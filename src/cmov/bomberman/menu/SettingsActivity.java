@@ -14,7 +14,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
 	
@@ -23,7 +22,7 @@ public class SettingsActivity extends Activity {
 		Button save, cancel;
 		final EditText editText;
 		SharedPreferences settings;
-		GridView gridview;
+		final GridView gridview;
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
@@ -39,11 +38,13 @@ public class SettingsActivity extends Activity {
 		settings =  getSharedPreferences("UserInfo", 0);
 		editText.setText((settings.getString("Username", "").toString()));
 		editText.setSelection(editText.length());
-		gridview.setAdapter(new ImageAdapter(this));
-
-		    gridview.setOnItemClickListener(new OnItemClickListener() {
+		final ImageAdapter myImageAdapter= new ImageAdapter(this);
+		gridview.setAdapter(myImageAdapter);
+        
+		    gridview.setOnItemClickListener(new OnItemClickListener() { 
 		        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		        	Toast.makeText(SettingsActivity.this, "" + position, Toast.LENGTH_SHORT).show();
+		        	myImageAdapter.chageState(position);
+					myImageAdapter.notifyDataSetChanged();
 		        }
 		    });
 		
@@ -60,25 +61,19 @@ public class SettingsActivity extends Activity {
 				editor.putString("Username",editText.getText().toString());
 				editor.commit();
 				startActivity(intent);
-				SettingsActivity.this.finish();
             }
         });
 		
 		cancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				
-				Intent intent;
-				
-				intent = new Intent(getApplicationContext(), HomeActivity.class);
+				Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
 				startActivity(intent);
-				SettingsActivity.this.finish();
             }
         });
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
 	}

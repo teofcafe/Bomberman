@@ -10,10 +10,6 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-
-    public ImageAdapter(Context c) {
-        mContext = c;
-    }
     
     private Integer[] mThumbIds = {
             R.drawable.avatar_1, R.drawable.avatar_2,
@@ -21,24 +17,43 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.avatar_5, R.drawable.avatar_6,
     };
     
- // references to our images
-
+    boolean[] items;
+    
+    public ImageAdapter(Context c) {
+        mContext = c;
+        items = new boolean[mThumbIds.length];
+        for(int i=0; i< mThumbIds.length; i++){
+            items[i]= false;
+        }   
+    }
+   
+   public void chageState(int position){
+     this.items[position] = !(this.items[position]);
+     for(int i = 0; i< items.length; i++){
+        if(i != position)
+            items[i]=false;
+     }
+   }
+   
     public int getCount() {
         return mThumbIds.length;
     }
 
     public Object getItem(int position) {
-        return null;
+        return mThumbIds[position];
     }
 
     public long getItemId(int position) {
         return 0;
     }
+    
+    public void paint(View v, int position){
+        
+    }
 
-    // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        if (convertView == null) {  // if it's not recycled, initialize some attributes
+        if (convertView == null) {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -46,6 +61,11 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
+        
+        if (this.items[position])
+            imageView.setBackgroundColor(0xFF00FF00);
+        else
+            imageView.setBackgroundColor(0x00000000);
 
         imageView.setImageResource(mThumbIds[position]);
         return imageView;
