@@ -34,6 +34,15 @@ public class GameActivity extends Activity {
 		return true;
 	}
 	
+	@Override
+	public void onBackPressed() {
+		Intent intent;
+		
+		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
+		startActivity(intent);
+		GameActivity.this.finish();
+	}
+	
 	public void quitGame(View view) {
 		Intent intent;
 		

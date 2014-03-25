@@ -44,6 +44,7 @@ public class HomeActivity extends Activity {
 		
 		Intent intent = new Intent(this.getApplicationContext(), SettingsActivity.class);
 		startActivity(intent);
+		HomeActivity.this.finish();
 	}
 	
 	public void quit(View v) {
@@ -60,5 +61,6 @@ public class HomeActivity extends Activity {
 		//MUDAR GAMEACTIVITY PARA CHANGELEVELACTIVITY!!!
 		Intent intent = new Intent(this.getApplicationContext(), GameActivity.class);
 		startActivity(intent);
+		HomeActivity.this.finish();
 	}
 }

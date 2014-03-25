@@ -61,6 +61,7 @@ public class SettingsActivity extends Activity {
 				editor.putString("Username",editText.getText().toString());
 				editor.commit();
 				startActivity(intent);
+				SettingsActivity.this.finish();
             }
         });
 		
@@ -68,6 +69,7 @@ public class SettingsActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
 				startActivity(intent);
+				SettingsActivity.this.finish();
             }
         });
 	}
@@ -76,5 +78,14 @@ public class SettingsActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent;
+		
+		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+		startActivity(intent);
+		SettingsActivity.this.finish();
 	}
 }
