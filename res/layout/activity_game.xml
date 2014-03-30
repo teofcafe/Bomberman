@@ -59,23 +59,32 @@
             android:gravity="center"
             android:text="1"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <cmov.bomberman.game.GameBoard
+            android:id="@+id/gameBoard"
+            android:layout_width="match_parent"
+            android:layout_height="257dp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:layout_marginTop="257dp"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:background="@drawable/border">
+        android:background="@drawable/border"
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:layout_marginLeft="10dp"  >
+            android:orientation="vertical" >
 
             <Button
                 android:id="@+id/button1"
@@ -90,78 +99,76 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button"
-                android:text="Quit" 
-                android:onClick="quitGame"/>
+                android:onClick="quitGame"
+                android:text="Quit" />
         </LinearLayout>
 
         <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:columnCount="3" 
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp" >
+            android:layout_marginLeft="10dp"
+            android:columnCount="3" >
 
             <ImageButton
                 android:id="@+id/leftButton"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
                 android:layout_column="0"
                 android:layout_gravity="left|center_vertical"
+                android:layout_margin="5dp"
                 android:layout_row="0"
-                android:layout_width="40dp"
-            	android:layout_height="30dp"
                 android:background="@drawable/button"
-                android:src="@drawable/left" 
-                android:layout_margin="5dp"/>
+                android:src="@drawable/left" />
 
             <ImageButton
                 android:id="@+id/upButton"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
                 android:layout_column="1"
                 android:layout_gravity="fill_horizontal|top"
+                android:layout_margin="5dp"
                 android:layout_row="0"
-            	android:layout_width="40dp"
-            	android:layout_height="30dp"
                 android:background="@drawable/button"
-                android:src="@drawable/up" 
-                android:layout_margin="5dp"/>
+                android:src="@drawable/up" />
 
             <ImageButton
                 android:id="@+id/downButton"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
                 android:layout_column="1"
                 android:layout_gravity="left|bottom"
+                android:layout_margin="5dp"
                 android:layout_row="0"
-                android:layout_width="40dp"
-            	android:layout_height="30dp"
                 android:background="@drawable/button"
-                android:src="@drawable/down" 
-                android:layout_margin="5dp"/>
+                android:src="@drawable/down" />
 
             <ImageButton
                 android:id="@+id/rightButton"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
                 android:layout_column="2"
                 android:layout_gravity="left|center_vertical"
+                android:layout_margin="5dp"
                 android:layout_row="0"
-                android:layout_width="40dp"
-            	android:layout_height="30dp"
                 android:background="@drawable/button"
-                android:src="@drawable/right" 
-                android:layout_margin="5dp"/>
+                android:src="@drawable/right" />
         </GridLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp" >
+            android:orientation="vertical" >
 
             <Button
                 android:id="@+id/bombButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bomb" 
-                android:background="@drawable/button"/>
-
+                android:background="@drawable/button"
+                android:text="Bomb" />
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>
