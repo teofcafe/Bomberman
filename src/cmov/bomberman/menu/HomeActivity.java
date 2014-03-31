@@ -28,6 +28,8 @@ public class HomeActivity extends Activity {
 		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
+		if(username.equals(""))
+			username=this.getString(R.string.guest);
 		homePageUsername = (TextView)findViewById(R.id.usernameHomePage);
 		
 		homePageUsername.setText(username);	
@@ -58,8 +60,7 @@ public class HomeActivity extends Activity {
 	}
 	
 	public void levelSelectionMenu(View v) {
-		//MUDAR GAMEACTIVITY PARA CHANGELEVELACTIVITY!!!
-		Intent intent = new Intent(this.getApplicationContext(), GameActivity.class);
+		Intent intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
 		startActivity(intent);
 		HomeActivity.this.finish();
 	}
