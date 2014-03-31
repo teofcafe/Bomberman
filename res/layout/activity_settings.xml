@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="17dp"
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="47dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/button"

@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="30dp"
         android:background="@drawable/border"
         android:gravity="center"
         android:orientation="horizontal" >
@@ -17,6 +17,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.17"
             android:gravity="center"
+            android:textColor="@android:color/black"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <View
@@ -31,6 +32,7 @@
             android:layout_weight="0.50"
             android:gravity="center"
             android:text="1234"
+            android:textColor="@android:color/black"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <View
@@ -45,6 +47,7 @@
             android:layout_weight="0.80"
             android:gravity="center"
             android:text="5:00"
+            android:textColor="@android:color/black"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <View
@@ -57,6 +60,7 @@
             android:layout_width="44dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textColor="@android:color/black"
             android:text="1"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
@@ -69,7 +73,7 @@
         <cmov.bomberman.game.GameBoard
             android:id="@+id/gameBoard"
             android:layout_width="match_parent"
-            android:layout_height="257dp" />
+            android:layout_height="360dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -100,7 +104,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button"
                 android:onClick="quitGame"
-                android:text="Quit" />
+                android:text="Quit"/>
         </LinearLayout>
 
         <GridLayout
@@ -167,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button"
-                android:text="Bomb" />
+                android:text="Bomb"/>
         </LinearLayout>
     </LinearLayout>
 
