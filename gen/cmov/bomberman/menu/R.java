@@ -28,36 +28,44 @@ public final class R {
         public static final int avatar_4=0x7f020003;
         public static final int avatar_5=0x7f020004;
         public static final int avatar_6=0x7f020005;
-        public static final int border=0x7f020006;
-        public static final int button=0x7f020007;
-        public static final int down=0x7f020008;
-        public static final int ic_launcher=0x7f020009;
-        public static final int left=0x7f02000a;
-        public static final int right=0x7f02000b;
-        public static final int up=0x7f02000c;
+        public static final int bomberman=0x7f020006;
+        public static final int border=0x7f020007;
+        public static final int button=0x7f020008;
+        public static final int down=0x7f020009;
+        public static final int ic_launcher=0x7f02000a;
+        public static final int left=0x7f02000b;
+        public static final int obstacle=0x7f02000c;
+        public static final int right=0x7f02000d;
+        public static final int up=0x7f02000e;
+        public static final int wall=0x7f02000f;
     }
     public static final class id {
-        public static final int TextView01=0x7f080014;
-        public static final int TextView02=0x7f080016;
-        public static final int action_settings=0x7f08001a;
+        public static final int TextView01=0x7f080019;
+        public static final int TextView02=0x7f08001b;
+        public static final int action_settings=0x7f08001f;
         public static final int bombButton=0x7f08000b;
+        public static final int bomberman=0x7f080014;
         public static final int button1=0x7f080005;
         public static final int button2=0x7f080006;
-        public static final int cancelButton=0x7f080017;
+        public static final int cancelButton=0x7f08001c;
         public static final int changeNameButton=0x7f080012;
         public static final int downButton=0x7f080009;
         public static final int gameBoard=0x7f080004;
-        public static final int gridview=0x7f080019;
-        public static final int insertName=0x7f080015;
+        public static final int gridview=0x7f08001e;
+        public static final int insertName=0x7f08001a;
         public static final int leftButton=0x7f080007;
         public static final int linearLayout=0x7f08000c;
         public static final int linearLayout1=0x7f08000d;
+        public static final int msgLevelSel=0x7f080015;
         public static final int numberPlayersTextView=0x7f080003;
         public static final int playerNameTextView=0x7f080000;
         public static final int playerScoreTextView=0x7f080001;
         public static final int quitButton=0x7f080013;
         public static final int rightButton=0x7f08000a;
-        public static final int saveButton=0x7f080018;
+        public static final int saveButton=0x7f08001d;
+        public static final int selAdv=0x7f080018;
+        public static final int selBeg=0x7f080016;
+        public static final int selItm=0x7f080017;
         public static final int startGamebutton=0x7f080011;
         public static final int timeLeftTextView=0x7f080002;
         public static final int upButton=0x7f080008;
@@ -77,6 +85,7 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f050002;
         public static final int app_name=0x7f050000;
+        public static final int guest=0x7f050003;
         public static final int hello_world=0x7f050001;
     }
     public static final class style {
