@@ -22,7 +22,7 @@ public class GameActivity extends Activity implements OnClickListener{
 		TextView usernameTextView;
 		String username;
 		/*final GameBoard gameBoard = (GameBoard)findViewById(R.id.gameBoard);*/
-		
+
 		//GameBoard gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		//Bitmap bitmap = Bitmap.createBitmap(gameBoard.bmp.getWidth(),gameBoard.bmp.getHeight(), Bitmap.Config.RGB_565);
 		//final Canvas canvas = new Canvas(bitmap);
@@ -32,28 +32,27 @@ public class GameActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_game);
 		final GameBoard gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		gameBoard.tostador();
-		
+
 		Bitmap bitmap = Bitmap.createBitmap(gameBoard.bmp.getWidth(),gameBoard.bmp.getHeight(), Bitmap.Config.RGB_565);
 		final Canvas canvas = new Canvas(bitmap);
-		
+
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
-		
+
 		usernameTextView.setText(username);	
-		
+
 		ImageButton clickButton = (ImageButton) findViewById(R.id.rightButton);
 		clickButton.setOnClickListener( new OnClickListener() {
 
-		            @Override
-		            public void onClick(View v) {
-		            	Toast.makeText(getBaseContext(),"clicaram.me", 
-		                        Toast.LENGTH_SHORT).show();
-		            	gameBoard.move();
-		        		gameBoard.draw(canvas);
-		            }
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getBaseContext(),"clicaram.me", 
+						Toast.LENGTH_SHORT).show();
+				gameBoard.move();
+				gameBoard.draw(canvas);
+			}
 		});
-
 	}
 
 	@Override
@@ -62,19 +61,19 @@ public class GameActivity extends Activity implements OnClickListener{
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Intent intent;
-		
+
 		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
 		startActivity(intent);
 		GameActivity.this.finish();
 	}
-	
+
 	public void quitGame(View view) {
 		Intent intent;
-		
+
 		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
 		startActivity(intent);
 		GameActivity.this.finish();
@@ -83,7 +82,6 @@ public class GameActivity extends Activity implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
