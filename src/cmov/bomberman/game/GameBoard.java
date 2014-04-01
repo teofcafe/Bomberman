@@ -55,6 +55,7 @@ public void move() {
 		//p.setAlpha(255);
 	    //p.setStrokeWidth(1);
 		//canvas.drawRect(0, 0, getWidth(), getHeight(), p);
+		canvas.drawColor(Color.BLACK);
 		canvas.drawBitmap(bmp, i, i, null);
 }
 		//initialize the field
