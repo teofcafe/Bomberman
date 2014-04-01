@@ -14,15 +14,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
-	
+	int imageSelected;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Button save, cancel;
 		final EditText editText;
 		SharedPreferences settings;
 		final GridView gridview;
+		SharedPreferences.Editor editor;
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
@@ -40,9 +42,23 @@ public class SettingsActivity extends Activity {
 		editText.setSelection(editText.length());
 		final ImageAdapter myImageAdapter= new ImageAdapter(this);
 		gridview.setAdapter(myImageAdapter);
-        
+		
+		settings = getSharedPreferences("UserInfo", 0);
+		editor = settings.edit();
+		imageSelected = (settings.getInt("SelectedAvatar", -1));
+		
+		if(imageSelected == -1){
+			imageSelected = 0;
+			editor.putInt("SelectedAvatar", imageSelected);
+			editor.commit();
+		}
+		
+		myImageAdapter.chageState(imageSelected);
+		myImageAdapter.notifyDataSetChanged();
+
 		    gridview.setOnItemClickListener(new OnItemClickListener() { 
 		        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		        	imageSelected = position;
 		        	myImageAdapter.chageState(position);
 					myImageAdapter.notifyDataSetChanged();
 		        }
@@ -59,7 +75,9 @@ public class SettingsActivity extends Activity {
 				editor = settings.edit();
 				
 				editor.putString("Username",editText.getText().toString());
+				editor.putInt("SelectedAvatar", imageSelected);
 				editor.commit();
+				
 				startActivity(intent);
 				SettingsActivity.this.finish();
             }

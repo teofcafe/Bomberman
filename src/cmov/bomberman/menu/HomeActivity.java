@@ -22,17 +22,23 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;		
 		TextView homePageUsername;
+		SharedPreferences.Editor editor;
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
 		settings =  getSharedPreferences("UserInfo", 0);
-		username = (settings.getString("Username", "").toString());
-		if(username.equals(""))
-			username=this.getString(R.string.guest);
+		username = settings.getString("Username", "").toString();
+		
+		if(username.equals("")){
+			editor = settings.edit();
+			editor.putString("Username",this.getString(R.string.guest));
+			editor.commit();
+		}
+			
 		homePageUsername = (TextView)findViewById(R.id.usernameHomePage);
 		
-		homePageUsername.setText(username);	
+		homePageUsername.setText(settings.getString("Username", "").toString());	
 	}
 
 	@Override
