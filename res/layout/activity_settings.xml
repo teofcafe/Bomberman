@@ -38,17 +38,6 @@
             android:layout_weight="0.09"
             android:paddingTop="20dp" >
 
-            <Button
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/saveButton"
-                android:layout_alignBottom="@+id/saveButton"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="48dp"
-                android:background="@drawable/button"
-                android:text="Cancel" />
-
     <GridView
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
@@ -63,14 +52,22 @@
         android:verticalSpacing="10dp" />
 
     <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/cancelButton"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="47dp"
-        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/button"
+        android:text="Cancel" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="290dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/cancelButton"
+        android:layout_alignLeft="@+id/cancelButton"
+        android:layout_marginBottom="21dp"
         android:background="@drawable/button"
         android:text="Save" />
 
