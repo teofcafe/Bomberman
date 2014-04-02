@@ -14,13 +14,13 @@ import android.view.SurfaceView;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
-	
+
 	private MainThread thread;
 	private Player player;
-	
+
 	//tamanhos maximos por definir
 	int maxWidth,maxHeight;
-	
+
 
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
@@ -28,10 +28,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		//setFocusable(true);
 		//it's best not to create any new objects in the on draw
 		//initialize them as class variables here
-//		LinearLayout layout = (LinearLayout)findViewById(R.id.gameBoardLayout);
-//		this.maxHeight = layout.getMeasuredHeight();
-//		this.maxWidth = layout.getMeasuredWidth();
-		player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar_1),10,10);
+		//		LinearLayout layout = (LinearLayout)findViewById(R.id.gameBoardLayout);
+		//		this.maxHeight = layout.getMeasuredHeight();
+		//		this.maxWidth = layout.getMeasuredWidth();
+		player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),10,10);
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);
 
@@ -41,29 +41,37 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void moveRight() {
 		int newPosition=player.getX()+3;
 		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
-		if(canMoveX(newPosition))
+		if(canMoveX(newPosition)) {
 			player.setX(newPosition);
+			player.setDirection(2);
+		}
 	}
 
 	public void moveLeft(){
 		int newPosition=player.getX()-3;
 		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
-		if(canMoveX(newPosition))
+		if(canMoveX(newPosition)) {
 			player.setX(newPosition);
+			player.setDirection(1);
+		}
 	}
 
 	public void moveUp(){
 		int newPosition=player.getY()-3;
 		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
-		if(canMoveY(newPosition))
+		if(canMoveY(newPosition)) {
 			player.setY(newPosition);
+			player.setDirection(3);
+		}
 	}
 
 	public void moveDown(){
 		int newPosition=player.getY()+3;
 		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
-		if(canMoveY(newPosition))
+		if(canMoveY(newPosition)) {
 			player.setY(newPosition);
+			player.setDirection(0);
+		}
 	}
 
 	public boolean canMoveX(int x){
@@ -77,7 +85,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			return false;
 		return true;
 	}
-	
+
 	public void exitGame() {
 		thread.setRunning(false);
 	}
@@ -94,7 +102,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceCreated(SurfaceHolder holder) {
 		thread.setRunning(true);
 		thread.start();
-
 	}
 
 	@Override
