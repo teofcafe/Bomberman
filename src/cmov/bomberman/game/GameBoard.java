@@ -77,6 +77,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			return false;
 		return true;
 	}
+	
+	public void exitGame() {
+		thread.setRunning(false);
+	}
 
 
 	@Override

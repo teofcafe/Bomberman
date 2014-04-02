@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 public class GameActivity extends Activity implements OnClickListener{
 
-
+	GameBoard gameBoard = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
@@ -28,7 +28,7 @@ public class GameActivity extends Activity implements OnClickListener{
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
-		final GameBoard gameBoard = (GameBoard)findViewById(R.id.gameBoard);
+		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 
 
 
@@ -103,7 +103,7 @@ public class GameActivity extends Activity implements OnClickListener{
 
 	public void quitGame(View view) {
 		Intent intent;
-
+		gameBoard.exitGame();
 		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
 		startActivity(intent);
 		GameActivity.this.finish();
