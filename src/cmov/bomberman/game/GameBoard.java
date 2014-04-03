@@ -17,7 +17,7 @@ import android.view.SurfaceView;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
-	
+
 	private MainThread thread;
 	private Player player;
 	private Wall wall;
@@ -27,6 +27,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public int maxWidth,maxHeight;
 	
 
+
+
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		
@@ -34,6 +36,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		//setFocusable(true);
 		//it's best not to create any new objects in the on draw
 		//initialize them as class variables here
+
 		
 		Bitmap bmpPlayer = BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar_1);
 		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
@@ -41,6 +44,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		
 		player=new Player(Resize.getResizedBitmap(bmpPlayer, bmpPlayer.getHeight()*2/3, bmpPlayer.getWidth()*2/3),19,21);
 		wall=new Wall(Resize.getResizedBitmap(bmpWall,bmpWall.getHeight()*2/3,bmpWall.getWidth()*2/3),30,30);
+
+		//		LinearLayout layout = (LinearLayout)findViewById(R.id.gameBoardLayout);
+		//		this.maxHeight = layout.getMeasuredHeight();
+		//		this.maxWidth = layout.getMeasuredWidth();
+
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);
 
@@ -49,30 +57,46 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void moveRight() {
 		int newPosition=player.getX()+3;
-		Log.d("posicao","Max:" + maxHeight + " Proximo:" + newPosition);
-		if(canMoveX(newPosition))
+
+		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
+		if(canMoveX(newPosition)) {
+
 			player.setX(newPosition);
+			player.setDirection(2);
+		}
 	}
 
 	public void moveLeft(){
 		int newPosition=player.getX()-3;
-		Log.d("posicao","Max:" + maxHeight + " Proximo:" + newPosition);
-		if(canMoveX(newPosition))
+
+		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
+		if(canMoveX(newPosition)) {
+
 			player.setX(newPosition);
+			player.setDirection(1);
+		}
 	}
 
 	public void moveUp(){
 		int newPosition=player.getY()-3;
-		Log.d("posicao","Max:" + maxWidth + " Proximo:" + newPosition);
-		if(canMoveY(newPosition))
+
+
+		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
+		if(canMoveY(newPosition)) {
+
 			player.setY(newPosition);
+			player.setDirection(3);
+		}
 	}
 
 	public void moveDown(){
 		int newPosition=player.getY()+3;
-		Log.d("posicao","Max:" + maxWidth + " Proximo:" + newPosition);
-		if(canMoveY(newPosition))
+
+		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
+		if(canMoveY(newPosition)) {
 			player.setY(newPosition);
+			player.setDirection(0);
+		}
 	}
 
 	public boolean canMoveX(int x){
@@ -88,7 +112,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			return false;
 		return true;
 	}
-	
+
 	public void exitGame() {
 		thread.setRunning(false);
 	}
@@ -106,7 +130,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceCreated(SurfaceHolder holder) {
 		thread.setRunning(true);
 		thread.start();
-
 	}
 
 	@Override
