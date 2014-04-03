@@ -25,6 +25,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	
 	//tamanhos maximos por definir
 	public int maxWidth,maxHeight;
+	int playerHeight, playerWidth;
 	
 
 
@@ -38,11 +39,17 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		//initialize them as class variables here
 
 		
-		Bitmap bmpPlayer = BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar_1);
+		Bitmap bmpPlayer = BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1);
 		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
 		Bitmap bmpObstacle=BitmapFactory.decodeResource(this.getResources(), R.drawable.obstacle);
 		
-		player=new Player(Resize.getResizedBitmap(bmpPlayer, bmpPlayer.getHeight()*2/3, bmpPlayer.getWidth()*2/3),19,21);
+		this.playerHeight = bmpPlayer.getHeight()/4*2/3;
+		this.playerWidth = bmpPlayer.getWidth()/4*2/3;
+		
+		player=new Player(Resize.getResizedBitmap(bmpPlayer, bmpPlayer.getHeight()*2/3, bmpPlayer.getWidth()*2/3),21,21);
+		//player=new Player(bmpPlayer,19,21);
+		
+		Log.d("posicao","Heigh:" + bmpPlayer.getHeight() + " Width:" + bmpPlayer.getWidth());
 		wall=new Wall(Resize.getResizedBitmap(bmpWall,bmpWall.getHeight()*2/3,bmpWall.getWidth()*2/3),30,30);
 
 		//		LinearLayout layout = (LinearLayout)findViewById(R.id.gameBoardLayout);
@@ -100,14 +107,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public boolean canMoveX(int x){
-		int playerWidth=player.getBitmap().getWidth();
+		int playerWidth=this.playerWidth;
 		if(x + playerWidth>maxWidth || x<playerWidth)
 			return false;
 		return true;
 	}
 
 	public boolean canMoveY(int y){
-		int playerHeight= player.getBitmap().getHeight();
+		int playerHeight=this.playerHeight;
 		if(y+playerHeight>maxHeight || y<playerHeight)
 			return false;
 		return true;
@@ -122,7 +129,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		player.draw(canvas);
-		wall.draw(canvas);
+		//wall.draw(canvas);
 	}
 	//initialize the field
 

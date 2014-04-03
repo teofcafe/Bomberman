@@ -2,7 +2,6 @@ package cmov.bomberman.game.components;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.Rect;
 
 public class Player {
