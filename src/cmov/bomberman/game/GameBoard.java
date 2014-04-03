@@ -1,8 +1,11 @@
 package cmov.bomberman.game;
 
 import cmov.bomberman.game.components.Player;
+import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.R;
+import cmov.bomberman.resize.Resize;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,21 +20,27 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	
 	private MainThread thread;
 	private Player player;
+	private Wall wall;
+	
 	
 	//tamanhos maximos por definir
-	int maxWidth,maxHeight;
+	public int maxWidth,maxHeight;
 	
 
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
+		
 		getHolder().addCallback(this);
 		//setFocusable(true);
 		//it's best not to create any new objects in the on draw
 		//initialize them as class variables here
-//		LinearLayout layout = (LinearLayout)findViewById(R.id.gameBoardLayout);
-//		this.maxHeight = layout.getMeasuredHeight();
-//		this.maxWidth = layout.getMeasuredWidth();
-		player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar_1),10,10);
+		
+		Bitmap bmpPlayer = BitmapFactory.decodeResource(this.getResources(), R.drawable.avatar_1);
+		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
+		Bitmap bmpObstacle=BitmapFactory.decodeResource(this.getResources(), R.drawable.obstacle);
+		
+		player=new Player(Resize.getResizedBitmap(bmpPlayer, bmpPlayer.getHeight()*2/3, bmpPlayer.getWidth()*2/3),19,21);
+		wall=new Wall(Resize.getResizedBitmap(bmpWall,bmpWall.getHeight()*2/3,bmpWall.getWidth()*2/3),30,30);
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);
 
@@ -40,40 +49,42 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void moveRight() {
 		int newPosition=player.getX()+3;
-		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
+		Log.d("posicao","Max:" + maxHeight + " Proximo:" + newPosition);
 		if(canMoveX(newPosition))
 			player.setX(newPosition);
 	}
 
 	public void moveLeft(){
 		int newPosition=player.getX()-3;
-		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
+		Log.d("posicao","Max:" + maxHeight + " Proximo:" + newPosition);
 		if(canMoveX(newPosition))
 			player.setX(newPosition);
 	}
 
 	public void moveUp(){
 		int newPosition=player.getY()-3;
-		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
+		Log.d("posicao","Max:" + maxWidth + " Proximo:" + newPosition);
 		if(canMoveY(newPosition))
 			player.setY(newPosition);
 	}
 
 	public void moveDown(){
 		int newPosition=player.getY()+3;
-		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
+		Log.d("posicao","Max:" + maxWidth + " Proximo:" + newPosition);
 		if(canMoveY(newPosition))
 			player.setY(newPosition);
 	}
 
 	public boolean canMoveX(int x){
-		if(x>getWidth() || x<13)
+		int playerWidth=player.getBitmap().getWidth();
+		if(x + playerWidth>maxWidth || x<playerWidth)
 			return false;
 		return true;
 	}
 
 	public boolean canMoveY(int y){
-		if(y>getHeight() || y<0)
+		int playerHeight= player.getBitmap().getHeight();
+		if(y+playerHeight>maxHeight || y<playerHeight)
 			return false;
 		return true;
 	}
@@ -87,6 +98,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		player.draw(canvas);
+		wall.draw(canvas);
 	}
 	//initialize the field
 

@@ -1,6 +1,7 @@
 package cmov.bomberman.game.components;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 
 public class Wall {
 
@@ -35,5 +36,10 @@ public class Wall {
 
 	public void setBitmap(Bitmap bitmap) {
 		this.bitmap = bitmap;
+	}
+	
+
+	public void draw(Canvas canvas) {
+		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 	}
 }

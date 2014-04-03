@@ -1,25 +1,21 @@
 package cmov.bomberman.menu;
 
 import cmov.bomberman.game.GameBoard;
-import cmov.bomberman.game.components.Player;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class GameActivity extends Activity implements OnClickListener{
 
 	GameBoard gameBoard = null;
+	LinearLayout gameLayout=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
@@ -29,8 +25,7 @@ public class GameActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
-
-
+		this.gameLayout = (LinearLayout)findViewById(R.id.gameBoardLayout);
 
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
@@ -48,7 +43,7 @@ public class GameActivity extends Activity implements OnClickListener{
 
 			@Override
 			public void onClick(View v) {
-				gameBoard.moveLeft();			
+				gameBoard.moveLeft();
 
 			}
 		});
@@ -81,8 +76,25 @@ public class GameActivity extends Activity implements OnClickListener{
 			}
 		});
 
-
-
+	}
+	
+	public void updateLayoutMeasures(){
+		gameBoard.maxHeight=getLayoutHeight();
+		gameBoard.maxWidth=getLayoutWidth();
+	}
+	
+	public int getLayoutHeight(){
+		return gameLayout.getMeasuredHeight();
+	}
+	
+	public int getLayoutWidth(){
+		return gameLayout.getMeasuredWidth();
+	}
+	
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+	      updateLayoutMeasures();
+	    super.onWindowFocusChanged(hasFocus);
 	}
 
 	@Override
