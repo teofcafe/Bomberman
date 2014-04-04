@@ -22,6 +22,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		SharedPreferences settings;
 		TextView usernameTextView;
 		String username;
+		int avatar;
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
@@ -32,6 +33,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
 
 		usernameTextView.setText(username);	
+		
+		avatar = (settings.getInt("SelectedAvatar", -1));
+		
+		gameBoard.gameStart(avatar);
 
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);

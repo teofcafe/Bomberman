@@ -21,9 +21,32 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
-		player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),50,50);
+	}
+
+	public void gameStart(int avatar) {		
+		switch (avatar) {
+		case 0:
+			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),50,50);
+			break;
+		case 1:
+			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_2),50,50);
+			break;
+		case 2:
+			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_3),50,50);
+			break;
+		case 3:
+			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_4),50,50);
+			break;
+		case 4:
+			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_5),50,50);
+			break;
+		case 5:
+			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_6),50,50);
+			break;
+		}
+
 		thread= new MainThread(getHolder(), this);
-		setFocusable(true);
+		setFocusable(true);				
 	}
 
 	public void exitGame() {
@@ -71,14 +94,22 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void update() {
 		if(player.getTouched()) {
 			player.update();
-			if(player.getDirection() == 0)
+
+			switch (player.getDirection()) {
+			case 0:
 				player.moveDown();
-			if(player.getDirection() == 1)
+				break;
+			case 1:
 				player.moveLeft();
-			if(player.getDirection() == 2)
+				break;
+			case 2:
 				player.moveRight();
-			if(player.getDirection() == 3)
+				break;
+			case 3:
 				player.moveUp();
+				break;
+
+			}			
 		}
 	}
 }
