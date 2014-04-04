@@ -6,16 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class GameActivity extends Activity implements OnClickListener{
+public class GameActivity extends Activity implements OnTouchListener{
+	GameBoard gameBoard;
 
-	GameBoard gameBoard = null;
-	LinearLayout gameLayout=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
@@ -25,76 +26,90 @@ public class GameActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
-		this.gameLayout = (LinearLayout)findViewById(R.id.gameBoardLayout);
-
+		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
 
 		usernameTextView.setText(username);	
 
-		ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
+		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
 		ImageButton upButton = (ImageButton)findViewById(R.id.upButton);
 		ImageButton downButton = (ImageButton) findViewById(R.id.downButton);
 		
+		upButton.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:{
+					gameBoard.player.setDirection(3);
+					gameBoard.player.setTouched(true);
+					break;
+				}
+
+				case MotionEvent.ACTION_UP:{
+					gameBoard.player.setTouched(false);
+					gameBoard.player.setCurrentFrame(1);
+				}  	
+				}
+				return true;
+			}});
 		
-		leftButton.setOnClickListener( new OnClickListener() {
-
+		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public void onClick(View v) {
-				gameBoard.moveLeft();
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:{
+					gameBoard.player.setDirection(0);
+					gameBoard.player.setTouched(true);
+					break;
+				}
 
-			}
-		});
+				case MotionEvent.ACTION_UP:{
+					gameBoard.player.setTouched(false);
+					gameBoard.player.setCurrentFrame(1);
+				}  	
+				}
+				return true;
+			}});
 
 
-		rightButton.setOnClickListener( new OnClickListener() {
-
+		leftButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
-			public void onClick(View v) {
-				gameBoard.moveRight();			
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:{
+					gameBoard.player.setDirection(1);
+					gameBoard.player.setTouched(true);
+					break;
+				}
 
-			}
-		});
-		
-		upButton.setOnClickListener( new OnClickListener() {
+				case MotionEvent.ACTION_UP:{
+					gameBoard.player.setTouched(false);
+					gameBoard.player.setCurrentFrame(1);
+				}  	
+				}
+				return true;
+			}});
 
+		rightButton.setOnTouchListener(new OnTouchListener() {
 			@Override
-			public void onClick(View v) {
-				gameBoard.moveUp();			
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:{
+					gameBoard.player.setDirection(2);
+					gameBoard.player.setTouched(true);
+					break;
+				}
 
-			}
-		});
-		
-		downButton.setOnClickListener( new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				gameBoard.moveDown();			
-
-			}
-		});
-
-	}
-	
-	public void updateLayoutMeasures(){
-		gameBoard.maxHeight=getLayoutHeight();
-		gameBoard.maxWidth=getLayoutWidth();
-	}
-	
-	public int getLayoutHeight(){
-		return gameLayout.getMeasuredHeight();
-	}
-	
-	public int getLayoutWidth(){
-		return gameLayout.getMeasuredWidth();
-	}
-	
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-	      updateLayoutMeasures();
-	    super.onWindowFocusChanged(hasFocus);
+				case MotionEvent.ACTION_UP:{
+					gameBoard.player.setTouched(false);
+					gameBoard.player.setCurrentFrame(1);
+				}  	
+				}
+				return true;
+			}});
 	}
 
 	@Override
@@ -107,7 +122,7 @@ public class GameActivity extends Activity implements OnClickListener{
 	@Override
 	public void onBackPressed() {
 		Intent intent;
-
+		gameBoard.exitGame();
 		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
 		startActivity(intent);
 		GameActivity.this.finish();
@@ -122,9 +137,8 @@ public class GameActivity extends Activity implements OnClickListener{
 	}
 
 	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-
+	public boolean onTouch(View v, MotionEvent event) {
+		return false;
 	}
 
 }

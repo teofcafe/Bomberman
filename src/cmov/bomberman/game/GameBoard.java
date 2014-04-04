@@ -1,11 +1,9 @@
 package cmov.bomberman.game;
 
+
 import cmov.bomberman.game.components.Player;
-import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.R;
-import cmov.bomberman.resize.Resize;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,121 +15,30 @@ import android.view.SurfaceView;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
-
-	private MainThread thread;
-	private Player player;
-	private Wall wall;
-	
-	
-	//tamanhos maximos por definir
-	public int maxWidth,maxHeight;
-	int playerHeight, playerWidth;
-	
-
-
+	public MainThread thread;
+	public Player player;
 
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
-		
 		getHolder().addCallback(this);
-		//setFocusable(true);
-		//it's best not to create any new objects in the on draw
-		//initialize them as class variables here
-
-		
-		Bitmap bmpPlayer = BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1);
-		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
-		Bitmap bmpObstacle=BitmapFactory.decodeResource(this.getResources(), R.drawable.obstacle);
-		
-		this.playerHeight = bmpPlayer.getHeight()/4*2/3;
-		this.playerWidth = bmpPlayer.getWidth()/4*2/3;
-		
-		player=new Player(Resize.getResizedBitmap(bmpPlayer, bmpPlayer.getHeight()*2/3, bmpPlayer.getWidth()*2/3),21,21);
-		//player=new Player(bmpPlayer,19,21);
-		
-		Log.d("posicao","Heigh:" + bmpPlayer.getHeight() + " Width:" + bmpPlayer.getWidth());
-		wall=new Wall(Resize.getResizedBitmap(bmpWall,bmpWall.getHeight()*2/3,bmpWall.getWidth()*2/3),30,30);
-
-		//		LinearLayout layout = (LinearLayout)findViewById(R.id.gameBoardLayout);
-		//		this.maxHeight = layout.getMeasuredHeight();
-		//		this.maxWidth = layout.getMeasuredWidth();
-
+		player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),50,50);
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);
-
-	}
-
-
-	public void moveRight() {
-		int newPosition=player.getX()+3;
-
-		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
-		if(canMoveX(newPosition)) {
-
-			player.setX(newPosition);
-			player.setDirection(2);
-		}
-	}
-
-	public void moveLeft(){
-		int newPosition=player.getX()-3;
-
-		Log.d("posicao","Max:" + getHeight() + " Proximo:" + newPosition);
-		if(canMoveX(newPosition)) {
-
-			player.setX(newPosition);
-			player.setDirection(1);
-		}
-	}
-
-	public void moveUp(){
-		int newPosition=player.getY()-3;
-
-
-		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
-		if(canMoveY(newPosition)) {
-
-			player.setY(newPosition);
-			player.setDirection(3);
-		}
-	}
-
-	public void moveDown(){
-		int newPosition=player.getY()+3;
-
-		Log.d("posicao","Max:" + getWidth() + " Proximo:" + newPosition);
-		if(canMoveY(newPosition)) {
-			player.setY(newPosition);
-			player.setDirection(0);
-		}
-	}
-
-	public boolean canMoveX(int x){
-		int playerWidth=this.playerWidth;
-		if(x + playerWidth>maxWidth || x<playerWidth)
-			return false;
-		return true;
-	}
-
-	public boolean canMoveY(int y){
-		int playerHeight=this.playerHeight;
-		if(y+playerHeight>maxHeight || y<playerHeight)
-			return false;
-		return true;
 	}
 
 	public void exitGame() {
 		thread.setRunning(false);
 	}
 
+	public void startGame() {
+		thread.setRunning(true);
+	}
 
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		player.draw(canvas);
-		//wall.draw(canvas);
 	}
-	//initialize the field
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
@@ -140,9 +47,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 	}
 
 	@Override
@@ -156,23 +61,24 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 			}
 		}
-
 	}
-
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		return false;
-		//		Toast.makeText(this.getContext()," Button Touched", Toast.LENGTH_SHORT).show();
-		//		i = i + 10;
-		//		if (event.getY() > getHeight() - 50) {
-		//			thread.setRunning(false);
-		//			((Activity)getContext()).finish();
-		//		} else {
-		//		}
-		//		return true;
 	}
 
-
-
+	public void update() {
+		if(player.getTouched()) {
+			player.update();
+			if(player.getDirection() == 0)
+				player.moveDown();
+			if(player.getDirection() == 1)
+				player.moveLeft();
+			if(player.getDirection() == 2)
+				player.moveRight();
+			if(player.getDirection() == 3)
+				player.moveUp();
+		}
+	}
 }

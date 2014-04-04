@@ -1,30 +1,32 @@
 package cmov.bomberman.game;
 
+import java.util.concurrent.TimeUnit;
+
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
 
 public class MainThread extends Thread {
-	
 
-	
+
+
 	private static final String TAG = MainThread.class.getSimpleName();
-	
+
 	// Surface holder that can access the physical surface
 	private SurfaceHolder surfaceHolder;
 	// The actual view that handles inputs
 	// and draws to the surface
 	private GameBoard gamePanel;
-	
-  
-	
+
+
+
 	// flag to hold game state 
 	private boolean running;
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
-	
+
 
 
 	public MainThread(SurfaceHolder surfaceHolder, GameBoard gamePanel) {
@@ -47,7 +49,13 @@ public class MainThread extends Thread {
 					// update game state 
 					// render state to the screen
 					// draws the canvas on the panel
-					this.gamePanel.onDraw(canvas);				
+					this.gamePanel.update();
+					this.gamePanel.onDraw(canvas);	
+					try {
+						TimeUnit.MILLISECONDS.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			} finally {
 				// in case of an exception the surface is not left in 
