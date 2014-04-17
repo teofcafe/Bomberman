@@ -3,8 +3,8 @@ package cmov.bomberman.game;
 
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
+import cmov.bomberman.game.resizer.Resize;
 import cmov.bomberman.menu.R;
-import cmov.bomberman.resize.Resize;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,13 +46,24 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		
 	}
 	
+	public void setMaxWidth(int maxWidth){
+		this.maxWidth=maxWidth;
+	}
+	
+	public void setMaxHeight(int maxHeight){
+		this.maxHeight=maxHeight;
+	}
+	
 	private void drawWall(Canvas canvas) {
 		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
+		setMaxHeight(maxHeight);
+		setMaxWidth(maxWidth);
 		
 		
-		Log.d("parede", "maxHeight: " + this);
+		Log.d("parede", "maxHeight: " + maxHeight);
+		Log.d("parede","maxWidth: " + maxWidth);
 		int i=0;
 		
 		
@@ -61,6 +72,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		Log.d("parede", "amount of walls: " + amountOfWalls);
 		
 		wall = new Wall[amountOfWalls];
+		
+		wall[0] = new Wall(this.resizedWall,300,0);
+		wall[0].draw(canvas);
+		wall[1] = new Wall(this.resizedWall,50,50);
+		wall[1].draw(canvas);
 		
 //		for(;posX<maxWidth;posX+=this.wallWidth){
 //			for(;posY<maxHeight;posY+=this.wallHeight){
