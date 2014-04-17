@@ -47,13 +47,7 @@ public class SettingsActivity extends Activity {
 		settings = getSharedPreferences("UserInfo", 0);
 		editor = settings.edit();
 		imageSelected = (settings.getInt("SelectedAvatar", -1));
-		
-		if(imageSelected == -1){
-			imageSelected = 0;
-			editor.putInt("SelectedAvatar", imageSelected);
-			editor.commit();
-		}
-		
+				
 		myImageAdapter.chageState(imageSelected);
 		myImageAdapter.notifyDataSetChanged();
 

@@ -11,12 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.os.Build;
 
 public class HomeActivity extends Activity {
 
 	String username = null;
+	int imageSelected;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +32,22 @@ public class HomeActivity extends Activity {
 		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = settings.getString("Username", "").toString();
+		imageSelected = (settings.getInt("SelectedAvatar", -1));
+		
 		
 		if(username.equals("")){
 			editor = settings.edit();
 			editor.putString("Username",this.getString(R.string.guest));
 			editor.commit();
 		}
-			
+		
+		if(imageSelected == -1){
+			imageSelected = 0;
+			editor = settings.edit();
+			editor.putInt("SelectedAvatar", imageSelected);
+			editor.commit();
+		}
+		
 		homePageUsername = (TextView)findViewById(R.id.usernameHomePage);
 		
 		homePageUsername.setText(settings.getString("Username", "").toString());	
