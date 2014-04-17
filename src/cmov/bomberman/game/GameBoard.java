@@ -212,7 +212,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 		bomb = null;
 		bombDroped = false;
-		
+
 		updateBomb.interrupt();
 	}
 
@@ -226,8 +226,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 					updateBomb();
 				}
 			};
-		}
 
-		updateBomb.start();
+			updateBomb.start();
+		}
 	}
 }
