@@ -1,6 +1,5 @@
 package cmov.bomberman.menu;
 
-import cmov.bomberman.game.GameBoard;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,14 +7,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+import cmov.bomberman.game.GameBoard;
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
+	
+	public static String packageName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
+		packageName = getApplicationContext().getPackageName();
 		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
@@ -48,14 +49,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.player.setDirection(3);
-					gameBoard.player.setTouched(true);
+					gameBoard.getPlayer().setDirection(3);
+					gameBoard.getPlayer().setTouched(true);
 					break;
 				}
 
 				case MotionEvent.ACTION_UP:{
-					gameBoard.player.setTouched(false);
-					gameBoard.player.setCurrentFrame(1);
+					gameBoard.getPlayer().setTouched(false);
+					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
 				}
 				return true;
@@ -66,14 +67,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.player.setDirection(0);
-					gameBoard.player.setTouched(true);
+					gameBoard.getPlayer().setDirection(0);
+					gameBoard.getPlayer().setTouched(true);
 					break;
 				}
 
 				case MotionEvent.ACTION_UP:{
-					gameBoard.player.setTouched(false);
-					gameBoard.player.setCurrentFrame(1);
+					gameBoard.getPlayer().setTouched(false);
+					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
 				}
 				return true;
@@ -85,14 +86,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.player.setDirection(1);
-					gameBoard.player.setTouched(true);
+					gameBoard.getPlayer().setDirection(1);
+					gameBoard.getPlayer().setTouched(true);
 					break;
 				}
 
 				case MotionEvent.ACTION_UP:{
-					gameBoard.player.setTouched(false);
-					gameBoard.player.setCurrentFrame(1);
+					gameBoard.getPlayer().setTouched(false);
+					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
 				}
 				return true;
@@ -103,14 +104,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.player.setDirection(2);
-					gameBoard.player.setTouched(true);
+					gameBoard.getPlayer().setDirection(2);
+					gameBoard.getPlayer().setTouched(true);
 					break;
 				}
 
 				case MotionEvent.ACTION_UP:{
-					gameBoard.player.setTouched(false);
-					gameBoard.player.setCurrentFrame(1);
+					gameBoard.getPlayer().setTouched(false);
+					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
 				}
 				return true;
@@ -144,6 +145,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		return false;
+	}
+	
+	public void dropBomb(View view) {
+		this.gameBoard.dropBomb();
 	}
 
 }

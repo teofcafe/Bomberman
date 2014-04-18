@@ -27,6 +27,14 @@ public class Player {
 		this.height = bitmap.getHeight() / BMP_ROWS;
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
 	public Bitmap getBitmap() {
 		return bitmap;
 	}

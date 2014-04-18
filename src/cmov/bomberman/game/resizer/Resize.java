@@ -1,4 +1,4 @@
-package cmov.bomberman.resize;
+package cmov.bomberman.game.resizer;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;

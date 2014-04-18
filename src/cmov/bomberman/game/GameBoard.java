@@ -1,10 +1,18 @@
 package cmov.bomberman.game;
 
 
+
+import java.io.IOException;
+import java.io.InputStream;
+
+
+import cmov.bomberman.game.components.Bomb;
+
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
+import cmov.bomberman.game.resizer.Resize;
+import cmov.bomberman.menu.GameActivity;
 import cmov.bomberman.menu.R;
-import cmov.bomberman.resize.Resize;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,64 +26,79 @@ import android.view.SurfaceView;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
-	public MainThread thread;
-	public Player player;
+	private MainThread thread;
+	private Thread updateBomb;
+	private Player player;
+	private Bomb bomb;
 	private Wall[] wall;
-	
+	private boolean bombDroped = false;
 	//layout size max
-	public int maxWidth, maxHeight;
-	
+	private int maxWidth, maxHeight;
 	//playout resized size
 	private int playerHeight, playerWidth;
-	
 	//wall resized size
 	private int wallHeight, wallWidth;
-	
 	private Bitmap resizedWall;
 
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
-		
+
 		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
-		
+
 		this.wallHeight = bmpWall.getHeight()*2/3;
 		this.wallWidth = bmpWall.getWidth()*2/3;
-		
+
 		this.resizedWall=Resize.getResizedBitmap(bmpWall,this.wallHeight,this.wallWidth);
-		
+
 	}
-	
+
+	public void setMaxWidth(int maxWidth){
+		this.maxWidth=maxWidth;
+	}
+
+	public void setMaxHeight(int maxHeight){
+		this.maxHeight=maxHeight;
+	}
+
 	private void drawWall(Canvas canvas) {
 		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
-		
-		
-		Log.d("parede", "maxHeight: " + this);
+		setMaxHeight(maxHeight);
+		setMaxWidth(maxWidth);
+
+
+		Log.d("parede", "maxHeight: " + maxHeight);
+		Log.d("parede","maxWidth: " + maxWidth);
 		int i=0;
-		
-		
+
+
 		int amountOfWalls=(maxHeight/this.wallHeight)*2;
 		amountOfWalls+=(maxWidth/this.wallWidth)*2;
 		Log.d("parede", "amount of walls: " + amountOfWalls);
-		
+
 		wall = new Wall[amountOfWalls];
-		
-//		for(;posX<maxWidth;posX+=this.wallWidth){
-//			for(;posY<maxHeight;posY+=this.wallHeight){
-//				wall[i]=new Wall(this.resizedWall,posX,0);
-//				wall[i++].draw(canvas);
-//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-//			}
-//		}
-//		
-//		for(;posY<maxHeight;posY+=this.wallHeight){
-//				wall[i]=new Wall(this.resizedWall,0,posY);
-//				wall[i++].draw(canvas);
-//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-//			}
-//		}
+
+		wall[0] = new Wall(this.resizedWall,300,0);
+		wall[0].draw(canvas);
+		wall[1] = new Wall(this.resizedWall,50,50);
+		wall[1].draw(canvas);
+
+		//		for(;posX<maxWidth;posX+=this.wallWidth){
+		//			for(;posY<maxHeight;posY+=this.wallHeight){
+		//				wall[i]=new Wall(this.resizedWall,posX,0);
+		//				wall[i++].draw(canvas);
+		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
+		//			}
+		//		}
+		//		
+		//		for(;posY<maxHeight;posY+=this.wallHeight){
+		//				wall[i]=new Wall(this.resizedWall,0,posY);
+		//				wall[i++].draw(canvas);
+		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
+		//			}
+		//		}
 	}
 
 	public void gameStart(int avatar) {		
@@ -100,9 +123,25 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 		}
 
+		try {
+			
+			//TODO relacionar os niveis com o grau de dificuldade do jogo
+			String levelName = "level1";
+			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
+			
+			InputStream level = getResources().openRawResource(resID);
+			
+			LoadMap.loadMap(level);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d("mapa","Unable to read file.");
+		}
+	
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);				
 	}
+
 
 	public void exitGame() {
 		thread.setRunning(false);
@@ -115,8 +154,18 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-		player.draw(canvas);
 		drawWall(canvas);
+
+		if(this.bombDroped)
+			drawBomb(canvas);	
+
+
+
+		player.draw(canvas);
+	}
+
+	private void drawBomb(Canvas canvas) {
+		this.bomb.draw(canvas);	
 	}
 
 	@Override
@@ -166,6 +215,42 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				break;
 
 			}			
+		}
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	@SuppressWarnings("static-access")
+	public void updateBomb() {
+		while(!bomb.isExploded()) {
+			bomb.update();
+			try {
+				updateBomb.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		bomb = null;
+		bombDroped = false;
+
+		updateBomb.interrupt();
+	}
+
+	public void dropBomb() {
+		if(!bombDroped) {
+			bomb = new Bomb(BitmapFactory.decodeResource(this.getResources(), R.drawable.bomb), this.player.getX(), this.player.getY());
+			this.bombDroped = true;
+
+			updateBomb = new Thread() {
+				public void run() {
+					updateBomb();
+				}
+			};
+
+			updateBomb.start();
 		}
 	}
 }
