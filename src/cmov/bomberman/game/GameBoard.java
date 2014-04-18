@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import cmov.bomberman.game.components.Robot;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -39,6 +40,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	//wall resized size
 	private int wallHeight, wallWidth;
 	private Bitmap resizedWall;
+	public Robot bot;
 
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
@@ -101,7 +103,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		//		}
 	}
 
-	public void gameStart(int avatar) {		
+	public void gameStart(int avatar) {	
+		bot=new Robot(BitmapFactory.decodeResource(this.getResources(), R.drawable.bot),55,55);
 		switch (avatar) {
 		case 0:
 			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),50,50);
@@ -154,6 +157,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
+		bot.draw(canvas);
 		drawWall(canvas);
 
 		if(this.bombDroped)
@@ -197,6 +201,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void update() {
+		bot.update(player.getX(), player.getY());
 		if(player.getTouched()) {
 			player.update();
 
