@@ -51,6 +51,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if(!gameBoard.getPlayer().getPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(3);
@@ -62,13 +63,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}
+				}}
 				return true;
 			}});
 		
 		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if(!gameBoard.getPlayer().getPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(0);
@@ -80,7 +82,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}
+				}}
 				return true;
 			}});
 
@@ -88,6 +90,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		leftButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if(!gameBoard.getPlayer().getPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(1);
@@ -99,13 +102,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}
+				}}
 				return true;
 			}});
 
 		rightButton.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
+				if(!gameBoard.getPlayer().getPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(2);
@@ -117,7 +121,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}
+				}}
 				return true;
 			}});
 	}
@@ -157,6 +161,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
 		startActivity(intent);
 		GameActivity.this.finish();
+	}
+	
+	public void pauseGame(View view) {
+		gameBoard.getPlayer().setPaused();
 	}
 
 	@Override

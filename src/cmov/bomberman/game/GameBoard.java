@@ -70,8 +70,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		return this.levelProperties;
 	}
 	
-
-
 	private void drawWall(Canvas canvas) {
 		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
