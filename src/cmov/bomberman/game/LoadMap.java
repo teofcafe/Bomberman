@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.*;
 
 import android.util.Log;
 
@@ -38,10 +39,15 @@ public class LoadMap {
     int[] playersPositions = new int[PLAYERS];
     
     //grid layout
-    public static char[][] gridLayout = new char[LINES][COLUMNS];
+    public static char[][] gridMap = new char[LINES][COLUMNS];
+    
+    public static boolean[][] gridLayout = new boolean[LINES][COLUMNS];
+    
+    
 	
 	
-	 protected static void loadMap(InputStream filename) throws IOException {
+	 protected static LevelProperties loadMap(InputStream filename) throws IOException {
+		 LevelProperties levelProperties = new LevelProperties(PLAYERS,LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
 	        int height = 0;
@@ -55,15 +61,47 @@ public class LoadMap {
 	                reader.close();
 	                break;
 	            }
+	            
+	            if(line.startsWith("LN")){
+	            	String[] split = line.split("=");
+	            	levelProperties.setLevelName(split[1]);
+	            }
+	            else if(line.startsWith("GD")){
+	            	String[] split = line.split("=");
+	            	levelProperties.setGameDuration(Integer.valueOf(split[1]));
+	            }
+	            else if(line.startsWith("ET")){
+	               	String[] split = line.split("=");
+	            	levelProperties.setExplosionTimeout(Integer.valueOf(split[1]));
+	            }
+	            else if(line.startsWith("ED")){
+	               	String[] split = line.split("=");
+	            	levelProperties.setExplosionDuration(Integer.valueOf(split[1]));
+	            }
+	            else if(line.startsWith("ER")){
+	               	String[] split = line.split("=");
+	            	levelProperties.setExplosionRange(Integer.valueOf(split[1]));
+	            }
+	            else if(line.startsWith("RS")){
+	               	String[] split = line.split("=");
+	            	levelProperties.setRobotSpeed(Integer.valueOf(split[1]));
+	            }
+	            else if(line.startsWith("PR")){
+	               	String[] split = line.split("=");
+	            	levelProperties.setPointsPerRobotKilled(Integer.valueOf(split[1]));
+	            }
+	            else if(line.startsWith("PO")){
+	               	String[] split = line.split("=");
+	            	levelProperties.setPointsPerOponentKilled(Integer.valueOf(split[1]));
+	            }
+	            
 
-	            if (!line.startsWith("!")) {
+	            else if (!line.startsWith("!")) {
 	                lines.add(line);
 	                width = Math.max(width, line.length());
 
 	            }
-	            else {
-	            	//read parameteres
-	            }
+	           
 	        }
 	        height = lines.size();
 	        
@@ -73,15 +111,23 @@ public class LoadMap {
 
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
-	                    gridLayout[i][j]=ch;
+	                    gridMap[i][j]=ch;
+	                    if(!(ch == '-'))
+	                    	gridLayout[i][j]=true;
+	                    if((ch > 47 )&& (ch < 58))
+	                    	levelProperties.setPlayerPositions(ch-'0', new Pair(i,j));
 	                }
 
 	            }
 	        }
+	        
+	        levelProperties.setGridLayout(gridLayout);
+	        levelProperties.setGridMap(gridMap);
+	        
+	        return levelProperties;
 
 	    }
-	 
-	
-	 
+
+
 	
 }

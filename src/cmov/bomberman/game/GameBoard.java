@@ -42,6 +42,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Bitmap resizedWall;
 	public Robot bot;
 
+	private LevelProperties levelProperties;
+	
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
@@ -62,6 +64,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void setMaxHeight(int maxHeight){
 		this.maxHeight=maxHeight;
 	}
+	
+
 
 	private void drawWall(Canvas canvas) {
 		int posX=0,posY=0;
@@ -134,7 +138,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			
 			InputStream level = getResources().openRawResource(resID);
 			
-			LoadMap.loadMap(level);
+			this.levelProperties = LoadMap.loadMap(level);
+	
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -162,8 +167,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 		if(this.bombDroped)
 			drawBomb(canvas);	
-
-
 
 		player.draw(canvas);
 	}
