@@ -1,9 +1,13 @@
 package cmov.bomberman.game;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.game.resizer.Resize;
+import cmov.bomberman.menu.GameActivity;
 import cmov.bomberman.menu.R;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -116,9 +120,25 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 		}
 
+		try {
+			
+			//TODO relacionar os niveis com o grau de dificuldade do jogo
+			String levelName = "level1";
+			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
+			
+			InputStream level = getResources().openRawResource(resID);
+			
+			LoadMap.loadMap(level);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.d("mapa","Unable to read file.");
+		}
+	
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);				
 	}
+
 
 	public void exitGame() {
 		thread.setRunning(false);

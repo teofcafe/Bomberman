@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
+	
+	public static String packageName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
+		packageName = getApplicationContext().getPackageName();
 		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
