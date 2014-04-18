@@ -60,9 +60,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void setMaxWidth(int maxWidth){
 		this.maxWidth=maxWidth;
 	}
+	
 
 	public void setMaxHeight(int maxHeight){
 		this.maxHeight=maxHeight;
+	}
+	
+	public LevelProperties getLevelProperties(){
+		return this.levelProperties;
 	}
 	
 

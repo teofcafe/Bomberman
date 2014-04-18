@@ -1,21 +1,25 @@
 package cmov.bomberman.menu;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
 	
 	public static String packageName;
+	Handler timeHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,12 +27,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 		TextView usernameTextView;
 		String username;
 		int avatar;
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		packageName = getApplicationContext().getPackageName();
-		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
@@ -38,7 +40,9 @@ public class GameActivity extends Activity implements OnTouchListener{
 		avatar = (settings.getInt("SelectedAvatar", -1));
 		
 		gameBoard.gameStart(avatar);
-
+		timeHandler = new Handler();
+		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
+		
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
 		ImageButton upButton = (ImageButton)findViewById(R.id.upButton);
@@ -124,6 +128,13 @@ public class GameActivity extends Activity implements OnTouchListener{
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
 	}
+	
+	private final Runnable timeControler = new Runnable(){
+	    public void run(){
+            	Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
+            	gameBoard.exitGame();
+	    }
+	};
 
 	@Override
 	public void onBackPressed() {
@@ -132,6 +143,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
 		startActivity(intent);
 		GameActivity.this.finish();
+	}
+	
+	@Override
+	protected void onDestroy() {
+	      super.onDestroy();
+	      timeHandler.removeCallbacks(timeControler);
 	}
 
 	public void quitGame(View view) {
