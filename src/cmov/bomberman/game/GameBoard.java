@@ -145,9 +145,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);
-
 			this.levelProperties = LoadMap.loadMap(level);
-	
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -184,7 +182,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private void drawExplosion(Canvas canvas) {
 		for(Explosion explosion : explosions) 
 			explosion.draw(canvas);
-		player.draw(canvas);
 	}
 
 	private void drawBomb(Canvas canvas) {
