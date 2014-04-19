@@ -18,6 +18,7 @@ public class Player {
 	private int direction = 0;		
 	private boolean touched = false;
 	private final static float VELOCITY = 3;
+	private boolean paused;
 
 	public Player(Bitmap bitmap, int x, int y){
 		this.bitmap=bitmap;
@@ -25,6 +26,7 @@ public class Player {
 		this.y=y;
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
+		this.paused = false;
 	}
 
 	public int getX() {
@@ -79,6 +81,14 @@ public class Player {
 
 	public void update() {
 		currentFrame = ++currentFrame % BMP_COLUMNS; //update
+	}
+	
+	public boolean getPaused() {
+		return this.paused;
+	}
+	
+	public void setPaused() {
+		this.paused = (!this.paused);
 	}
 
 	public void moveDown() {
