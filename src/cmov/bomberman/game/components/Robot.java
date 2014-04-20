@@ -108,7 +108,6 @@ public class Robot {
 	}
 
 	public void autoMove(){
-
 		switch ((int)(Math.random() * ((3) + 1))) 
 		{ 
 		case 0:
