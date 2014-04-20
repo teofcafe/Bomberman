@@ -209,7 +209,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void update() {
-		bot.update(player.getX(), player.getY());
+		bot.update(player.getX(), player.getY(), player.getPaused());
 		if(player.getTouched()) {
 			player.update();
 

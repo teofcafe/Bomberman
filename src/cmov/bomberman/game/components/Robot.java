@@ -61,7 +61,7 @@ public class Robot {
 		canvas.drawBitmap(bitmap, src, dst, null);
 	}
 
-	
+
 	public void checkDirection(int distX, int distY){
 
 		//Aproxima.se do player pelo eixo x ou y
@@ -96,11 +96,19 @@ public class Robot {
 		}
 	}
 
-	public void update(int playerX, int playerY) {
+	public void update(int playerX, int playerY, boolean paused) {
 		int distX = this.getX() - playerX;
 		int distY = this.getY() - playerY;
-		//heuristic #1
-		checkDirection(distX, distY);
+		if(!paused)
+			//heuristic #1
+			checkDirection(distX, distY);
+		else
+			//heuristic #2
+			autoMove();
+	}
+
+	public void autoMove(){
+
 	}
 
 
