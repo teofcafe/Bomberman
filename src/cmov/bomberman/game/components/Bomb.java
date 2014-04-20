@@ -41,7 +41,7 @@ public class Bomb {
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
 		canvas.drawBitmap(bitmap, src, dst, null);
-		if(currentFrame == 2) 
+		if(currentFrame == 3) 
 			exploded = true;
 	}
 

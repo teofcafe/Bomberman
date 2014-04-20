@@ -218,7 +218,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		while(!bomb.isExploded()) {
 			bomb.update();
 			try {
-				updateBomb.sleep(1000);
+				updateBomb.sleep((levelProperties.getExplosionTimeout())/4);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -245,7 +245,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			for(Explosion explosion : explosions) 
 				explosion.update();
 			try {
-				updateBomb.sleep(1000);
+				updateBomb.sleep((levelProperties.getExplosionDuration())/4);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
