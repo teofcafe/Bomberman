@@ -1,6 +1,9 @@
 package cmov.bomberman.game.components;
 
+import cmov.bomberman.menu.R;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.Log;
@@ -20,8 +23,29 @@ public class Player {
 	private final static float VELOCITY = 3;
 	private boolean paused;
 
-	public Player(Bitmap bitmap, int x, int y){
-		this.bitmap=bitmap;
+	public Player(Context context, int avatar, int x, int y){
+		
+		switch (avatar) {
+		case 0:
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_1);
+			break;
+		case 1:
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_2);
+			break;
+		case 2:
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_3);
+			break;
+		case 3:
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_4);
+			break;
+		case 4:
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_5);
+			break;
+		case 5:
+			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_6);
+			break;
+		}
+		
 		this.x=x;
 		this.y=y;
 		this.width = bitmap.getWidth() / BMP_COLUMNS;

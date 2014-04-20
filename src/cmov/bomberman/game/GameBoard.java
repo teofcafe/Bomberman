@@ -40,11 +40,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private int explosionRange = 20;
 	//layout size max
 	private int maxWidth, maxHeight;
-	//playout resized size
-	private int playerHeight, playerWidth;
-	//wall resized size
-	private int wallHeight, wallWidth;
-	private Bitmap resizedWall;
 	public Robot bot;
 
 	private LevelProperties levelProperties;
@@ -52,14 +47,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
-
-		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
-
-		this.wallHeight = bmpWall.getHeight()*2/3;
-		this.wallWidth = bmpWall.getWidth()*2/3;
-
-		this.resizedWall=Resize.getResizedBitmap(bmpWall,this.wallHeight,this.wallWidth);
-
 	}
 
 	public void setMaxWidth(int maxWidth){
@@ -87,16 +74,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		Log.d("parede","maxWidth: " + maxWidth);
 		int i=0;
 
+		wall = new Wall[100]; //TODO 
 
-		int amountOfWalls=(maxHeight/this.wallHeight)*2;
-		amountOfWalls+=(maxWidth/this.wallWidth)*2;
-		Log.d("parede", "amount of walls: " + amountOfWalls);
-
-		wall = new Wall[amountOfWalls];
-
-		wall[0] = new Wall(this.resizedWall,300,0);
+		wall[0] = new Wall(getContext(), 300,0);
 		wall[0].draw(canvas);
-		wall[1] = new Wall(this.resizedWall,50,50);
+		wall[1] = new Wall(getContext(), 50,50);
 		wall[1].draw(canvas);
 
 		//		for(;posX<maxWidth;posX+=this.wallWidth){
@@ -116,30 +98,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void gameStart(int avatar) {	
-		bot=new Robot(BitmapFactory.decodeResource(this.getResources(), R.drawable.bot),55,55);
-		switch (avatar) {
-		case 0:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),50,50);
-			break;
-		case 1:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_2),50,50);
-			break;
-		case 2:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_3),50,50);
-			break;
-		case 3:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_4),50,50);
-			break;
-		case 4:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_5),50,50);
-			break;
-		case 5:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_6),50,50);
-			break;
-		}
+		bot = new Robot(getContext(), 55,55);
+		player = new Player(getContext(), avatar, 50, 50);
 
 		try {
-
 			//TODO relacionar os niveis com o grau de dificuldade do jogo
 			String levelName = "level1";
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
