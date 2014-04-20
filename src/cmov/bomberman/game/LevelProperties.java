@@ -3,82 +3,93 @@ package cmov.bomberman.game;
 import cmov.bomberman.pair.*;
 
 public class LevelProperties {
-   private String levelName = "";
-   private int gameDuration;
-   private int explosionTimeout;
-   private int explosionDuration;
-   private int explosionRange;
-   
-   Pair playerPositions[];
-   
-   private int numberOfwalls;
-   private int numberOfObstacles;
-   private int numberOfRobots;
-   
-   public int getNumberOfwalls() {
-	return numberOfwalls;
-}
+	private String levelName = "";
+	private int gameDuration;
+	private int explosionTimeout;
+	private int explosionDuration;
+	private int explosionRange;
 
-public void setNumberOfwalls(int numberOfwalls) {
-	this.numberOfwalls = numberOfwalls;
-}
+	Pair playerPositions[];
 
-public int getNumberOfObstacles() {
-	return numberOfObstacles;
-}
+	private int numberOfWalls;
+	private int numberOfObstacles;
+	private int numberOfRobots;
 
-public void setNumberOfObstacles(int numberOfObstacles) {
-	this.numberOfObstacles = numberOfObstacles;
-}
+	public int getNumberOfwalls() {
+		return numberOfWalls;
+	}
+	
+	public void addWall(){
+		this.numberOfWalls++;
+	}
+	
+	public void addObstacle(){
+		this.numberOfObstacles++;
+	}
+	
+	public void addRobot(){
+		this.numberOfRobots++;
+	}
 
-public int getNumberOfRobots() {
-	return numberOfRobots;
-}
+	public void setNumberOfwalls(int numberOfwalls) {
+		this.numberOfWalls = numberOfwalls;
+	}
 
-public void setNumberOfRobots(int numberOfRobots) {
-	this.numberOfRobots = numberOfRobots;
-}
+	public int getNumberOfObstacles() {
+		return numberOfObstacles;
+	}
+
+	public void setNumberOfObstacles(int numberOfObstacles) {
+		this.numberOfObstacles = numberOfObstacles;
+	}
+
+	public int getNumberOfRobots() {
+		return numberOfRobots;
+	}
+
+	public void setNumberOfRobots(int numberOfRobots) {
+		this.numberOfRobots = numberOfRobots;
+	}
 
 
+	public char[][] getGridMap() {
+		return gridMap;
+	}
 
-public char[][] getGridMap() {
-	return gridMap;
-}
+	public void setGridMap(char[][] gridMap) {
+		this.gridMap = gridMap;
+	}
 
-public void setGridMap(char[][] gridMap) {
-	this.gridMap = gridMap;
-}
+	public boolean[][] getGridLayout() {
+		return gridLayout;
+	}
 
-public boolean[][] getGridLayout() {
-	return gridLayout;
-}
+	public void setGridLayout(boolean[][] gridLayout) {
+		this.gridLayout = gridLayout;
+	}
 
-public void setGridLayout(boolean[][] gridLayout) {
-	this.gridLayout = gridLayout;
-}
-   
-   //grid layout
-   public char[][] gridMap;
-   
-   public boolean[][] gridLayout;
-   
-    
-    //cells per second
-    int robotSpeed;
-    int pointsPerRobotKilled;
-    int pointsPerOponentKilled;
-    
-    public LevelProperties(int players, int lines, int columns){
-    	this.gridMap = new char[lines][columns];
-    	this.gridLayout = new boolean[lines][columns];
-    	this.playerPositions =  new Pair[players];
-   
-    }
-    
+	//grid layout
+	public char[][] gridMap;
+
+	public boolean[][] gridLayout;
+
+
+	//cells per second
+	int robotSpeed;
+	int pointsPerRobotKilled;
+	int pointsPerOponentKilled;
+
+	public LevelProperties(int players, int lines, int columns){
+		this.gridMap = new char[lines][columns];
+		this.gridLayout = new boolean[lines][columns];
+		this.playerPositions =  new Pair[players];
+
+	}
+
 	public Pair getPlayerPositions(int player) {
 		return playerPositions[player];
 	}
-	
+
 
 	public void setPlayerPositions(int player, Pair pair) {
 		this.playerPositions[player-1] = pair;
@@ -132,12 +143,12 @@ public void setGridLayout(boolean[][] gridLayout) {
 	public void setPointsPerOponentKilled(int pointsPerOponentKilled) {
 		this.pointsPerOponentKilled = pointsPerOponentKilled;
 	}
-	
+
 	public void setGridMap(int x,int y, char value){
 		this.gridMap[x][y]=value;
 	}
-	
-	
+
+
 	public void dumpPlayerPositions(){
 		for(int i=0;i<playerPositions.length;i++){
 			String player = Integer.toString(i+1);
@@ -145,52 +156,53 @@ public void setGridLayout(boolean[][] gridLayout) {
 			String x = this.getPlayerPositions(i).getKey().toString();
 			String y = this.getPlayerPositions(i).getValue().toString();
 			System.out.println("X="+x+" Y="+y);
-			
+
 		}
 	}
-	
+
 	public void dumpMap(){
 		for(int i=0;i<gridMap.length;i++){
 			for(int j=0;j<gridMap[i].length;j++)
 				System.out.print(gridMap[i][j]);
-		System.out.printf("\n");	
+			System.out.printf("\n");	
 		}
-		
+
 	}
-	
+
 	public void dumpGrid(){
 		for(int i=0;i<gridLayout.length;i++){
 			for(int j=0;j<gridLayout[i].length;j++)
 				System.out.print(gridLayout[i][j] ? '1' : '0');
-		System.out.printf("\n");	
+			System.out.printf("\n");	
 		}
 	}
-	
+
 	public boolean isCellEmpty(int x, int y){
 		return !this.gridLayout[x][y];
 	}
-	
+
 	public void deleteObject(int x, int y){
 		this.setGridMap(x, y, '-');
 		this.gridLayout[x][y]=false;
 	}
-	
+
 	public void addObject(int x, int y,char value){
 		this.setGridMap(x,y,value);
 		this.gridLayout[x][y]=true;
 	}
-	
+
 	public String toString(){
 		String properties = "LEVEL NAME="+this.getLevelName() + "\n" + "GAME DURATION="+this.getGameDuration() +
 				"\n" + "EXPLOSTION TIMEOUT="+this.getExplosionTimeout()+"\n"+"EXPLOSION RANGE="+this.getExplosionRange()+
 				"\n" + "ROBOT SPEED="+this.getRobotSpeed()+"\n"+"POINTS PER ROBOT KILLED"+this.getPointsPerRobotKilled()+
 				"\n" + "POINTS PER OPPONNENT KILLED="+this.getPointsPerOponentKilled();
-		
+
 		this.dumpPlayerPositions();
 		this.dumpMap();
 		this.dumpGrid();
 		return properties;
-		
+
 	}
-    
+	
+
 }

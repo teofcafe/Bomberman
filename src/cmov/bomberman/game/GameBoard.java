@@ -13,6 +13,7 @@ import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.game.resizer.Resize;
 import cmov.bomberman.menu.GameActivity;
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -66,48 +67,58 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 	
 
-
-	private void drawWall(Canvas canvas) {
-		int posX=0,posY=0;
+	private void drawWall(Canvas canvas,Pair fileCoordinates) {
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
 
+		Pair coordinates = Mapping.mapToScreen(fileCoordinates, maxWidth, maxHeight,LoadMap.LINES,LoadMap.COLUMNS);
+		int coordX = (Integer)coordinates.getKey();
+		int coordY = (Integer) coordinates.getValue();
+		System.out.println("COORD X=" + coordX );
+		System.out.println("COORD Y=" + coordY);
+		Wall wall = new Wall(this.resizedWall,coordX,coordY);
+		wall.draw(canvas);
+		
+//		int posX=0,posY=0;
 
-		Log.d("parede", "maxHeight: " + maxHeight);
-		Log.d("parede","maxWidth: " + maxWidth);
-		int i=0;
 
-
-		int amountOfWalls=(maxHeight/this.wallHeight)*2;
-		amountOfWalls+=(maxWidth/this.wallWidth)*2;
-		Log.d("parede", "amount of walls: " + amountOfWalls);
-
-		wall = new Wall[amountOfWalls];
-
-		wall[0] = new Wall(this.resizedWall,300,0);
-		wall[0].draw(canvas);
-		wall[1] = new Wall(this.resizedWall,50,50);
-		wall[1].draw(canvas);
-
-		//		for(;posX<maxWidth;posX+=this.wallWidth){
-		//			for(;posY<maxHeight;posY+=this.wallHeight){
-		//				wall[i]=new Wall(this.resizedWall,posX,0);
-		//				wall[i++].draw(canvas);
-		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-		//			}
-		//		}
-		//		
-		//		for(;posY<maxHeight;posY+=this.wallHeight){
-		//				wall[i]=new Wall(this.resizedWall,0,posY);
-		//				wall[i++].draw(canvas);
-		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-		//			}
-		//		}
+//
+//		Log.d("parede", "maxHeight: " + maxHeight);
+//		Log.d("parede","maxWidth: " + maxWidth);
+//		int i=0;
+//
+//
+//		int amountOfWalls=(maxHeight/this.wallHeight)*2;
+//		amountOfWalls+=(maxWidth/this.wallWidth)*2;
+//		Log.d("parede", "amount of walls: " + amountOfWalls);
+//
+//		wall = new Wall[amountOfWalls];
+//
+//		wall[0] = new Wall(this.resizedWall,300,0);
+//		wall[0].draw(canvas);
+//		wall[1] = new Wall(this.resizedWall,50,50);
+//		wall[1].draw(canvas);
+//
+//		//		for(;posX<maxWidth;posX+=this.wallWidth){
+//		//			for(;posY<maxHeight;posY+=this.wallHeight){
+//		//				wall[i]=new Wall(this.resizedWall,posX,0);
+//		//				wall[i++].draw(canvas);
+//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
+//		//			}
+//		//		}
+//		//		
+//		//		for(;posY<maxHeight;posY+=this.wallHeight){
+//		//				wall[i]=new Wall(this.resizedWall,0,posY);
+//		//				wall[i++].draw(canvas);
+//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
+//		//			}
+//		//		}
 	}
 
-	public void gameStart(int avatar) {	
+	public void gameStart(int avatar) {
+
 		bot=new Robot(BitmapFactory.decodeResource(this.getResources(), R.drawable.bot),55,55);
 		switch (avatar) {
 		case 0:
@@ -139,11 +150,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			InputStream level = getResources().openRawResource(resID);
 			
 			this.levelProperties = LoadMap.loadMap(level);
+			
 	
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			Log.d("mapa","Unable to read file.");
+			System.err.println("Unable to read map");
 		}
 	
 		thread= new MainThread(getHolder(), this);
@@ -157,13 +168,21 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void startGame() {
 		thread.setRunning(true);
+		
 	}
 
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		bot.draw(canvas);
-		drawWall(canvas);
+		for(int i=0;i<19;i++)
+			drawWall(canvas,new Pair(0,i));
+//			for(int j=0;j<13;j++)
+//				drawWall(canvas,new Pair(19,j));
+//		drawWall(canvas,new Pair(0,0));
+//		drawWall(canvas,new Pair(0,1));
+//		drawWall(canvas,new Pair(1,0));
+//		drawWall(canvas,new Pair(5,0));
 
 		if(this.bombDroped)
 			drawBomb(canvas);	

@@ -114,8 +114,12 @@ public class LoadMap {
 	                    gridMap[i][j]=ch;
 	                    if(!(ch == '-'))
 	                    	gridLayout[i][j]=true;
+	                    //player verification
 	                    if((ch > 47 )&& (ch < 58))
 	                    	levelProperties.setPlayerPositions(ch-'0', new Pair(i,j));
+	                    if(ch == 'W') levelProperties.addWall();
+	                    else if (ch== 'O') levelProperties.addObstacle();
+	                    else if (ch == 'R') levelProperties.addRobot();
 	                }
 
 	            }
