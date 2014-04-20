@@ -9,8 +9,8 @@ import android.util.Log;
 public class Bomb {
 
 	private Bitmap bitmap;	// the actual bitmap
-	private static int x; // the X coordinate
-	private static int y; // the Y coordinate
+	private int x; // the X coordinate
+	private int y; // the Y coordinate
 	private static final int BMP_COLUMNS = 4;
 	private int currentFrame = -1; 
 	private int width;
@@ -40,8 +40,16 @@ public class Bomb {
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
 		canvas.drawBitmap(bitmap, src, dst, null);
-		if(currentFrame == 3) 
+		if(currentFrame == 2) 
 			exploded = true;
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
 	}
 
 	public void update() {

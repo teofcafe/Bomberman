@@ -1,7 +1,10 @@
 package cmov.bomberman.game.components;
 
 
+import cmov.bomberman.menu.R;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -17,10 +20,10 @@ public class Robot {
 	private int width;
 	private int height;
 
-	public Robot(Bitmap bitmap, int x, int y) {
+	public Robot(Context context, int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.bitmap = bitmap;
+		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bot);
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
 	}

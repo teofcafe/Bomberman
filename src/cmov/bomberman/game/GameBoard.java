@@ -4,10 +4,12 @@ package cmov.bomberman.game;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 
 import cmov.bomberman.game.components.Bomb;
 
+import cmov.bomberman.game.components.Explosion;
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.game.resizer.Resize;
@@ -34,13 +36,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Bomb bomb;
 	private Wall[] wall;
 	private boolean bombDroped = false;
+	private boolean bombExploded = false;
+	private ArrayList<Explosion> explosions; 
+	private int explosionRange = 20;
 	//layout size max
 	private int maxWidth, maxHeight;
-	//playout resized size
-	private int playerHeight, playerWidth;
-	//wall resized size
-	private int wallHeight, wallWidth;
-	private Bitmap resizedWall;
 	public Robot bot;
 
 	private LevelProperties levelProperties;
@@ -48,37 +48,37 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
-
-		Bitmap bmpWall = BitmapFactory.decodeResource(this.getResources(), R.drawable.wall);
-
-		this.wallHeight = bmpWall.getHeight()*2/3;
-		this.wallWidth = bmpWall.getWidth()*2/3;
-
-		this.resizedWall=Resize.getResizedBitmap(bmpWall,this.wallHeight,this.wallWidth);
-
 	}
 
 	public void setMaxWidth(int maxWidth){
 		this.maxWidth=maxWidth;
 	}
+	
 
 	public void setMaxHeight(int maxHeight){
 		this.maxHeight=maxHeight;
 	}
 	
+	public LevelProperties getLevelProperties(){
+		return this.levelProperties;
+	}
+	
+
 
 	private void drawWall(Canvas canvas,Pair fileCoordinates) {
+		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
+
 
 		Pair coordinates = Mapping.mapToScreen(fileCoordinates, maxWidth, maxHeight,LoadMap.LINES,LoadMap.COLUMNS);
 		int coordX = (Integer)coordinates.getKey();
 		int coordY = (Integer) coordinates.getValue();
 		System.out.println("COORD X=" + coordX );
 		System.out.println("COORD Y=" + coordY);
-		Wall wall = new Wall(this.resizedWall,coordX,coordY);
+		Wall wall = new Wall(getContext(),coordX,coordY);
 		wall.draw(canvas);
 		
 //		int posX=0,posY=0;
@@ -117,46 +117,25 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 //		//		}
 	}
 
-	public void gameStart(int avatar) {
+	
 
-		bot=new Robot(BitmapFactory.decodeResource(this.getResources(), R.drawable.bot),55,55);
-		switch (avatar) {
-		case 0:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_1),50,50);
-			break;
-		case 1:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_2),50,50);
-			break;
-		case 2:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_3),50,50);
-			break;
-		case 3:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_4),50,50);
-			break;
-		case 4:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_5),50,50);
-			break;
-		case 5:
-			player=new Player(BitmapFactory.decodeResource(this.getResources(), R.drawable.player_6),50,50);
-			break;
-		}
+	public void gameStart(int avatar) {	
+		bot = new Robot(getContext(), 55,55);
+		player = new Player(getContext(), avatar, 50, 50);
+
 
 		try {
-			
 			//TODO relacionar os niveis com o grau de dificuldade do jogo
 			String levelName = "level1";
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
-			
+
 			InputStream level = getResources().openRawResource(resID);
-			
 			this.levelProperties = LoadMap.loadMap(level);
-			
-	
-			
+
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
 		}
-	
+
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);				
 	}
@@ -185,9 +164,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 //		drawWall(canvas,new Pair(5,0));
 
 		if(this.bombDroped)
-			drawBomb(canvas);	
+			if(this.bombExploded) 
+				drawExplosion(canvas);
+			else drawBomb(canvas);
 
 		player.draw(canvas);
+	}
+
+	private void drawExplosion(Canvas canvas) {
+		for(Explosion explosion : explosions) 
+			explosion.draw(canvas);
 	}
 
 	private void drawBomb(Canvas canvas) {
@@ -249,7 +235,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		return player;
 	}
 
-	@SuppressWarnings("static-access")
+	@SuppressWarnings({ "static-access", "unused" })
 	public void updateBomb() {
 		while(!bomb.isExploded()) {
 			bomb.update();
@@ -260,9 +246,39 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
+		int bombX = bomb.getX(), bombY = bomb.getY();
+		
+		explosions = new ArrayList<Explosion>();
+		Log.d("bomba","mmmmm");
+		
+		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += explosionRange) 
+			for(int j = bombY - explosionRange; j <= bombY + explosionRange; j += explosionRange) 
+				if(j != bombY && i != bombX) 
+					continue;
+				else {
+					Log.d("bomba","i: " + i + " j: " + j + " bombX: " + bombX + " bombY: " + bombY);
+					
+					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
+				}
+		
 		bomb = null;
-		bombDroped = false;
+		bombExploded = true;
 
+		while(explosions.get(0).isAlive()) {
+			for(Explosion explosion : explosions) 
+				explosion.update();
+			try {
+				updateBomb.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		for(Explosion explosion : explosions) 
+			explosion = null;
+
+		bombExploded = false;
+		bombDroped = false;
 		updateBomb.interrupt();
 	}
 
