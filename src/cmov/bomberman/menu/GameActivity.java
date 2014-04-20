@@ -51,7 +51,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().getPaused()){
+				if(!gameBoard.getPlayer().isPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(3);
@@ -70,7 +70,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().getPaused()){
+				if(!gameBoard.getPlayer().isPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(0);
@@ -90,7 +90,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		leftButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().getPaused()){
+				if(!gameBoard.getPlayer().isPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(1);
@@ -109,7 +109,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		rightButton.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().getPaused()){
+				if(!gameBoard.getPlayer().isPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
 					gameBoard.getPlayer().setDirection(2);

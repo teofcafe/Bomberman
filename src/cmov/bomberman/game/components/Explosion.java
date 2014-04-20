@@ -55,8 +55,6 @@ public class Explosion {
 		this.y = y;
 		this.width = this.bitmap.getWidth() / BMP_COLUMNS;
 		this.height = this.bitmap.getHeight();
-		
-		
 	}
 	
 	public void draw(Canvas canvas) {
