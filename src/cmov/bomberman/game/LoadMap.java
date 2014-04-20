@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.*;
 
+import android.content.Context;
 import android.util.Log;
 
 public class LoadMap {
@@ -46,7 +47,7 @@ public class LoadMap {
     
 	
 	
-	 protected static LevelProperties loadMap(InputStream filename) throws IOException {
+	 protected static LevelProperties loadMap(InputStream filename, Context context, int maxWidth, int maxHeight) throws IOException {
 		 LevelProperties levelProperties = new LevelProperties(PLAYERS,LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
@@ -99,29 +100,27 @@ public class LoadMap {
 	            else if (!line.startsWith("!")) {
 	                lines.add(line);
 	                width = Math.max(width, line.length());
-	                System.out.println("WIDTH " + width);
-
 	            }
 	           
 	        }
 	        height = lines.size();
-	        System.out.println("HEIGHT="+ height);
 	        
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);
 	            for (int j = 0; j < width; j++) {
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
-	                    System.out.println("["+i+"]["+j+"]="+ch);
 	                    gridMap[i][j]=ch;
 	                    if(!(ch == '-'))
 	                    	gridLayout[i][j]=true;
 	                    //player verification
 	                    if((ch > 47 )&& (ch < 58))
 	                    	levelProperties.setPlayerPositions(ch-'0', new Pair(i,j));
-	                    if(ch == 'W') levelProperties.addWall();
-	                    else if (ch== 'O') levelProperties.addObstacle();
-	                    else if (ch == 'R') levelProperties.addRobot();
+	                    if(ch == 'W') {
+	                    	levelProperties.addWall(context,new Pair(i,j),maxWidth, maxHeight);
+	                    }
+//	                    else if (ch== 'O') levelProperties.addObstacle();
+//	                    else if (ch == 'R') levelProperties.addRobot();
 	                }
 
 	            }

@@ -4,7 +4,7 @@ import cmov.bomberman.pair.*;
 
 public class Mapping {
 
-	public static Pair mapToScreen(Pair coordinates,int screenWidth,int screenHeight, int fileWidth, int fileHeight){
+	public static Pair mapToScreen(Pair coordinates){
 		int x = (Integer) coordinates.getKey();
 		int y = (Integer) coordinates.getValue();
 		//Para size = 20
