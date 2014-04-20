@@ -1,16 +1,20 @@
 package cmov.bomberman.game.components;
 
+import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class Obstacle {
 
 	private int x, y;
 	private Bitmap bitmap;
 
-	public Obstacle(Bitmap bitmap, int x, int y) {
-		this.x = x;
-		this.y = y;
-		this.bitmap = bitmap;
+	public Obstacle(Context context, Pair coordinates) {
+//		this.x =x coordinates.get;
+//		this.y = y;
+		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstacle);
 	}
 
 	public int getX() {

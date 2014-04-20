@@ -1,10 +1,11 @@
 package cmov.bomberman.game.components;
 
+import cmov.bomberman.menu.R;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Bomb {
 
@@ -18,8 +19,8 @@ public class Bomb {
 	private final static float VELOCITY = 1;
 	private boolean exploded = false;
 
-	public Bomb(Bitmap bitmap, int x, int y) {
-		this.bitmap = bitmap;
+	public Bomb(Context context, int x, int y) {
+		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bomb);
 		this.x = x;
 		this.y = y;
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
