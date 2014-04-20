@@ -65,22 +65,17 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	
 
 
-	private void drawWall(Canvas canvas,Pair fileCoordinates) {
+	private void drawWall(Canvas canvas) {
 		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
 
-
-		Pair coordinates = Mapping.mapToScreen(fileCoordinates, maxWidth, maxHeight,LoadMap.LINES,LoadMap.COLUMNS);
-		int coordX = (Integer)coordinates.getKey();
-		int coordY = (Integer) coordinates.getValue();
-		System.out.println("COORD X=" + coordX );
-		System.out.println("COORD Y=" + coordY);
-		Wall wall = new Wall(getContext(),coordX,coordY);
-		wall.draw(canvas);
-		
+		for(Wall wall : levelProperties.getWalls()){
+			System.out.println("coordenada: " + wall.getX() + " , " + wall.getY());
+			wall.draw(canvas);
+		}
 //		int posX=0,posY=0;
 
 
@@ -130,7 +125,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);
-			this.levelProperties = LoadMap.loadMap(level);
+			this.levelProperties = LoadMap.loadMap(level,getContext(),320, 360);
 
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
@@ -154,8 +149,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		bot.draw(canvas);
-		for(int i=0;i<19;i++)
-			drawWall(canvas,new Pair(0,i));
+		drawWall(canvas);
 //			for(int j=0;j<13;j++)
 //				drawWall(canvas,new Pair(19,j));
 //		drawWall(canvas,new Pair(0,0));

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.*;
 
+import android.content.Context;
 import android.util.Log;
 
 public class LoadMap {
@@ -46,7 +47,7 @@ public class LoadMap {
     
 	
 	
-	 protected static LevelProperties loadMap(InputStream filename) throws IOException {
+	 protected static LevelProperties loadMap(InputStream filename, Context context, int maxWidth, int maxHeight) throws IOException {
 		 LevelProperties levelProperties = new LevelProperties(PLAYERS,LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
@@ -117,9 +118,11 @@ public class LoadMap {
 	                    //player verification
 	                    if((ch > 47 )&& (ch < 58))
 	                    	levelProperties.setPlayerPositions(ch-'0', new Pair(i,j));
-	                    if(ch == 'W') levelProperties.addWall();
-	                    else if (ch== 'O') levelProperties.addObstacle();
-	                    else if (ch == 'R') levelProperties.addRobot();
+	                    if(ch == 'W') {
+	                    	levelProperties.addWall(context,new Pair(i,j),maxWidth, maxHeight);
+	                    }
+//	                    else if (ch== 'O') levelProperties.addObstacle();
+//	                    else if (ch == 'R') levelProperties.addRobot();
 	                }
 
 	            }
