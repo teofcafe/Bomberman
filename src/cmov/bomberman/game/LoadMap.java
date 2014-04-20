@@ -100,20 +100,16 @@ public class LoadMap {
 	            else if (!line.startsWith("!")) {
 	                lines.add(line);
 	                width = Math.max(width, line.length());
-	                System.out.println("WIDTH " + width);
-
 	            }
 	           
 	        }
 	        height = lines.size();
-	        System.out.println("HEIGHT="+ height);
 	        
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);
 	            for (int j = 0; j < width; j++) {
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
-	                    System.out.println("["+i+"]["+j+"]="+ch);
 	                    gridMap[i][j]=ch;
 	                    if(!(ch == '-'))
 	                    	gridLayout[i][j]=true;
