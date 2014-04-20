@@ -12,13 +12,9 @@ import cmov.bomberman.game.components.Bomb;
 import cmov.bomberman.game.components.Explosion;
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
-import cmov.bomberman.game.resizer.Resize;
 import cmov.bomberman.menu.GameActivity;
-import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -38,7 +34,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private boolean bombDroped = false;
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
-	private int explosionRange = 20;
 	//layout size max
 	private int maxWidth, maxHeight;
 	public Robot bot;
@@ -203,26 +198,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void update() {
-		bot.update(player.getX(), player.getY());
-		if(player.getTouched()) {
+		bot.update(player.getX(), player.getY(), player.isPaused());
+		if(player.isKeyTouched())
 			player.update();
-
-			switch (player.getDirection()) {
-			case 0:
-				player.moveDown();
-				break;
-			case 1:
-				player.moveLeft();
-				break;
-			case 2:
-				player.moveRight();
-				break;
-			case 3:
-				player.moveUp();
-				break;
-
-			}			
-		}
 	}
 
 	public Player getPlayer() {
@@ -234,16 +212,15 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		while(!bomb.isExploded()) {
 			bomb.update();
 			try {
-				updateBomb.sleep(1000);
+				updateBomb.sleep((levelProperties.getExplosionTimeout())/4);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 
 		int bombX = bomb.getX(), bombY = bomb.getY();
-		
+		int explosionRange = levelProperties.getExplosionRange();
 		explosions = new ArrayList<Explosion>();
-		Log.d("bomba","mmmmm");
 		
 		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += explosionRange) 
 			for(int j = bombY - explosionRange; j <= bombY + explosionRange; j += explosionRange) 
@@ -262,7 +239,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			for(Explosion explosion : explosions) 
 				explosion.update();
 			try {
-				updateBomb.sleep(1000);
+				updateBomb.sleep((levelProperties.getExplosionDuration())/4);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -278,7 +255,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void dropBomb() {
 		if(!bombDroped) {
-			bomb = new Bomb(BitmapFactory.decodeResource(this.getResources(), R.drawable.bomb), this.player.getX(), this.player.getY());
+			bomb = new Bomb(getContext(), this.player.getX(), this.player.getY());
 			this.bombDroped = true;
 
 			updateBomb = new Thread() {

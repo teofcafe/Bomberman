@@ -14,9 +14,7 @@ public class Mapping {
 //		System.out.println("SCREEN HEIGHT: " + screenHeight);
 		System.out.println("FILEWIDTH: " + fileWidth);
 		System.out.println("FILE HEIGHT: " + fileHeight);
-		int x = (Integer) coordinates.getKey();
-		int y = (Integer) coordinates.getValue();
-		
+
 //		int newX = (x * screenHeight)/fileHeight;
 //		int newY = (y * screenWidth)/fileWidth;
 //
@@ -27,10 +25,14 @@ public class Mapping {
 //		
 //		int newX = (screenHeight/fileHeight)*x;
 //		int newY = (screenWidth/fileWidth)*y;
-		int newX = (2*(Integer)coordinates.getKey()+1)*10;
-		int newY = (2*(Integer)coordinates.getValue()+1)*10;
+
+
+		int x = (Integer) coordinates.getKey();
+		int y = (Integer) coordinates.getValue();
+		int newX = (((x*2)+1)*10);
+		int newY = (((y*2)+1)*10);
+
 		Pair screen = new Pair(newX,newY);
-		
 		return screen;
 	}
 }

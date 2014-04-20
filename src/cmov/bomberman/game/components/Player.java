@@ -19,12 +19,12 @@ public class Player {
 	private int width;
 	private int height;
 	private int direction = 0;		
-	private boolean touched = false;
+	private boolean keyTouched = false;
 	private final static float VELOCITY = 3;
 	private boolean paused;
 
 	public Player(Context context, int avatar, int x, int y){
-		
+
 		switch (avatar) {
 		case 0:
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_1);
@@ -45,7 +45,7 @@ public class Player {
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_6);
 			break;
 		}
-		
+
 		this.x=x;
 		this.y=y;
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
@@ -66,11 +66,11 @@ public class Player {
 	}
 
 	public void setX(int x) {
-		if (touched) 
+		if (keyTouched) 
 			this.x = x;		
 	}
 	public void setY(int y) {
-		if(touched)
+		if(keyTouched)
 			this.y = y;
 	}
 
@@ -92,11 +92,11 @@ public class Player {
 	}
 
 	public void setTouched(boolean touched) {
-		this.touched = touched;
+		this.keyTouched = touched;
 	}
-	
-	public boolean getTouched() {
-		return this.touched;
+
+	public boolean isKeyTouched() {
+		return this.keyTouched;
 	}
 
 	public void setCurrentFrame(int currentFrame) {
@@ -105,12 +105,27 @@ public class Player {
 
 	public void update() {
 		currentFrame = ++currentFrame % BMP_COLUMNS; //update
+
+		switch (getDirection()) {
+		case 0:
+			moveDown();
+			break;
+		case 1:
+			moveLeft();
+			break;
+		case 2:
+			moveRight();
+			break;
+		case 3:
+			moveUp();
+			break;
+		}	
 	}
-	
-	public boolean getPaused() {
+
+	public boolean isPaused() {
 		return this.paused;
 	}
-	
+
 	public void setPaused() {
 		this.paused = (!this.paused);
 	}
