@@ -109,6 +109,25 @@ public class Robot {
 
 	public void autoMove(){
 
+		switch ((int)(Math.random() * ((3) + 1))) 
+		{ 
+		case 0:
+			for(int i = 0; i <=3; i++)
+				moveUp();
+			break; 
+		case 1:
+			for(int i = 0; i <=3; i++)
+				moveLeft(); 
+			break;
+		case 2: 
+			for(int i = 0; i <=3; i++)
+				moveRight();
+			break;
+		case 3: 
+			for(int i = 0; i <=3; i++)
+				moveDown(); 
+			break;
+		}
 	}
 
 
