@@ -33,30 +33,46 @@ public class Explosion {
 	}
 
 	public Explosion(Context context, int x, int y, int xSource, int ySource, int range) {
-		Log.d("bomba","x: " + x + " y: " + y + " xSource: " + xSource + " ySource: " + ySource);
-		if(x == xSource)
-			if(y == ySource)
+		if(x == xSource) {
+			if(y == ySource) {
+				Log.d("bomba","1");
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_center);
-			else if(y == y + range)
+			}
+			else if(ySource == y + range) {
+				Log.d("bomba","2");
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_top);
-			else if(y == y - range)
+			}
+			else if(ySource == y - range) {
+				Log.d("bomba","3");
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_bottom);
-			else 
+			}
+			else {
+				Log.d("bomba","4");
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_top_bottom_fill);
-		else if(y == ySource)
-			if(x == x + range)
-				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_right);
-			else if(x == x - range)
+			}
+		}
+		
+		else if(y == ySource) {
+			if(xSource == x + range) {
+				Log.d("bomba","5");
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_left);
-			else 
+			}
+			else if(xSource == x - range) {
+				Log.d("bomba","6");
+				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_right);
+			}
+			else  {
+				Log.d("bomba","7 -> x - range: " + (x - range) + " | x + range: " + (x + range));
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_left_right_fill);
-
+			}
+		}
+		
 		this.x = x;
 		this.y = y;
 		this.width = this.bitmap.getWidth() / BMP_COLUMNS;
 		this.height = this.bitmap.getHeight();
 	}
-	
+
 	public void draw(Canvas canvas) {
 		int srcX = currentFrame * width;
 		int srcY = 0; //so ha uma linha
