@@ -1,6 +1,11 @@
 package cmov.bomberman.game;
 
+import java.util.ArrayList;
+
+import android.content.Context;
+
 import cmov.bomberman.pair.*;
+import cmov.bomberman.game.components.*;
 
 public class LevelProperties {
 	private String levelName = "";
@@ -14,17 +19,55 @@ public class LevelProperties {
 	private int numberOfWalls;
 	private int numberOfObstacles;
 	private int numberOfRobots;
+	
+	private ArrayList<Player> players;
+	private ArrayList<Wall> walls;
+	private ArrayList<Obstacle> obstacles;
+	private ArrayList<Robot> robots;
+	
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
+	}
+
+	public ArrayList<Wall> getWalls() {
+		return walls;
+	}
+
+	public void setWalls(ArrayList<Wall> walls) {
+		this.walls = walls;
+	}
+
+	public ArrayList<Obstacle> getObstacles() {
+		return obstacles;
+	}
+
+	public void setObstacles(ArrayList<Obstacle> obstacles) {
+		this.obstacles = obstacles;
+	}
+
+	public ArrayList<Robot> getRobots() {
+		return robots;
+	}
+
+	public void setRobots(ArrayList<Robot> robots) {
+		this.robots = robots;
+	}
 
 	public int getNumberOfwalls() {
 		return numberOfWalls;
 	}
 	
-	public void addWall(){
-		this.numberOfWalls++;
+	public void addWall(Context context,Pair coordinates){
+		this.walls.add(new Wall(context, Mapping.mapToScreen(coordinates)));
 	}
 	
-	public void addObstacle(){
-		this.numberOfObstacles++;
+	public void addObstacle(Context context,Pair coordinates){
+		this.obstacles.add(new Obstacle(context, Mapping.mapToScreen(coordinates)));
 	}
 	
 	public void addRobot(){
@@ -83,8 +126,11 @@ public class LevelProperties {
 		this.gridMap = new char[lines][columns];
 		this.gridLayout = new boolean[lines][columns];
 		this.playerPositions =  new Pair[players];
-
+		this.walls = new ArrayList<Wall>();
+		this.obstacles = new ArrayList<Obstacle>();
+		this.robots = new ArrayList<Robot>();
 	}
+	
 
 	public Pair getPlayerPositions(int player) {
 		return playerPositions[player];

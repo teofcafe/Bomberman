@@ -1,6 +1,7 @@
 package cmov.bomberman.game.components;
 
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,9 +14,9 @@ public class Wall {
 	private int width;
 	private int height;
 
-	public Wall(Context context, int x, int y) {
-		this.x = x;
-		this.y = y;
+	public Wall(Context context, Pair coordinates) {
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
 		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
 		this.width = bitmap.getWidth();
 		this.height = bitmap.getHeight();
