@@ -1,17 +1,12 @@
 package cmov.bomberman.game;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.*;
-
 import android.content.Context;
-import android.util.Log;
 
 public class LoadMap {
 	

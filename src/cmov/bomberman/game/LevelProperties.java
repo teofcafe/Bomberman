@@ -1,9 +1,7 @@
 package cmov.bomberman.game;
 
 import java.util.ArrayList;
-
 import android.content.Context;
-
 import cmov.bomberman.pair.*;
 import cmov.bomberman.game.components.*;
 

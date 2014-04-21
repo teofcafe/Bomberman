@@ -1,24 +1,17 @@
 package cmov.bomberman.game;
 
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-
 import cmov.bomberman.game.components.Bomb;
-
 import cmov.bomberman.game.components.Explosion;
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.GameActivity;
-import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -39,7 +32,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public Robot bot;
 
 	private LevelProperties levelProperties;
-	
+
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
@@ -48,16 +41,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void setMaxWidth(int maxWidth){
 		this.maxWidth=maxWidth;
 	}
-	
+
 
 	public void setMaxHeight(int maxHeight){
 		this.maxHeight=maxHeight;
 	}
-	
+
 	public LevelProperties getLevelProperties(){
 		return this.levelProperties;
 	}
-	
+
 
 
 	private void drawWall(Canvas canvas) {
@@ -71,43 +64,43 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			System.out.println("coordenada: " + wall.getX() + " , " + wall.getY());
 			wall.draw(canvas);
 		}
-//		int posX=0,posY=0;
+		//		int posX=0,posY=0;
 
 
-//
-//		Log.d("parede", "maxHeight: " + maxHeight);
-//		Log.d("parede","maxWidth: " + maxWidth);
-//		int i=0;
-//
-//
-//		int amountOfWalls=(maxHeight/this.wallHeight)*2;
-//		amountOfWalls+=(maxWidth/this.wallWidth)*2;
-//		Log.d("parede", "amount of walls: " + amountOfWalls);
-//
-//		wall = new Wall[amountOfWalls];
-//
-//		wall[0] = new Wall(this.resizedWall,300,0);
-//		wall[0].draw(canvas);
-//		wall[1] = new Wall(this.resizedWall,50,50);
-//		wall[1].draw(canvas);
-//
-//		//		for(;posX<maxWidth;posX+=this.wallWidth){
-//		//			for(;posY<maxHeight;posY+=this.wallHeight){
-//		//				wall[i]=new Wall(this.resizedWall,posX,0);
-//		//				wall[i++].draw(canvas);
-//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-//		//			}
-//		//		}
-//		//		
-//		//		for(;posY<maxHeight;posY+=this.wallHeight){
-//		//				wall[i]=new Wall(this.resizedWall,0,posY);
-//		//				wall[i++].draw(canvas);
-//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-//		//			}
-//		//		}
+		//
+		//		Log.d("parede", "maxHeight: " + maxHeight);
+		//		Log.d("parede","maxWidth: " + maxWidth);
+		//		int i=0;
+		//
+		//
+		//		int amountOfWalls=(maxHeight/this.wallHeight)*2;
+		//		amountOfWalls+=(maxWidth/this.wallWidth)*2;
+		//		Log.d("parede", "amount of walls: " + amountOfWalls);
+		//
+		//		wall = new Wall[amountOfWalls];
+		//
+		//		wall[0] = new Wall(this.resizedWall,300,0);
+		//		wall[0].draw(canvas);
+		//		wall[1] = new Wall(this.resizedWall,50,50);
+		//		wall[1].draw(canvas);
+		//
+		//		//		for(;posX<maxWidth;posX+=this.wallWidth){
+		//		//			for(;posY<maxHeight;posY+=this.wallHeight){
+		//		//				wall[i]=new Wall(this.resizedWall,posX,0);
+		//		//				wall[i++].draw(canvas);
+		//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
+		//		//			}
+		//		//		}
+		//		//		
+		//		//		for(;posY<maxHeight;posY+=this.wallHeight){
+		//		//				wall[i]=new Wall(this.resizedWall,0,posY);
+		//		//				wall[i++].draw(canvas);
+		//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
+		//		//			}
+		//		//		}
 	}
 
-	
+
 
 	public void gameStart(int avatar) {	
 		bot = new Robot(getContext(), 55,55);
@@ -137,7 +130,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void startGame() {
 		thread.setRunning(true);
-		
+
 	}
 
 	@Override
@@ -145,12 +138,12 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.drawColor(Color.BLACK);
 		bot.draw(canvas);
 		drawWall(canvas);
-//			for(int j=0;j<13;j++)
-//				drawWall(canvas,new Pair(19,j));
-//		drawWall(canvas,new Pair(0,0));
-//		drawWall(canvas,new Pair(0,1));
-//		drawWall(canvas,new Pair(1,0));
-//		drawWall(canvas,new Pair(5,0));
+		//			for(int j=0;j<13;j++)
+		//				drawWall(canvas,new Pair(19,j));
+		//		drawWall(canvas,new Pair(0,0));
+		//		drawWall(canvas,new Pair(0,1));
+		//		drawWall(canvas,new Pair(1,0));
+		//		drawWall(canvas,new Pair(5,0));
 
 		if(this.bombDroped)
 			if(this.bombExploded) 
@@ -221,17 +214,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int bombX = bomb.getX(), bombY = bomb.getY();
 		int explosionRange = levelProperties.getExplosionRange();
 		explosions = new ArrayList<Explosion>();
-		
+
 		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += explosionRange) 
 			for(int j = bombY - explosionRange; j <= bombY + explosionRange; j += explosionRange) 
 				if(j != bombY && i != bombX) 
 					continue;
-				else {
-					Log.d("bomba","i: " + i + " j: " + j + " bombX: " + bombX + " bombY: " + bombY);
-					
+				else
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
-				}
-		
+
 		bomb = null;
 		bombExploded = true;
 

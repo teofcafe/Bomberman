@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
 
 public class Explosion {
 
@@ -33,40 +32,24 @@ public class Explosion {
 	}
 
 	public Explosion(Context context, int x, int y, int xSource, int ySource, int range) {
-		if(x == xSource) {
-			if(y == ySource) {
-				Log.d("bomba","1");
+		if(x == xSource)
+			if(y == ySource) 
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_center);
-			}
-			else if(ySource == y + range) {
-				Log.d("bomba","2");
+			else if(ySource == y + range)
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_top);
-			}
-			else if(ySource == y - range) {
-				Log.d("bomba","3");
+
+			else if(ySource == y - range) 
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_bottom);
-			}
-			else {
-				Log.d("bomba","4");
+			else
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_top_bottom_fill);
-			}
-		}
-		
-		else if(y == ySource) {
-			if(xSource == x + range) {
-				Log.d("bomba","5");
+		else if(y == ySource) 
+			if(xSource == x + range)
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_left);
-			}
-			else if(xSource == x - range) {
-				Log.d("bomba","6");
+			else if(xSource == x - range) 
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_right);
-			}
-			else  {
-				Log.d("bomba","7 -> x - range: " + (x - range) + " | x + range: " + (x + range));
+			else
 				this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.explosion_left_right_fill);
-			}
-		}
-		
+
 		this.x = x;
 		this.y = y;
 		this.width = this.bitmap.getWidth() / BMP_COLUMNS;
