@@ -15,8 +15,8 @@ public class Wall {
 	private int height;
 
 	public Wall(Context context, Pair coordinates) {
-		this.x = (Integer) coordinates.getKey();
-		this.y = (Integer) coordinates.getValue();
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
 		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.wall);
 		this.width = bitmap.getWidth();
 		this.height = bitmap.getHeight();

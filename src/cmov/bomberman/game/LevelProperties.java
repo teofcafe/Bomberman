@@ -62,14 +62,14 @@ public class LevelProperties {
 		return numberOfWalls;
 	}
 	
-	public void addWall(Context context,Pair coordinates, int maxWidth, int maxHeight){
+	public void addWall(Context context,Pair coordinates){
 		this.walls.add(new Wall(context, Mapping.mapToScreen(coordinates)));
 	}
 	
-//	public void addObstacle(Context context,Pair coordinates){
-//		this.obstacles.add()
-//	}
-//	
+	public void addObstacle(Context context,Pair coordinates){
+		this.obstacles.add(new Obstacle(context, Mapping.mapToScreen(coordinates)));
+	}
+	
 	public void addRobot(){
 		this.numberOfRobots++;
 	}

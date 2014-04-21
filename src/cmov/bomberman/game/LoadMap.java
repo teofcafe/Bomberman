@@ -117,9 +117,9 @@ public class LoadMap {
 	                    if((ch > 47 )&& (ch < 58))
 	                    	levelProperties.setPlayerPositions(ch-'0', new Pair(i,j));
 	                    if(ch == 'W') {
-	                    	levelProperties.addWall(context,new Pair(i,j),maxWidth, maxHeight);
+	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }
-//	                    else if (ch== 'O') levelProperties.addObstacle();
+	                    else if (ch== 'O') levelProperties.addObstacle(context,new Pair(i,j));
 //	                    else if (ch == 'R') levelProperties.addRobot();
 	                }
 
