@@ -14,7 +14,7 @@ public class Mapping {
 		
 		//Para size = 30
 		int newX = ((x*30)+25);
-		int newY = ((y*30)+25);
+		int newY = (y*30);
 		Pair screen = new Pair(newX,newY);
 		return screen;
 	}
