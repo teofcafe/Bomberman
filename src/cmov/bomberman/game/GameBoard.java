@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import cmov.bomberman.game.components.Bomb;
 import cmov.bomberman.game.components.Explosion;
+import cmov.bomberman.game.components.Obstacle;
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.GameActivity;
@@ -52,6 +53,18 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 
+	private void drawObstacle(Canvas canvas) {
+		int posX=0,posY=0;
+		int maxHeight=this.getHeight();
+		int maxWidth=this.getWidth();
+		setMaxHeight(maxHeight);
+		setMaxWidth(maxWidth);
+
+		for(Obstacle obstacle : levelProperties.getObstacles()){
+			System.out.println("coordenada: " + obstacle.getX() + " , " + obstacle.getY());
+			obstacle.draw(canvas);
+		}
+	}
 
 	private void drawWall(Canvas canvas) {
 		int posX=0,posY=0;
@@ -64,6 +77,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			System.out.println("coordenada: " + wall.getX() + " , " + wall.getY());
 			wall.draw(canvas);
 		}
+
 		//		int posX=0,posY=0;
 
 
@@ -136,8 +150,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-		bot.draw(canvas);
+		//bot.draw(canvas);
 		drawWall(canvas);
+		drawObstacle(canvas);
 		//			for(int j=0;j<13;j++)
 		//				drawWall(canvas,new Pair(19,j));
 		//		drawWall(canvas,new Pair(0,0));
@@ -215,8 +230,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int explosionRange = levelProperties.getExplosionRange();
 		explosions = new ArrayList<Explosion>();
 
-		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += explosionRange) 
-			for(int j = bombY - explosionRange; j <= bombY + explosionRange; j += explosionRange) 
+		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += bomb.getWidth()) 
+			for(int j = bombY - explosionRange; j <= bombY + explosionRange; j += bomb.getHeight()) 
 				if(j != bombY && i != bombX) 
 					continue;
 				else
