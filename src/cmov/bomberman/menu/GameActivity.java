@@ -27,6 +27,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		TextView usernameTextView;
 		String username;
 		int avatar;
+		String level;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
@@ -37,9 +38,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 		usernameTextView.setText(username);	
 		
-		avatar = (settings.getInt("SelectedAvatar", -1));
+		avatar = settings.getInt("SelectedAvatar", -1);
+		level = settings.getString("Level", "").toString();
 		
-		gameBoard.gameStart(avatar);
+		
+		gameBoard.gameStart(avatar, level);
 		timeHandler = new Handler();
 		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
 		

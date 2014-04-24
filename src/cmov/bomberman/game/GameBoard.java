@@ -116,14 +116,13 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 
 
-	public void gameStart(int avatar) {	
+	public void gameStart(int avatar, String levelName) {	
 		bot = new Robot(getContext(), 55,55);
 		player = new Player(getContext(), avatar, 50, 50);
 
 
 		try {
 			//TODO relacionar os niveis com o grau de dificuldade do jogo
-			String levelName = "level1";
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);

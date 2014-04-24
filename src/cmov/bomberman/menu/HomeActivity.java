@@ -32,7 +32,7 @@ public class HomeActivity extends Activity {
 		
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = settings.getString("Username", "").toString();
-		imageSelected = (settings.getInt("SelectedAvatar", -1));
+		imageSelected = settings.getInt("SelectedAvatar", -1);
 		
 		
 		if(username.equals("")){
