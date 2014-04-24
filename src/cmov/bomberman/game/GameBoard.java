@@ -52,7 +52,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		return this.levelProperties;
 	}
 
-
 	private void drawObstacle(Canvas canvas) {
 		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
@@ -77,52 +76,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			System.out.println("coordenada: " + wall.getX() + " , " + wall.getY());
 			wall.draw(canvas);
 		}
-
-		//		int posX=0,posY=0;
-
-
-		//
-		//		Log.d("parede", "maxHeight: " + maxHeight);
-		//		Log.d("parede","maxWidth: " + maxWidth);
-		//		int i=0;
-		//
-		//
-		//		int amountOfWalls=(maxHeight/this.wallHeight)*2;
-		//		amountOfWalls+=(maxWidth/this.wallWidth)*2;
-		//		Log.d("parede", "amount of walls: " + amountOfWalls);
-		//
-		//		wall = new Wall[amountOfWalls];
-		//
-		//		wall[0] = new Wall(this.resizedWall,300,0);
-		//		wall[0].draw(canvas);
-		//		wall[1] = new Wall(this.resizedWall,50,50);
-		//		wall[1].draw(canvas);
-		//
-		//		//		for(;posX<maxWidth;posX+=this.wallWidth){
-		//		//			for(;posY<maxHeight;posY+=this.wallHeight){
-		//		//				wall[i]=new Wall(this.resizedWall,posX,0);
-		//		//				wall[i++].draw(canvas);
-		//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-		//		//			}
-		//		//		}
-		//		//		
-		//		//		for(;posY<maxHeight;posY+=this.wallHeight){
-		//		//				wall[i]=new Wall(this.resizedWall,0,posY);
-		//		//				wall[i++].draw(canvas);
-		//		//				Log.d("parede","PosX: " + posX + " PosY: " + posY);
-		//		//			}
-		//		//		}
 	}
-
-
 
 	public void gameStart(int avatar, String levelName) {	
 		bot = new Robot(getContext(), 55,55);
 		player = new Player(getContext(), avatar, 50, 50);
 
-
 		try {
-			//TODO relacionar os niveis com o grau de dificuldade do jogo
+			
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);
@@ -136,28 +97,19 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		setFocusable(true);				
 	}
 
-
 	public void exitGame() {
 		thread.setRunning(false);
 	}
 
 	public void startGame() {
 		thread.setRunning(true);
-
 	}
 
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-		//bot.draw(canvas);
 		drawWall(canvas);
 		drawObstacle(canvas);
-		//			for(int j=0;j<13;j++)
-		//				drawWall(canvas,new Pair(19,j));
-		//		drawWall(canvas,new Pair(0,0));
-		//		drawWall(canvas,new Pair(0,1));
-		//		drawWall(canvas,new Pair(1,0));
-		//		drawWall(canvas,new Pair(5,0));
 
 		if(this.bombDroped)
 			if(this.bombExploded) 
