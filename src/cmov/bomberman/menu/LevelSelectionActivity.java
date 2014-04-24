@@ -7,14 +7,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 public class LevelSelectionActivity extends Activity {
-	SharedPreferences settings = getSharedPreferences("UserInfo", 0);;	
-	SharedPreferences.Editor editor = settings.edit();;
+	SharedPreferences settings;	
+	SharedPreferences.Editor editor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_level_selection);
-
+		settings = getSharedPreferences("UserInfo", 0);
+		editor = settings.edit();
 	}
 
 	@Override
