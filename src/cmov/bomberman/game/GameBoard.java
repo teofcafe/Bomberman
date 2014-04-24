@@ -9,10 +9,12 @@ import cmov.bomberman.game.components.Obstacle;
 import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.GameActivity;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -60,7 +62,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		setMaxWidth(maxWidth);
 
 		for(Obstacle obstacle : levelProperties.getObstacles()){
-			System.out.println("coordenada: " + obstacle.getX() + " , " + obstacle.getY());
+//			System.out.println("coordenada obstaculo: " + obstacle.getX() + " , " + obstacle.getY());
 			obstacle.draw(canvas);
 		}
 	}
@@ -73,7 +75,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		setMaxWidth(maxWidth);
 
 		for(Wall wall : levelProperties.getWalls()){
-			System.out.println("coordenada: " + wall.getX() + " , " + wall.getY());
+//			System.out.println("coordenada parede: " + wall.getX() + " , " + wall.getY());
 			wall.draw(canvas);
 		}
 	}
@@ -165,7 +167,13 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public Player getPlayer() {
 		return player;
 	}
-
+	
+	//arguments as gameCoordinates
+	public void deleteObjects(int x, int y){
+		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+		levelProperties.delete(Integer.valueOf(mapCoordinates.getKey().toString()), Integer.valueOf(mapCoordinates.getValue().toString()));
+	}
+	
 	@SuppressWarnings({ "static-access", "unused" })
 	public void updateBomb() {
 		while(!bomb.isExploded()) {
@@ -181,12 +189,18 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int explosionRange = levelProperties.getExplosionRange();
 		explosions = new ArrayList<Explosion>();
 
-		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += bomb.getWidth()) 
+		 
+		//No eixo dos X
+		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += bomb.getWidth())
+			//No eixo dos Y
 			for(int j = bombY - explosionRange; j <= bombY + explosionRange; j += bomb.getHeight()) 
+				//para fazer cruzamento
 				if(j != bombY && i != bombX) 
 					continue;
-				else
+				else{
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
+					deleteObjects(i,j);
+				}
 
 		bomb = null;
 		bombExploded = true;

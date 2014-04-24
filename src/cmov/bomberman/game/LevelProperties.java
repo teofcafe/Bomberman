@@ -2,6 +2,7 @@ package cmov.bomberman.game;
 
 import java.util.ArrayList;
 import android.content.Context;
+import android.util.Log;
 import cmov.bomberman.pair.*;
 import cmov.bomberman.game.components.*;
 
@@ -235,6 +236,64 @@ public class LevelProperties {
 		this.gridLayout[x][y]=true;
 	}
 
+	public Wall getWallByMapCoordinates(Pair coordinates){
+		int x = (Integer)coordinates.getKey();
+		int y = (Integer)coordinates.getValue();
+		
+		for(Wall wall : this.getWalls()){
+			if(wall.getX()==x && wall.getY()==y)
+				return wall;
+		}
+		
+		throw new RuntimeException("Wall not found");
+	}
+	
+	public Wall getWallByGameCoordinates(int x,int y){
+		Pair coordinates = new Pair(x,y);
+		Pair mapCoordinates = Mapping.screenToMap(coordinates);
+		
+		try{
+			return this.getWallByMapCoordinates(mapCoordinates);
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public Obstacle getObstacleByMapCoordinates(Pair coordinates){
+		int x = (Integer)coordinates.getKey();
+		int y = (Integer)coordinates.getValue();
+		
+		for(Obstacle obstacle : this.getObstacles()){
+			if(obstacle.getX()==x && obstacle.getY()==y)
+				return obstacle;
+		}
+		
+		return null;
+	}
+	
+	public Obstacle getObstacleByGameCoordinates(int x,int y){
+		Pair coordinates = new Pair(x,y);
+		Pair mapCoordinates = Mapping.screenToMap(coordinates);
+		
+		try{
+			return this.getObstacleByMapCoordinates(mapCoordinates);
+		}catch(Exception e){
+			return null;
+		}
+	}
+	
+	public void delete(int x,int y){
+		char objectToDelete = gridMap[x][y];
+		switch(objectToDelete){
+			case 'O': 
+				this.getObstacles().remove(getObstacleByMapCoordinates(new Pair(x,y)));
+				Log.d("posicao","remover x= " +x + " y="+y );
+				break;
+			
+		}
+		gridLayout[x][y]=false;
+	}
+	
 	public String toString(){
 		String properties = "LEVEL NAME="+this.getLevelName() + "\n" + "GAME DURATION="+this.getGameDuration() +
 				"\n" + "EXPLOSTION TIMEOUT="+this.getExplosionTimeout()+"\n"+"EXPLOSION RANGE="+this.getExplosionRange()+
