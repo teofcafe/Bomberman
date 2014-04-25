@@ -64,38 +64,43 @@ public class GameActivity extends Activity implements OnTouchListener{
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(3);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(3);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
-
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
-		
+
 		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(0);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(0);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
 
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
 
@@ -103,38 +108,44 @@ public class GameActivity extends Activity implements OnTouchListener{
 		leftButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(1);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(1);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
 
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
 
 		rightButton.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(2);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(2);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
 
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
 	}
