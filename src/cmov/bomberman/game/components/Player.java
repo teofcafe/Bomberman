@@ -168,6 +168,7 @@ public class Player {
 		if(this.working ){
 			if( ((this.position)  + 1) > 20){
 				this.position = 0;
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -185,6 +186,7 @@ public class Player {
 		if(this.working){
 			if(((this.position)  + 1) > 20){
 				this.position = 0;
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -202,6 +204,7 @@ public class Player {
 		if(this.working ){
 			if( ((this.position)  + 1) > 20){
 				this.position = 0;
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else 
@@ -219,6 +222,7 @@ public class Player {
 		if(this.working){
 			if( ((this.position)  + 1) > 20){
 				this.position = 0;
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else
