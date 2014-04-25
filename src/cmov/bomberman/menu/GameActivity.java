@@ -1,11 +1,14 @@
 package cmov.bomberman.menu;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,14 +20,16 @@ import cmov.bomberman.game.GameBoard;
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
-	
 	public static String packageName;
 	Handler timeHandler;
-
+	Handler updateTimeHander;
+	private TextView timeLeft;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
 		TextView usernameTextView;
+		
 		String username;
 		int avatar;
 		String level;
@@ -35,6 +40,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
+		timeLeft = (TextView)findViewById(R.id.timeLeftTextView);
 
 		usernameTextView.setText(username);	
 		
@@ -44,7 +50,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 		
 		gameBoard.gameStart(avatar, level);
 		timeHandler = new Handler();
+		updateTimeHander = new Handler();
 		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
+		updateTimeHander.post(periodicTask);
+		
+		
 		
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
@@ -54,38 +64,43 @@ public class GameActivity extends Activity implements OnTouchListener{
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(3);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(3);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
-
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
-		
+
 		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(0);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(0);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
 
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
 
@@ -93,38 +108,44 @@ public class GameActivity extends Activity implements OnTouchListener{
 		leftButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
+
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(1);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(1);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
 
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
 
 		rightButton.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!gameBoard.getPlayer().isPaused()){
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:{
-					gameBoard.getPlayer().setDirection(2);
-					gameBoard.getPlayer().setTouched(true);
-					break;
+
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						gameBoard.getPlayer().setWorking(true);
+						gameBoard.getPlayer().setDirection(2);
+						gameBoard.getPlayer().setTouched(true);
+						break;
+					}
 				}
 
 				case MotionEvent.ACTION_UP:{
 					gameBoard.getPlayer().setTouched(false);
 					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}}
+				}
 				return true;
 			}});
 	}
@@ -136,10 +157,23 @@ public class GameActivity extends Activity implements OnTouchListener{
 		return true;
 	}
 	
-	private final Runnable timeControler = new Runnable(){
+	private final Runnable timeControler = new Runnable() {
 	    public void run(){
             	Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
             	gameBoard.exitGame();
+	    }
+	};
+	
+	Runnable periodicTask = new Runnable() {
+		int minutes; 
+		int seconds; 
+		
+	    public void run() {
+			minutes = (int) ((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60);
+	    	seconds = (int) (gameBoard.getLevelProperties().getGameDuration() / 1000) % 60 ;	
+	    	timeLeft.setText(minutes + ":" + seconds);
+			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1);
+			updateTimeHander.postDelayed(this, 1000);
 	    }
 	};
 
@@ -156,6 +190,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 	protected void onDestroy() {
 	      super.onDestroy();
 	      timeHandler.removeCallbacks(timeControler);
+	      updateTimeHander.removeCallbacks(periodicTask);
 	}
 
 	public void quitGame(View view) {
