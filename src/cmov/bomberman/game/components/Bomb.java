@@ -35,6 +35,14 @@ public class Bomb {
 		return bitmap;
 	}
 
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
 	public void draw(Canvas canvas) {
 		int srcX = currentFrame * width;
 		int srcY = 0; //so ha uma linha

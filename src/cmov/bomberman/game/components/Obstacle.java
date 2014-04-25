@@ -15,8 +15,8 @@ public class Obstacle {
 	private int height;
 
 	public Obstacle(Context context, Pair coordinates) {
-		this.x = (Integer) coordinates.getKey();
-		this.y = (Integer) coordinates.getValue();
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
 		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.obstacle);
 		this.width = bitmap.getWidth();
 		this.height = bitmap.getHeight();

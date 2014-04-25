@@ -25,4 +25,15 @@ public class Mapping {
 		Pair screen = new Pair(newX,newY);
 		return screen;
 	}
+	
+	public static Pair screenToMap(Pair coordinates){
+		int x = (Integer) coordinates.getKey();
+		int y = (Integer) coordinates.getValue();
+		
+		int newX = (x/10)/2;
+		int newY = (y/10)/2;
+		
+		Pair map = new Pair(newX,newY);
+		return map;
+	}
 }

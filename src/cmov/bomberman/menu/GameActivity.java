@@ -1,11 +1,14 @@
 package cmov.bomberman.menu;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,16 +20,19 @@ import cmov.bomberman.game.GameBoard;
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
-	
 	public static String packageName;
 	Handler timeHandler;
-
+	Handler updateTimeHander;
+	private TextView timeLeft;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
 		TextView usernameTextView;
+		
 		String username;
 		int avatar;
+		String level;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
@@ -34,14 +40,21 @@ public class GameActivity extends Activity implements OnTouchListener{
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
+		timeLeft = (TextView)findViewById(R.id.timeLeftTextView);
 
 		usernameTextView.setText(username);	
 		
-		avatar = (settings.getInt("SelectedAvatar", -1));
+		avatar = settings.getInt("SelectedAvatar", -1);
+		level = settings.getString("Level", "").toString();
 		
-		gameBoard.gameStart(avatar);
+		
+		gameBoard.gameStart(avatar, level);
 		timeHandler = new Handler();
+		updateTimeHander = new Handler();
 		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
+		updateTimeHander.post(periodicTask);
+		
+		
 		
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
@@ -133,10 +146,23 @@ public class GameActivity extends Activity implements OnTouchListener{
 		return true;
 	}
 	
-	private final Runnable timeControler = new Runnable(){
+	private final Runnable timeControler = new Runnable() {
 	    public void run(){
             	Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
             	gameBoard.exitGame();
+	    }
+	};
+	
+	Runnable periodicTask = new Runnable() {
+		int minutes; 
+		int seconds; 
+		
+	    public void run() {
+			minutes = (int) ((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60);
+	    	seconds = (int) (gameBoard.getLevelProperties().getGameDuration() / 1000) % 60 ;	
+	    	timeLeft.setText(minutes + ":" + seconds);
+			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1);
+			updateTimeHander.postDelayed(this, 1000);
 	    }
 	};
 
@@ -153,6 +179,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 	protected void onDestroy() {
 	      super.onDestroy();
 	      timeHandler.removeCallbacks(timeControler);
+	      updateTimeHander.removeCallbacks(periodicTask);
 	}
 
 	public void quitGame(View view) {
