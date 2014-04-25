@@ -1,5 +1,6 @@
 package cmov.bomberman.game.components;
 
+
 import cmov.bomberman.menu.R;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 
 public class Player {
-
 	private Bitmap bitmap;	// the actual bitmap
 	private int x;			// the X coordinate
 	private int y;			// the Y coordinate
@@ -19,8 +19,12 @@ public class Player {
 	private int height;
 	private int direction = 0;		
 	private boolean keyTouched = false;
-	private final static float VELOCITY = 3;
+	private final static float VELOCITY = 2;
 	private boolean paused;
+	private boolean working;
+	private int position;
+	private boolean canChange;
+
 
 	public Player(Context context, int avatar, int x, int y){
 
@@ -44,16 +48,26 @@ public class Player {
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_6);
 			break;
 		}
-
 		this.x=x;
 		this.y=y;
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
 		this.paused = false;
+		this.working = false;
+		this.position = 0;
+		this.canChange = true;
 	}
 
 	public int getX() {
 		return x;
+	}
+
+	public boolean getWorking() {
+		return this.working;
+	}
+
+	public void setWorking(boolean working) {
+		this.working = working;
 	}
 
 	public int getY() {
@@ -73,6 +87,7 @@ public class Player {
 			this.y = y;
 	}
 
+
 	public void draw(Canvas canvas) {
 		int srcX = currentFrame * width;
 		//aqui muda a direction 
@@ -84,6 +99,22 @@ public class Player {
 
 	public void setDirection(int animation) {
 		this.direction = animation;
+	}
+
+	public void setCanChange(boolean change) {
+		this.canChange = change;
+	}
+
+	public boolean getCanChange() {
+		return this.canChange;
+	}
+
+	public int getPosition() {
+		return this.position;
+	}
+
+	public void setPosition(int value) {
+		this.position = value;
 	}
 
 	public int getDirection() {
@@ -103,22 +134,26 @@ public class Player {
 	}
 
 	public void update() {
-		currentFrame = ++currentFrame % BMP_COLUMNS; //update
 
-		switch (getDirection()) {
-		case 0:
-			moveDown();
-			break;
-		case 1:
-			moveLeft();
-			break;
-		case 2:
-			moveRight();
-			break;
-		case 3:
-			moveUp();
-			break;
-		}	
+		if(this.working || isKeyTouched() ){
+			currentFrame = ++currentFrame % BMP_COLUMNS; //update
+
+			switch (getDirection()) {
+			case 0:
+				moveDown();
+				break;
+			case 1:
+				moveLeft();
+				break;
+			case 2:{
+				moveRight();
+				break;
+			}
+			case 3:
+				moveUp();
+				break;
+			}	
+		}
 	}
 
 	public boolean isPaused() {
@@ -130,19 +165,71 @@ public class Player {
 	}
 
 	public void moveDown() {
-		y += 1 * VELOCITY;
+		if(this.working ){
+			if( ((this.position)  + 1) > 20){
+				this.position = 0;
+				if(!isKeyTouched())
+					this.working= false;
+				else
+					moveDown();
+			}
+			else{
+				this.position++;
+				currentFrame = ++currentFrame % BMP_COLUMNS;
+				y += 1 * VELOCITY;
+			}
+		}
 	}
 
 	public void moveLeft() {
-		x -= 1 * VELOCITY;
+		if(this.working){
+			if(((this.position)  + 1) > 20){
+				this.position = 0;
+				if(!isKeyTouched())
+					this.working= false;
+				else
+					moveLeft();
+			}
+			else{
+				this.position++;
+				currentFrame = ++currentFrame % BMP_COLUMNS;
+				x -= 1 * VELOCITY;
+			}
+		}			
 	}
 
 	public void moveRight() {
-		x += 1 * VELOCITY;		
+		if(this.working ){
+			if( ((this.position)  + 1) > 20){
+				this.position = 0;
+				if(!isKeyTouched())
+					this.working= false;
+				else 
+					moveRight();
+			}
+			else{
+				this.position++;
+				currentFrame = ++currentFrame % BMP_COLUMNS;
+				x += 1 * VELOCITY;
+			}
+		}
 	}
 
 	public void moveUp() {
-		y -=1 * VELOCITY;		
+		if(this.working){
+			if( ((this.position)  + 1) > 20){
+				this.position = 0;
+				if(!isKeyTouched())
+					this.working= false;
+				else
+					moveUp();
+			}
+			else{
+				this.position++;
+				currentFrame = ++currentFrame % BMP_COLUMNS;
+				y -=1 * VELOCITY;
+			}
+		}			
 	}
 }
 
