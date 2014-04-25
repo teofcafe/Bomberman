@@ -25,6 +25,7 @@ public class Player {
 	private boolean working;
 	private int steps;
 	private boolean canChange;
+	private final static int mustWalk = 10;
 
 
 	public Player(Context context, int avatar, Pair coordinates){
@@ -179,8 +180,10 @@ public class Player {
 
 	public void moveDown() {
 		if(this.working ){
-			if( ((this.steps)  + 1) > 20){
+
+			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -196,8 +199,10 @@ public class Player {
 
 	public void moveLeft() {
 		if(this.working){
-			if(((this.steps)  + 1) > 20){
+
+			if(((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -213,8 +218,10 @@ public class Player {
 
 	public void moveRight() {
 		if(this.working ){
-			if( ((this.steps)  + 1) > 20){
+
+			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else 
@@ -230,8 +237,10 @@ public class Player {
 
 	public void moveUp() {
 		if(this.working){
-			if( ((this.steps)  + 1) > 20){
+
+			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else

@@ -24,12 +24,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 	Handler timeHandler;
 	Handler updateTimeHander;
 	private TextView timeLeft;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
 		TextView usernameTextView;
-		
+
 		String username;
 		int avatar;
 		String level;
@@ -43,42 +43,41 @@ public class GameActivity extends Activity implements OnTouchListener{
 		timeLeft = (TextView)findViewById(R.id.timeLeftTextView);
 
 		usernameTextView.setText(username);	
-		
+
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
-		
-		
+
+
 		gameBoard.gameStart(avatar, level);
 		timeHandler = new Handler();
 		updateTimeHander = new Handler();
 		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
 		updateTimeHander.post(periodicTask);
-		
-		
-		
+
+
+
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
 		ImageButton upButton = (ImageButton)findViewById(R.id.upButton);
 		ImageButton downButton = (ImageButton) findViewById(R.id.downButton);
-		
+
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:{
+				case MotionEvent.ACTION_DOWN:
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(3);
 						gameBoard.getPlayer().setTouched(true);
 						break;
 					}
-				}
-				case MotionEvent.ACTION_UP:{
+
+				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
-					gameBoard.getPlayer().setCurrentFrame(1);
 				}  	
-				}
+
 				return true;
 			}});
 
@@ -87,19 +86,18 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:{
+				case MotionEvent.ACTION_DOWN:
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(0);
 						gameBoard.getPlayer().setTouched(true);
 						break;
-					}
-				}
 
-				case MotionEvent.ACTION_UP:{
+					}
+
+				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
-					gameBoard.getPlayer().setCurrentFrame(1);
-				}  	
+
 				}
 				return true;
 			}});
@@ -110,19 +108,18 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:{
+				case MotionEvent.ACTION_DOWN:
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(1);
 						gameBoard.getPlayer().setTouched(true);
 						break;
 					}
-				}
 
-				case MotionEvent.ACTION_UP:{
+
+				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
-					gameBoard.getPlayer().setCurrentFrame(1);
-				}  	
+
 				}
 				return true;
 			}});
@@ -131,7 +128,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:{
+				case MotionEvent.ACTION_DOWN:
 
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
 						gameBoard.getPlayer().setWorking(true);
@@ -139,12 +136,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 						gameBoard.getPlayer().setTouched(true);
 						break;
 					}
-				}
 
-				case MotionEvent.ACTION_UP:{
+
+				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
-					gameBoard.getPlayer().setCurrentFrame(1);
-				}  	
+
 				}
 				return true;
 			}});
@@ -156,25 +152,25 @@ public class GameActivity extends Activity implements OnTouchListener{
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
 	}
-	
+
 	private final Runnable timeControler = new Runnable() {
-	    public void run(){
-            	Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
-            	gameBoard.exitGame();
-	    }
+		public void run(){
+			Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
+			gameBoard.exitGame();
+		}
 	};
-	
+
 	Runnable periodicTask = new Runnable() {
 		int minutes; 
 		int seconds; 
-		
-	    public void run() {
+
+		public void run() {
 			minutes = (int) ((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60);
-	    	seconds = (int) (gameBoard.getLevelProperties().getGameDuration() / 1000) % 60 ;	
-	    	timeLeft.setText(minutes + ":" + seconds);
+			seconds = (int) (gameBoard.getLevelProperties().getGameDuration() / 1000) % 60 ;	
+			timeLeft.setText(minutes + ":" + seconds);
 			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1);
 			updateTimeHander.postDelayed(this, 1000);
-	    }
+		}
 	};
 
 	@Override
@@ -185,12 +181,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 		startActivity(intent);
 		GameActivity.this.finish();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-	      super.onDestroy();
-	      timeHandler.removeCallbacks(timeControler);
-	      updateTimeHander.removeCallbacks(periodicTask);
+		super.onDestroy();
+		timeHandler.removeCallbacks(timeControler);
+		updateTimeHander.removeCallbacks(periodicTask);
 	}
 
 	public void quitGame(View view) {
@@ -200,7 +196,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		startActivity(intent);
 		GameActivity.this.finish();
 	}
-	
+
 	public void pauseGame(View view) {
 		gameBoard.getPlayer().setPaused();
 	}
@@ -209,7 +205,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 	public boolean onTouch(View v, MotionEvent event) {
 		return false;
 	}
-	
+
 	public void dropBomb(View view) {
 		this.gameBoard.dropBomb();
 	}
