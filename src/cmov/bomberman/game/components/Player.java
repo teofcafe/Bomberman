@@ -173,7 +173,7 @@ public class Player {
 
 			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
-
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -192,7 +192,7 @@ public class Player {
 
 			if(((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
-
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -211,7 +211,7 @@ public class Player {
 
 			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
-
+				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
 				else 
@@ -230,6 +230,7 @@ public class Player {
 
 			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
+				this.currentFrame = 1;
 
 				if(!isKeyTouched())
 					this.working= false;
