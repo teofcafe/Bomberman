@@ -24,6 +24,7 @@ public class Player {
 	private boolean working;
 	private int position;
 	private boolean canChange;
+	private final static int mustWalk = 10;
 
 
 	public Player(Context context, int avatar, int x, int y){
@@ -166,7 +167,7 @@ public class Player {
 
 	public void moveDown() {
 		if(this.working ){
-			if( ((this.position)  + 1) > 20){
+			if( ((this.position)  + 1) > mustWalk){
 				this.position = 0;
 				this.currentFrame = 1;
 				if(!isKeyTouched())
@@ -184,7 +185,7 @@ public class Player {
 
 	public void moveLeft() {
 		if(this.working){
-			if(((this.position)  + 1) > 20){
+			if(((this.position)  + 1) > mustWalk){
 				this.position = 0;
 				this.currentFrame = 1;
 				if(!isKeyTouched())
@@ -202,7 +203,7 @@ public class Player {
 
 	public void moveRight() {
 		if(this.working ){
-			if( ((this.position)  + 1) > 20){
+			if( ((this.position)  + 1) > mustWalk){
 				this.position = 0;
 				this.currentFrame = 1;
 				if(!isKeyTouched())
@@ -220,7 +221,7 @@ public class Player {
 
 	public void moveUp() {
 		if(this.working){
-			if( ((this.position)  + 1) > 20){
+			if( ((this.position)  + 1) > mustWalk){
 				this.position = 0;
 				this.currentFrame = 1;
 				if(!isKeyTouched())
