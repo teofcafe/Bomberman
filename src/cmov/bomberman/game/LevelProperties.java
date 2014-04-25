@@ -13,7 +13,6 @@ public class LevelProperties {
 	private int explosionDuration;
 	private int explosionRange;
 
-	Pair playerPositions[];
 
 	private int numberOfWalls;
 	private int numberOfObstacles;
@@ -25,6 +24,26 @@ public class LevelProperties {
 	private ArrayList<Robot> robots;
 	
 
+	//grid layout
+	public char[][] gridMap;
+
+	public boolean[][] gridLayout;
+
+
+	//cells per second
+	int robotSpeed;
+	int pointsPerRobotKilled;
+	int pointsPerOponentKilled;
+
+	public LevelProperties(int players, int lines, int columns){
+		this.gridMap = new char[lines][columns];
+		this.gridLayout = new boolean[lines][columns];
+		this.walls = new ArrayList<Wall>();
+		this.players = new ArrayList<Player>();
+		this.obstacles = new ArrayList<Obstacle>();
+		this.robots = new ArrayList<Robot>();
+	}
+	
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
@@ -69,6 +88,10 @@ public class LevelProperties {
 		this.obstacles.add(new Obstacle(context, Mapping.mapToScreen(coordinates)));
 	}
 	
+	public void addPlayer(Context context,int avatar, Pair coordinates){
+		this.players.add(new Player(context,avatar, Mapping.mapToScreen(coordinates)));	
+	}
+	
 	public void addRobot(){
 		this.numberOfRobots++;
 	}
@@ -110,36 +133,18 @@ public class LevelProperties {
 		this.gridLayout = gridLayout;
 	}
 
-	//grid layout
-	public char[][] gridMap;
 
-	public boolean[][] gridLayout;
-
-
-	//cells per second
-	int robotSpeed;
-	int pointsPerRobotKilled;
-	int pointsPerOponentKilled;
-
-	public LevelProperties(int players, int lines, int columns){
-		this.gridMap = new char[lines][columns];
-		this.gridLayout = new boolean[lines][columns];
-		this.playerPositions =  new Pair[players];
-		this.walls = new ArrayList<Wall>();
-		this.obstacles = new ArrayList<Obstacle>();
-		this.robots = new ArrayList<Robot>();
-	}
-	
 
 	public Pair getPlayerPositions(int player) {
-		return playerPositions[player];
+		return this.getPlayers().get(player-1).getPosition();
 	}
 
-
+	
+//arguments as game coordinates
 	public void setPlayerPositions(int player, Pair pair) {
-		this.playerPositions[player-1] = pair;
+		this.getPlayers().get(player-1).setPosition(pair);
 	}
-
+	
 	public String getLevelName() {
 		return levelName;
 	}
@@ -195,13 +200,14 @@ public class LevelProperties {
 
 
 	public void dumpPlayerPositions(){
-		for(int i=0;i<playerPositions.length;i++){
-			String player = Integer.toString(i+1);
-			System.out.println("PLAYER="+player);
-			String x = this.getPlayerPositions(i).getKey().toString();
-			String y = this.getPlayerPositions(i).getValue().toString();
+		
+		for(Player player : this.getPlayers()){
+			//TODO adicionar nome aos players
+//			String player =
+			Pair position = player.getPosition();
+			String x = position.getKey().toString();
+			String y = position.getValue().toString();
 			System.out.println("X="+x+" Y="+y);
-
 		}
 	}
 
@@ -286,8 +292,11 @@ public class LevelProperties {
 		char objectToDelete = gridMap[x][y];
 		switch(objectToDelete){
 			case 'O': 
-				this.getObstacles().remove(getObstacleByMapCoordinates(new Pair(x,y)));
-				Log.d("posicao","remover x= " +x + " y="+y );
+				boolean removi=this.getObstacles().remove(getObstacleByGameCoordinates(x, y));
+				for(Obstacle obstacle : this.getObstacles()){
+					Log.d("obstaculo","Obstaculo: X="+obstacle.getX() +" Y="+obstacle.getY());
+				}
+				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removi);
 				break;
 			
 		}
@@ -306,6 +315,5 @@ public class LevelProperties {
 		return properties;
 
 	}
-	
 
 }

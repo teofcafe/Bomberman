@@ -1,6 +1,7 @@
 package cmov.bomberman.game.components;
 
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,8 +23,7 @@ public class Player {
 	private final static float VELOCITY = 3;
 	private boolean paused;
 
-	public Player(Context context, int avatar, int x, int y){
-
+	public Player(Context context, int avatar, Pair coordinates){
 		switch (avatar) {
 		case 0:
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_1);
@@ -45,8 +45,8 @@ public class Player {
 			break;
 		}
 
-		this.x=x;
-		this.y=y;
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
 		this.paused = false;
@@ -59,7 +59,17 @@ public class Player {
 	public int getY() {
 		return y;
 	}
+	
+	public Pair getPosition(){
+		Pair position = new Pair(x,y);
+		return position;
+	}
 
+	public void setPosition(Pair coordinates){
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
+	}
+	
 	public Bitmap getBitmap() {
 		return bitmap;
 	}
