@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import cmov.bomberman.pair.*;
 import android.content.Context;
+import android.util.Log;
 
 public class LoadMap {
 	
@@ -39,10 +40,8 @@ public class LoadMap {
     
     public static boolean[][] gridLayout = new boolean[LINES][COLUMNS];
     
-    
 	
-	
-	 protected static LevelProperties loadMap(InputStream filename, Context context, int maxWidth, int maxHeight) throws IOException {
+	 protected static LevelProperties loadMap(InputStream filename, Context context,int avatar, int maxWidth, int maxHeight) throws IOException {
 		 LevelProperties levelProperties = new LevelProperties(PLAYERS,LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
@@ -106,11 +105,14 @@ public class LoadMap {
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
 	                    gridMap[i][j]=ch;
+	                    Log.d("mapa","X="+i+" Y="+j+" CH="+ch);
 	                    if(!(ch == '-'))
 	                    	gridLayout[i][j]=true;
 	                    //player verification
-	                    if((ch > 47 )&& (ch < 58))
-	                    	levelProperties.setPlayerPositions(ch-'0', new Pair(i,j));
+	                    if((ch > 47 )&& (ch < 58)){
+	                    	if(ch == '1')
+	                    		levelProperties.addPlayer(context, avatar, new Pair(i,j));
+	                    }
 	                    if(ch == 'W') {
 	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }
@@ -127,7 +129,5 @@ public class LoadMap {
 	        return levelProperties;
 
 	    }
-
-
 	
 }

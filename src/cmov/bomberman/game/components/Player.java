@@ -2,6 +2,7 @@ package cmov.bomberman.game.components;
 
 
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,13 +23,12 @@ public class Player {
 	private final static float VELOCITY = 2;
 	private boolean paused;
 	private boolean working;
-	private int position;
+	private int steps;
 	private boolean canChange;
 	private final static int mustWalk = 10;
 
 
-	public Player(Context context, int avatar, int x, int y){
-
+	public Player(Context context, int avatar, Pair coordinates){
 		switch (avatar) {
 		case 0:
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_1);
@@ -49,13 +49,16 @@ public class Player {
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_6);
 			break;
 		}
-		this.x=x;
-		this.y=y;
+
+
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
+
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
 		this.paused = false;
 		this.working = false;
-		this.position = 0;
+		this.steps = 0;
 		this.canChange = true;
 	}
 
@@ -74,7 +77,17 @@ public class Player {
 	public int getY() {
 		return y;
 	}
+	
+	public Pair getPosition(){
+		Pair position = new Pair(x,y);
+		return position;
+	}
 
+	public void setPosition(Pair coordinates){
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
+	}
+	
 	public Bitmap getBitmap() {
 		return bitmap;
 	}
@@ -110,12 +123,12 @@ public class Player {
 		return this.canChange;
 	}
 
-	public int getPosition() {
-		return this.position;
+	public int getSteps() {
+		return this.steps;
 	}
 
 	public void setPosition(int value) {
-		this.position = value;
+		this.steps = value;
 	}
 
 	public int getDirection() {
@@ -167,16 +180,17 @@ public class Player {
 
 	public void moveDown() {
 		if(this.working ){
-			if( ((this.position)  + 1) > mustWalk){
-				this.position = 0;
-				this.currentFrame = 1;
+
+			if( ((this.steps)  + 1) > mustWalk){
+				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else
 					moveDown();
 			}
 			else{
-				this.position++;
+				this.steps++;
 				currentFrame = ++currentFrame % BMP_COLUMNS;
 				y += 1 * VELOCITY;
 			}
@@ -185,16 +199,17 @@ public class Player {
 
 	public void moveLeft() {
 		if(this.working){
-			if(((this.position)  + 1) > mustWalk){
-				this.position = 0;
-				this.currentFrame = 1;
+
+			if(((this.steps)  + 1) > mustWalk){
+				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else
 					moveLeft();
 			}
 			else{
-				this.position++;
+				this.steps++;
 				currentFrame = ++currentFrame % BMP_COLUMNS;
 				x -= 1 * VELOCITY;
 			}
@@ -203,16 +218,17 @@ public class Player {
 
 	public void moveRight() {
 		if(this.working ){
-			if( ((this.position)  + 1) > mustWalk){
-				this.position = 0;
-				this.currentFrame = 1;
+
+			if( ((this.steps)  + 1) > mustWalk){
+				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else 
 					moveRight();
 			}
 			else{
-				this.position++;
+				this.steps++;
 				currentFrame = ++currentFrame % BMP_COLUMNS;
 				x += 1 * VELOCITY;
 			}
@@ -221,16 +237,17 @@ public class Player {
 
 	public void moveUp() {
 		if(this.working){
-			if( ((this.position)  + 1) > mustWalk){
-				this.position = 0;
-				this.currentFrame = 1;
+
+			if( ((this.steps)  + 1) > mustWalk){
+				this.steps = 0;
+
 				if(!isKeyTouched())
 					this.working= false;
 				else
 					moveUp();
 			}
 			else{
-				this.position++;
+				this.steps++;
 				currentFrame = ++currentFrame % BMP_COLUMNS;
 				y -=1 * VELOCITY;
 			}

@@ -82,14 +82,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void gameStart(int avatar, String levelName) {	
 		bot = new Robot(getContext(), 55,55);
-		player = new Player(getContext(), avatar, 50, 50);
-
 		try {
 			
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);
-			this.levelProperties = LoadMap.loadMap(level,getContext(),320, 360);
+			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
+			//TODO alterar o index para o player respectivo 
+			player = this.levelProperties.getPlayers().get(0);
 
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
@@ -166,11 +166,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public Player getPlayer() {
 		return player;
 	}
-	
+
 	//arguments as gameCoordinates
 	public void deleteObjects(int x, int y){
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
-		levelProperties.delete(Integer.valueOf(mapCoordinates.getKey().toString()), Integer.valueOf(mapCoordinates.getValue().toString()));
+		int xvalue = (Integer) mapCoordinates.getKey();
+		int yvalue = (Integer) mapCoordinates.getValue();
+		Log.d("explodi", "X="+xvalue + " Y="+yvalue + " CH="+levelProperties.gridMap[yvalue][xvalue]);
+		levelProperties.delete(Integer.valueOf(mapCoordinates.getValue().toString()), Integer.valueOf(mapCoordinates.getKey().toString()));
 	}
 	
 	@SuppressWarnings({ "static-access", "unused" })
