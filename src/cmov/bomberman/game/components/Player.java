@@ -24,7 +24,6 @@ public class Player {
 	private boolean paused;
 	private boolean working;
 	private int steps;
-	private boolean canChange;
 	private final static int mustWalk = 10;
 
 
@@ -59,7 +58,6 @@ public class Player {
 		this.paused = false;
 		this.working = false;
 		this.steps = 0;
-		this.canChange = true;
 	}
 
 	public int getX() {
@@ -113,14 +111,6 @@ public class Player {
 
 	public void setDirection(int animation) {
 		this.direction = animation;
-	}
-
-	public void setCanChange(boolean change) {
-		this.canChange = change;
-	}
-
-	public boolean getCanChange() {
-		return this.canChange;
 	}
 
 	public int getSteps() {
