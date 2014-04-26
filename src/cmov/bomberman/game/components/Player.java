@@ -144,10 +144,10 @@ public class Player {
 		int srcY = direction * height;
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
-		 if(paused)
-			 paint.setAlpha(100);   
-		 else
-			 paint = null;
+		if(paused)
+			paint.setAlpha(100);   
+		else
+			paint = null;
 		canvas.drawBitmap(bitmap, src, dst, paint);
 	}
 
@@ -178,10 +178,10 @@ public class Player {
 	public void setCurrentFrame(int currentFrame) {
 		this.currentFrame = currentFrame;
 	}
-	
+
 	public boolean CanMove(Pair pair){
 		return true;
-		
+
 	}
 
 	public void update() {
@@ -214,10 +214,15 @@ public class Player {
 	public void setPaused() {
 		this.paused = (!this.paused);
 	}
-	
+
 	public void resetSteps(){
 		this.steps = 0;
 		this.currentFrame = 1;
+	}
+
+	public void stepsIncrement(){
+		this.steps++;
+		currentFrame = ++currentFrame % BMP_COLUMNS;
 	}
 
 	public void moveDown() {
@@ -230,8 +235,7 @@ public class Player {
 					moveDown();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				y += 1 * VELOCITY;
 			}
 		}
@@ -247,8 +251,7 @@ public class Player {
 					moveLeft();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				x -= 1 * VELOCITY;
 			}
 		}			
@@ -264,8 +267,7 @@ public class Player {
 					moveRight();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				x += 1 * VELOCITY;
 			}
 		}
@@ -283,8 +285,7 @@ public class Player {
 					moveUp();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				y -=1 * VELOCITY;
 			}
 		}			
