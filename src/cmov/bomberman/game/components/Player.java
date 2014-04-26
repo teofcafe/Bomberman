@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
@@ -29,7 +30,16 @@ public class Player {
 	private boolean working;
 	private int steps;
 	private final static int mustWalk = 10;
+	private int score = 0;
 
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
 
 	public Player(Context context, int avatar, Pair coordinates){
 		switch (avatar) {
@@ -132,12 +142,17 @@ public class Player {
 
 
 	public void draw(Canvas canvas) {
+		Paint paint = new Paint();  
 		int srcX = currentFrame * width;
 		//aqui muda a direction 
 		int srcY = direction * height;
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
-		canvas.drawBitmap(bitmap, src, dst, null);
+		if(paused)
+			paint.setAlpha(100);   
+		else
+			paint = null;
+		canvas.drawBitmap(bitmap, src, dst, paint);
 	}
 
 	public void setDirection(int animation) {
@@ -167,7 +182,7 @@ public class Player {
 	public void setCurrentFrame(int currentFrame) {
 		this.currentFrame = currentFrame;
 	}
-	
+
 	public boolean canMove(){
 		return !LevelProperties.getGridLayout(y, x-1);
 	}
@@ -203,20 +218,27 @@ public class Player {
 		this.paused = (!this.paused);
 	}
 
+	public void resetSteps(){
+		this.steps = 0;
+		this.currentFrame = 1;
+	}
+
+	public void stepsIncrement(){
+		this.steps++;
+		currentFrame = ++currentFrame % BMP_COLUMNS;
+	}
+
 	public void moveDown() {
 		if(this.working ){
-
 			if( ((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
 				else
 					moveDown();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				y += 1 * VELOCITY;
 			}
 		}
@@ -224,37 +246,32 @@ public class Player {
 
 	public void moveLeft() {
 		if(this.working){
-
 			if(((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
 				else 
 					moveLeft();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
-					x -= 1 * VELOCITY;
+	
+				stepsIncrement();
+				x -= 1 * VELOCITY;
 			}
 		}			
 	}
 
 	public void moveRight() {
 		if(this.working ){
-
 			if( ((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
 				else 
 					moveRight();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				x += 1 * VELOCITY;
 			}
 		}
@@ -264,8 +281,7 @@ public class Player {
 		if(this.working){
 
 			if( ((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 
 				if(!isKeyTouched())
 					this.working= false;
@@ -274,8 +290,7 @@ public class Player {
 					moveUp();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				y -=1 * VELOCITY;
 			}
 		}			

@@ -1,14 +1,10 @@
 package cmov.bomberman.menu;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +21,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 	Handler timeHandler;
 	Handler updateTimeHander;
 	private TextView timeLeft;
+	private TextView playerScore;
+	private TextView numberPlayers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
 		timeLeft = (TextView)findViewById(R.id.timeLeftTextView);
-
+		playerScore = (TextView)findViewById(R.id.playerScoreTextView);
+		numberPlayers = (TextView)findViewById(R.id.numberPlayersTextView);
 		usernameTextView.setText(username);	
 
 		avatar = settings.getInt("SelectedAvatar", -1);
@@ -50,10 +49,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 
 		gameBoard.gameStart(avatar, level);
+
 		timeHandler = new Handler();
 		updateTimeHander = new Handler();
 		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
-		updateTimeHander.post(periodicTask);
+		updateTimeHander.post(updateDashboard);
 
 
 
@@ -162,30 +162,30 @@ public class GameActivity extends Activity implements OnTouchListener{
 		}
 	};
 
-	Runnable periodicTask = new Runnable() {
-		
+	Runnable updateDashboard = new Runnable() {
+
 		public void run() {
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
-								Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
 			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
+
+			playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
+			numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
+
 			updateTimeHander.postDelayed(this, 1000);
 		}
 	};
 
 	@Override
 	public void onBackPressed() {
-		Intent intent;
-		gameBoard.exitGame();
-		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
-		startActivity(intent);
-		GameActivity.this.finish();
+		gameBoard.getPlayer().setPaused();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		timeHandler.removeCallbacks(timeControler);
-		updateTimeHander.removeCallbacks(periodicTask);
+		updateTimeHander.removeCallbacks(updateDashboard);
 	}
 
 	public void quitGame(View view) {
