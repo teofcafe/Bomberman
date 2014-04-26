@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 public class Player {
@@ -128,12 +129,17 @@ public class Player {
 
 
 	public void draw(Canvas canvas) {
+		Paint paint = new Paint();  
 		int srcX = currentFrame * width;
 		//aqui muda a direction 
 		int srcY = direction * height;
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
-		canvas.drawBitmap(bitmap, src, dst, null);
+		 if(paused)
+			 paint.setAlpha(100);   
+		 else
+			 paint = null;
+		canvas.drawBitmap(bitmap, src, dst, paint);
 	}
 
 	public void setDirection(int animation) {
@@ -197,7 +203,6 @@ public class Player {
 
 	public void moveDown() {
 		if(this.working ){
-
 			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
 				this.currentFrame = 1;
@@ -216,7 +221,6 @@ public class Player {
 
 	public void moveLeft() {
 		if(this.working){
-
 			if(((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
 				this.currentFrame = 1;
@@ -235,7 +239,6 @@ public class Player {
 
 	public void moveRight() {
 		if(this.working ){
-
 			if( ((this.steps)  + 1) > mustWalk){
 				this.steps = 0;
 				this.currentFrame = 1;
