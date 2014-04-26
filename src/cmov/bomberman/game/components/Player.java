@@ -163,10 +163,15 @@ public class Player {
 	public void setCurrentFrame(int currentFrame) {
 		this.currentFrame = currentFrame;
 	}
+	
+	public boolean CanMove(Pair pair){
+		return true;
+		
+	}
 
 	public void update() {
 
-		if(this.working || isKeyTouched() ){
+		if( (this.working || isKeyTouched()) && CanMove(nextPosition()) ){
 			currentFrame = ++currentFrame % BMP_COLUMNS; //update
 
 			switch (getDirection()) {
