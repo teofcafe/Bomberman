@@ -161,14 +161,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 	};
 
 	Runnable periodicTask = new Runnable() {
-		int minutes; 
-		int seconds; 
-
+		
 		public void run() {
-			minutes = (int) ((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60);
-			seconds = (int) (gameBoard.getLevelProperties().getGameDuration() / 1000) % 60 ;	
-			timeLeft.setText(minutes + ":" + seconds);
-			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1);
+			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
+								Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
 			updateTimeHander.postDelayed(this, 1000);
 		}
 	};
