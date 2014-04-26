@@ -68,6 +68,33 @@ public class Player {
 		return this.working;
 	}
 
+	public Pair nextPosition( int x, int y){
+		int nextX = 0, nextY = 0;
+		switch (getDirection()) {
+		case 0:{
+			nextX = this.getX();
+			nextY=this.getY() + 1;
+			break;
+		}
+		case 1:{
+			nextX = this.getX() -1;
+			nextY=this.getY();
+			break;
+		}
+		case 2:{
+			nextX = this.getX() + 1;
+			nextY=this.getY();
+			break;
+		}
+		case 3:{
+			nextX = this.getX();
+			nextY=this.getY() - 1;
+			break;
+		}
+		}
+		return new Pair(nextX, nextY);
+	}
+
 	public void setWorking(boolean working) {
 		this.working = working;
 	}
@@ -75,7 +102,7 @@ public class Player {
 	public int getY() {
 		return y;
 	}
-	
+
 	public Pair getPosition(){
 		Pair position = new Pair(x,y);
 		return position;
@@ -85,7 +112,7 @@ public class Player {
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();
 	}
-	
+
 	public Bitmap getBitmap() {
 		return bitmap;
 	}
