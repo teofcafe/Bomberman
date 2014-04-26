@@ -68,7 +68,7 @@ public class Player {
 		return this.working;
 	}
 
-	public Pair nextPosition( int x, int y){
+	public Pair nextPosition(){
 		int nextX = 0, nextY = 0;
 		switch (getDirection()) {
 		case 0:{
