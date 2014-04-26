@@ -172,8 +172,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
-		Log.d("explodi", "X="+xvalue + " Y="+yvalue + " CH="+levelProperties.gridMap[yvalue][xvalue]);
-		levelProperties.delete(Integer.valueOf(mapCoordinates.getValue().toString()), Integer.valueOf(mapCoordinates.getKey().toString()));
+		Log.d("explodi", "X="+xvalue + " Y="+yvalue + " CH="+levelProperties.gridMap[xvalue][yvalue]);
+		levelProperties.delete(xvalue,yvalue);
 	}
 	
 	@SuppressWarnings({ "static-access", "unused" })
@@ -201,7 +201,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 					continue;
 				else{
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
-					deleteObjects(i,j);
+					deleteObjects(j,i);
 				}
 
 		bomb = null;

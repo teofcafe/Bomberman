@@ -1,6 +1,7 @@
 package cmov.bomberman.game.components;
 
 
+import cmov.bomberman.game.Mapping;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
 import android.content.Context;
@@ -8,6 +9,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
+
+import cmov.bomberman.game.LevelProperties;
 
 public class Player {
 	private Bitmap bitmap;	// the actual bitmap
@@ -164,14 +168,13 @@ public class Player {
 		this.currentFrame = currentFrame;
 	}
 	
-	public boolean CanMove(Pair pair){
-		return true;
-		
+	public boolean canMove(){
+		return !LevelProperties.getGridLayout(y, x-1);
 	}
 
 	public void update() {
 
-		if( (this.working || isKeyTouched()) && CanMove(nextPosition()) ){
+		if( (this.working || isKeyTouched())){
 			currentFrame = ++currentFrame % BMP_COLUMNS; //update
 
 			switch (getDirection()) {
@@ -227,13 +230,13 @@ public class Player {
 				this.currentFrame = 1;
 				if(!isKeyTouched())
 					this.working= false;
-				else
+				else 
 					moveLeft();
 			}
 			else{
 				this.steps++;
 				currentFrame = ++currentFrame % BMP_COLUMNS;
-				x -= 1 * VELOCITY;
+					x -= 1 * VELOCITY;
 			}
 		}			
 	}
@@ -266,6 +269,7 @@ public class Player {
 
 				if(!isKeyTouched())
 					this.working= false;
+				// e aqui que temos de ter a verificacao
 				else
 					moveUp();
 			}

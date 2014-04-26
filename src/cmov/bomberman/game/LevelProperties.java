@@ -25,9 +25,9 @@ public class LevelProperties {
 	
 
 	//grid layout
-	public char[][] gridMap;
+	public static char[][] gridMap;
 
-	public boolean[][] gridLayout;
+	public static boolean[][] gridLayout;
 
 
 	//cells per second
@@ -127,6 +127,14 @@ public class LevelProperties {
 
 	public boolean[][] getGridLayout() {
 		return gridLayout;
+	}
+	
+	public static boolean getGridLayout(int x, int y){
+	 	Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+		int xvalue = (Integer) mapCoordinates.getKey();
+		int yvalue = (Integer) mapCoordinates.getValue();
+		Log.d("gridlayout","XValue="+xvalue +" yvalue="+yvalue + " cH="+gridMap[xvalue][yvalue] + " Ocupado="+gridLayout[xvalue][yvalue]);
+		return LevelProperties.gridLayout[xvalue][yvalue];
 	}
 
 	public void setGridLayout(boolean[][] gridLayout) {
@@ -247,7 +255,8 @@ public class LevelProperties {
 		int y = (Integer)coordinates.getValue();
 		
 		for(Wall wall : this.getWalls()){
-			if(wall.getX()==x && wall.getY()==y)
+			// isto esta correcto, esta passagem tem de ser feita desta maneira
+			if(wall.getX()==y && wall.getY()==x)
 				return wall;
 		}
 		
