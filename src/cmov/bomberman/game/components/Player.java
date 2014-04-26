@@ -199,13 +199,17 @@ public class Player {
 	public void setPaused() {
 		this.paused = (!this.paused);
 	}
+	
+	public void resetSteps(){
+		this.steps = 0;
+		this.currentFrame = 1;
+	}
 
 	public void moveDown() {
 		if(this.working ){
 
 			if( ((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -223,8 +227,7 @@ public class Player {
 		if(this.working){
 
 			if(((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
 				else
@@ -242,8 +245,7 @@ public class Player {
 		if(this.working ){
 
 			if( ((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
 				else 
@@ -261,8 +263,7 @@ public class Player {
 		if(this.working){
 
 			if( ((this.steps)  + 1) > mustWalk){
-				this.steps = 0;
-				this.currentFrame = 1;
+				resetSteps();
 
 				if(!isKeyTouched())
 					this.working= false;
