@@ -22,7 +22,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
@@ -48,7 +48,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 
 		gameBoard.gameStart(avatar, level);
-		
+
 		timeHandler = new Handler();
 		updateTimeHander = new Handler();
 		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
@@ -161,26 +161,22 @@ public class GameActivity extends Activity implements OnTouchListener{
 	};
 
 	Runnable updateDashboard = new Runnable() {
-		
+
 		public void run() {
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
-								Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
 			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
-			
+
 			playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
 			numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
-			
+
 			updateTimeHander.postDelayed(this, 1000);
 		}
 	};
 
 	@Override
 	public void onBackPressed() {
-		Intent intent;
-		gameBoard.exitGame();
-		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
-		startActivity(intent);
-		GameActivity.this.finish();
+		gameBoard.getPlayer().setPaused();
 	}
 
 	@Override
