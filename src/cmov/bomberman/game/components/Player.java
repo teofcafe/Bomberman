@@ -26,7 +26,16 @@ public class Player {
 	private boolean working;
 	private int steps;
 	private final static int mustWalk = 10;
+	private int score = 0;
 
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
 
 	public Player(Context context, int avatar, Pair coordinates){
 		switch (avatar) {
