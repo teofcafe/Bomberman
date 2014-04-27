@@ -16,7 +16,6 @@ public class Explosion {
 	private int currentFrame = -1; 
 	private int width;
 	private int height;
-	private final static float VELOCITY = 1;
 	private boolean alive = true;
 
 	public int getX() {

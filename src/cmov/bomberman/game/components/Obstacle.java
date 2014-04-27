@@ -14,6 +14,7 @@ public class Obstacle {
 	private int width;
 	private int height;
 
+	@SuppressWarnings("rawtypes")
 	public Obstacle(Context context, Pair coordinates) {
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();

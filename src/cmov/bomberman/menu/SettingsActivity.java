@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,10 +14,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
 public class SettingsActivity extends Activity {
 	int imageSelected;
+	@SuppressWarnings("unused")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Button save, cancel;

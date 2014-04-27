@@ -10,8 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-
 import cmov.bomberman.game.LevelProperties;
 
 public class Player {
@@ -46,6 +44,7 @@ public class Player {
 		return this.blocked;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Player(Context context, int avatar, Pair coordinates){
 		switch (avatar) {
 		case 0:
@@ -87,6 +86,7 @@ public class Player {
 		return this.working;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair nextPosition(){
 		int nextX = 0, nextY = 0;
 		switch (getDirection()) {
@@ -122,16 +122,19 @@ public class Player {
 		return y;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair getPosition(){
 		Pair position = new Pair(x,y);
 		return position;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Pair getMapCoordinatesPosition(){
 		Pair coordinates = Mapping.screenToMap(new Pair(x,y));
 		return coordinates;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setPosition(Pair coordinates){
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();
