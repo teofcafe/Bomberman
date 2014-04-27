@@ -2,6 +2,7 @@ package cmov.bomberman.game.components;
 
 
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,13 +17,13 @@ public class Robot {
 	private static final int BMP_COLUMNS = 3;
 	private int currentFrame = 1;
 	private final static float VELOCITY = 2;
-	private int direction = 2;
+	private int direction = 0;
 	private int width;
 	private int height;
 
-	public Robot(Context context, int x, int y) {
-		this.x = x;
-		this.y = y;
+	public Robot(Context context,  Pair coordinates) {
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
 		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bot);
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;

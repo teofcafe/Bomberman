@@ -96,8 +96,8 @@ public class LevelProperties {
 		this.players.add(new Player(context,avatar, Mapping.mapToScreen(coordinates)));	
 	}
 	
-	public void addRobot(){
-		this.numberOfRobots++;
+	public void addRobot(Context context, Pair coordinates){
+		this.robots.add(new Robot(context, Mapping.mapToScreen(coordinates)));
 	}
 
 	public void setNumberOfwalls(int numberOfwalls) {

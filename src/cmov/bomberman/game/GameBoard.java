@@ -7,6 +7,7 @@ import cmov.bomberman.game.components.Bomb;
 import cmov.bomberman.game.components.Explosion;
 import cmov.bomberman.game.components.Obstacle;
 import cmov.bomberman.game.components.Player;
+import cmov.bomberman.game.components.Robot;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.GameActivity;
 import cmov.bomberman.pair.Pair;
@@ -18,7 +19,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import cmov.bomberman.game.components.Robot;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -27,12 +27,12 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Player player;
 	private Bomb bomb;
 	private Wall[] wall;
+	private Robot[] robots;
 	private boolean bombDroped = false;
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
 	//layout size max
 	private int maxWidth, maxHeight;
-	public Robot bot;
 
 	private LevelProperties levelProperties;
 
@@ -78,9 +78,21 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			wall.draw(canvas);
 		}
 	}
+	
+	private void drawRobots(Canvas canvas) {
+		int posX=0,posY=0;
+		int maxHeight=this.getHeight();
+		int maxWidth=this.getWidth();
+		setMaxHeight(maxHeight);
+		setMaxWidth(maxWidth);
+
+		for(Robot robot : levelProperties.getRobots()){
+//			System.out.println("coordenada parede: " + wall.getX() + " , " + wall.getY());
+			robot.draw(canvas);
+		}
+	}
 
 	public void gameStart(int avatar, String levelName) {	
-		bot = new Robot(getContext(), 55,55);
 		try {
 			
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
@@ -111,6 +123,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.drawColor(Color.BLACK);
 		drawWall(canvas);
 		drawObstacle(canvas);
+		drawRobots(canvas);
 
 		if(this.bombDroped)
 			if(this.bombExploded) 
@@ -158,8 +171,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void update() {
-		bot.update(player.getX(), player.getY(), player.isPaused());
 		player.update();
+		for(Robot robot : levelProperties.getRobots())
+			robot.update(player.getX(), player.getY(), player.isPaused());
 	}
 
 	public Player getPlayer() {

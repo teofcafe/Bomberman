@@ -117,7 +117,7 @@ public class LoadMap {
 	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }
 	                    else if (ch== 'O') levelProperties.addObstacle(context,new Pair(i,j));
-//	                    else if (ch == 'R') levelProperties.addRobot();
+	                    else if (ch == 'R') levelProperties.addRobot(context,new Pair(i,j));
 	                }
 
 	            }
