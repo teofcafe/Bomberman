@@ -26,12 +26,15 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Thread updateBomb;
 	private Player player;
 	private Bomb bomb;
+	@SuppressWarnings("unused")
 	private Wall[] wall;
+	@SuppressWarnings("unused")
 	private Robot[] robots;
 	private boolean bombDroped = false;
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
 	//layout size max
+	@SuppressWarnings("unused")
 	private int maxWidth, maxHeight;
 
 	private LevelProperties levelProperties;
@@ -54,8 +57,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		return this.levelProperties;
 	}
 
+
 	private void drawObstacle(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
@@ -67,34 +70,31 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void drawWall(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
 
 		for(Wall wall : levelProperties.getWalls()){
-//			System.out.println("coordenada parede: " + wall.getX() + " , " + wall.getY());
+			//			System.out.println("coordenada parede: " + wall.getX() + " , " + wall.getY());
 			wall.draw(canvas);
 		}
 	}
-	
+
 	private void drawRobots(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
 
-		for(Robot robot : levelProperties.getRobots()){
-//			System.out.println("coordenada parede: " + wall.getX() + " , " + wall.getY());
+		for(Robot robot : levelProperties.getRobots())
 			robot.draw(canvas);
-		}
+
 	}
 
 	public void gameStart(int avatar, String levelName) {	
 		try {
-			
+
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);
@@ -172,8 +172,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void update() {
 		player.update();
-		for(Robot robot : levelProperties.getRobots())
-			robot.update(player.getX(), player.getY(), player.isPaused());
+		//TODO tratar da actualizacao dos robots
+//		for(Robot robot : levelProperties.getRobots())
+//			robot.update(player.getX(), player.getY(), player.isPaused());
 	}
 
 	public Player getPlayer() {
@@ -181,15 +182,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	//arguments as gameCoordinates
-	public void deleteObjects(int x, int y){
+	@SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
+	public void deleteObjects(int x, int y) {
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
 		Log.d("explodi", "X="+xvalue + " Y="+yvalue + " CH="+levelProperties.gridMap[xvalue][yvalue]);
 		levelProperties.delete(xvalue,yvalue);
 	}
-	
-	@SuppressWarnings({ "static-access", "unused" })
+
+	@SuppressWarnings({ "static-access" })
 	public void updateBomb() {
 		while(!bomb.isExploded()) {
 			bomb.update();
@@ -204,7 +206,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int explosionRange = levelProperties.getExplosionRange();
 		explosions = new ArrayList<Explosion>();
 
-		 
+
 		//No eixo dos X
 		for(int i = bombX - explosionRange; i <= bombX + explosionRange; i += bomb.getWidth())
 			//No eixo dos Y
@@ -212,10 +214,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				//para fazer cruzamento
 				if(j != bombY && i != bombX) 
 					continue;
-				else{
-					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
-					
-				}
+				else explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
 
 		bomb = null;
 		bombExploded = true;
@@ -229,7 +228,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				e.printStackTrace();
 			}
 		}
-		
+
 		for(Explosion explosion : explosions) {
 			deleteObjects(explosion.getX(),explosion.getY());
 			explosion = null;

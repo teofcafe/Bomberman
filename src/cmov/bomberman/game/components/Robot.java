@@ -20,7 +20,10 @@ public class Robot {
 	private int direction = 0;
 	private int width;
 	private int height;
+	private int steps = 0;
+	private final static int mustWalk = 10;
 
+	@SuppressWarnings("rawtypes")
 	public Robot(Context context,  Pair coordinates) {
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();
@@ -130,29 +133,49 @@ public class Robot {
 		}
 	}
 
+	private void update() {
+		currentFrame = ++currentFrame % BMP_COLUMNS;
+		steps++;		
+	}
+
+	public void resetSteps(){
+		this.steps = 0;
+		this.currentFrame = 1;
+	}
 
 	public void moveUp() {
 		direction = 3;
-		y -= 1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while(this.steps + 1 <= mustWalk) {
+			y -= 1 * VELOCITY;
+			update();
+		} 
+		resetSteps();
 	}
 
 	public void moveLeft() {
 		direction = 1;
-		x -= 1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while(this.steps  + 1 <= mustWalk) {
+			x -= 1 * VELOCITY;
+			update();
+		}
+		resetSteps();
 	}
 
 	public void moveRight() {
 		direction = 2;
-		x += 1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while (this.steps  + 1 <= mustWalk) {
+			x += 1 * VELOCITY;
+			update();
+		}
+		resetSteps();
 	}
 
 	public void moveDown() {
 		direction = 0;	
-		y +=1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while (this.steps + 1 <= mustWalk) {
+			y += 1 * VELOCITY;
+			update();
+		}
+		resetSteps();
 	}
-
 }
