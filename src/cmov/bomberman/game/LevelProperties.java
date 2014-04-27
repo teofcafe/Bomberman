@@ -1,6 +1,8 @@
 package cmov.bomberman.game;
 
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
+
 import android.content.Context;
 import android.util.Log;
 import cmov.bomberman.pair.*;
@@ -20,14 +22,15 @@ public class LevelProperties {
 	
 	private ArrayList<Player> players;
 	private ArrayList<Wall> walls;
-	private ArrayList<Obstacle> obstacles;
+	private ArrayBlockingQueue<Obstacle> obstacles;
 	private ArrayList<Robot> robots;
+
 	
 
 	//grid layout
-	public char[][] gridMap;
+	public static char[][] gridMap;
 
-	public boolean[][] gridLayout;
+	public static boolean[][] gridLayout;
 
 
 	//cells per second
@@ -40,7 +43,8 @@ public class LevelProperties {
 		this.gridLayout = new boolean[lines][columns];
 		this.walls = new ArrayList<Wall>();
 		this.players = new ArrayList<Player>();
-		this.obstacles = new ArrayList<Obstacle>();
+		//TODO ALTERAR ISTO
+		this.obstacles = new ArrayBlockingQueue(100);
 		this.robots = new ArrayList<Robot>();
 	}
 	
@@ -60,11 +64,11 @@ public class LevelProperties {
 		this.walls = walls;
 	}
 
-	public ArrayList<Obstacle> getObstacles() {
+	public ArrayBlockingQueue<Obstacle> getObstacles() {
 		return obstacles;
 	}
 
-	public void setObstacles(ArrayList<Obstacle> obstacles) {
+	public void setObstacles(ArrayBlockingQueue<Obstacle> obstacles) {
 		this.obstacles = obstacles;
 	}
 
@@ -128,6 +132,22 @@ public class LevelProperties {
 	public boolean[][] getGridLayout() {
 		return gridLayout;
 	}
+	
+	// Screen coordinates
+	public static boolean hasObjectByScreenCoordinates(int x, int y){
+	 	Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+		int xvalue = (Integer) mapCoordinates.getKey();
+		int yvalue = (Integer) mapCoordinates.getValue();
+		Log.d("gridlayout","XValue="+xvalue +" yvalue="+yvalue + " cH="+gridMap[xvalue][yvalue] + " Ocupado="+gridLayout[xvalue][yvalue]);
+		return LevelProperties.gridLayout[xvalue][yvalue];
+	}
+	
+	// Screen coordinates
+	public static boolean hasObjectByMapCoordinates(int x, int y){
+		Log.d("gridlayout","XValue="+x +" yvalue="+y + " cH="+gridMap[x][y] + " Ocupado="+gridLayout[x][y]);
+		return LevelProperties.gridLayout[x][y];
+	}
+	
 
 	public void setGridLayout(boolean[][] gridLayout) {
 		this.gridLayout = gridLayout;
@@ -243,11 +263,13 @@ public class LevelProperties {
 	}
 
 	public Wall getWallByMapCoordinates(Pair coordinates){
-		int x = (Integer)coordinates.getKey();
-		int y = (Integer)coordinates.getValue();
+		
+		Pair screenCoordinates = Mapping.mapToScreen(coordinates);
+		int xvalue = (Integer)screenCoordinates.getValue();
+		int yvalue = (Integer)screenCoordinates.getKey();
 		
 		for(Wall wall : this.getWalls()){
-			if(wall.getX()==x && wall.getY()==y)
+			if(wall.getX()==xvalue && wall.getY()==yvalue)
 				return wall;
 		}
 		
@@ -255,22 +277,26 @@ public class LevelProperties {
 	}
 	
 	public Wall getWallByGameCoordinates(int x,int y){
-		Pair coordinates = new Pair(x,y);
-		Pair mapCoordinates = Mapping.screenToMap(coordinates);
 		
-		try{
-			return this.getWallByMapCoordinates(mapCoordinates);
-		}catch(Exception e){
-			return null;
+		for(Wall wall : this.getWalls()){
+			if(wall.getX()==x && wall.getY()==y)
+				return wall;
 		}
+		return null;
+	}
+	
+	public Obstacle getObstacleByMapCoordinates(int x, int y){
+		return this.getObstacleByMapCoordinates(new Pair(x,y));
 	}
 	
 	public Obstacle getObstacleByMapCoordinates(Pair coordinates){
-		int x = (Integer)coordinates.getKey();
-		int y = (Integer)coordinates.getValue();
+		
+		Pair screenCoordinates = Mapping.mapToScreen(coordinates);
+		int xvalue = (Integer)screenCoordinates.getValue();
+		int yvalue = (Integer)screenCoordinates.getKey();
 		
 		for(Obstacle obstacle : this.getObstacles()){
-			if(obstacle.getX()==x && obstacle.getY()==y)
+			if(obstacle.getX()==xvalue && obstacle.getY()==yvalue)
 				return obstacle;
 		}
 		
@@ -278,29 +304,26 @@ public class LevelProperties {
 	}
 	
 	public Obstacle getObstacleByGameCoordinates(int x,int y){
-		Pair coordinates = new Pair(x,y);
-		Pair mapCoordinates = Mapping.screenToMap(coordinates);
-		
-		try{
-			return this.getObstacleByMapCoordinates(mapCoordinates);
-		}catch(Exception e){
-			return null;
+		for(Obstacle obstacle : this.getObstacles()){
+			if(obstacle.getX()==x && obstacle.getY()==y)
+				return obstacle;
 		}
+		return null;
 	}
 	
 	public void delete(int x,int y){
 		char objectToDelete = gridMap[x][y];
 		switch(objectToDelete){
 			case 'O': 
-				boolean removi=this.getObstacles().remove(getObstacleByGameCoordinates(x, y));
+				boolean removi=this.getObstacles().remove(getObstacleByMapCoordinates(x, y));
 				for(Obstacle obstacle : this.getObstacles()){
 					Log.d("obstaculo","Obstaculo: X="+obstacle.getX() +" Y="+obstacle.getY());
 				}
 				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removi);
+				gridLayout[x][y]=false;
 				break;
 			
 		}
-		gridLayout[x][y]=false;
 	}
 	
 	public String toString(){

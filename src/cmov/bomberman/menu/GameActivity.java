@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
+import cmov.bomberman.pair.Pair;
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
@@ -62,8 +63,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
-						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(3);
+						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
 						break;
 					}
@@ -82,8 +83,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
-						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(0);
+						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
 						break;
 
@@ -103,7 +104,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false) && (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(1);
 						gameBoard.getPlayer().setTouched(true);
@@ -125,8 +126,9 @@ public class GameActivity extends Activity implements OnTouchListener{
 				case MotionEvent.ACTION_DOWN:
 
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
-						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(2);
+						gameBoard.getPlayer().setWorking(true);
+						
 						gameBoard.getPlayer().setTouched(true);
 						break;
 					}
@@ -152,6 +154,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		public void run() {
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
 					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+			
 			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
 				Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
 				gameBoard.exitGame();	
@@ -169,11 +172,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 	@Override
 	public void onBackPressed() {
-		Intent intent;
-		gameBoard.exitGame();
-		intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
-		startActivity(intent);
-		GameActivity.this.finish();
+		gameBoard.getPlayer().setPaused();
 	}
 
 	@Override

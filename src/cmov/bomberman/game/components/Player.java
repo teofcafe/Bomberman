@@ -1,6 +1,7 @@
 package cmov.bomberman.game.components;
 
 
+import cmov.bomberman.game.Mapping;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
 import android.content.Context;
@@ -9,6 +10,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
+
+import cmov.bomberman.game.LevelProperties;
 
 public class Player {
 	private Bitmap bitmap;	// the actual bitmap
@@ -117,6 +121,11 @@ public class Player {
 		Pair position = new Pair(x,y);
 		return position;
 	}
+	
+	public Pair getMapCoordinatesPosition(){
+		Pair coordinates = Mapping.screenToMap(new Pair(x,y));
+		return coordinates;
+	}
 
 	public void setPosition(Pair coordinates){
 		this.y = (Integer) coordinates.getKey();
@@ -144,10 +153,10 @@ public class Player {
 		int srcY = direction * height;
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
-		 if(paused)
-			 paint.setAlpha(100);   
-		 else
-			 paint = null;
+		if(paused)
+			paint.setAlpha(100);   
+		else
+			paint = null;
 		canvas.drawBitmap(bitmap, src, dst, paint);
 	}
 
@@ -178,15 +187,14 @@ public class Player {
 	public void setCurrentFrame(int currentFrame) {
 		this.currentFrame = currentFrame;
 	}
-	
-	public boolean CanMove(Pair pair){
-		return true;
-		
+
+	public boolean canMove(){
+		return !LevelProperties.hasObjectByScreenCoordinates(x-1, y);
 	}
 
 	public void update() {
 
-		if( (this.working || isKeyTouched()) && CanMove(nextPosition()) ){
+		if( (this.working || isKeyTouched())){
 			currentFrame = ++currentFrame % BMP_COLUMNS; //update
 
 			switch (getDirection()) {
@@ -214,10 +222,15 @@ public class Player {
 	public void setPaused() {
 		this.paused = (!this.paused);
 	}
-	
+
 	public void resetSteps(){
 		this.steps = 0;
 		this.currentFrame = 1;
+	}
+
+	public void stepsIncrement(){
+		this.steps++;
+		currentFrame = ++currentFrame % BMP_COLUMNS;
 	}
 
 	public void moveDown() {
@@ -230,8 +243,7 @@ public class Player {
 					moveDown();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				y += 1 * VELOCITY;
 			}
 		}
@@ -243,12 +255,12 @@ public class Player {
 				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
-				else
+				else 
 					moveLeft();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+	
+				stepsIncrement();
 				x -= 1 * VELOCITY;
 			}
 		}			
@@ -264,8 +276,7 @@ public class Player {
 					moveRight();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				x += 1 * VELOCITY;
 			}
 		}
@@ -279,12 +290,12 @@ public class Player {
 
 				if(!isKeyTouched())
 					this.working= false;
+				// e aqui que temos de ter a verificacao
 				else
 					moveUp();
 			}
 			else{
-				this.steps++;
-				currentFrame = ++currentFrame % BMP_COLUMNS;
+				stepsIncrement();
 				y -=1 * VELOCITY;
 			}
 		}			
