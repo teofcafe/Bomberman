@@ -31,6 +31,7 @@ public class Player {
 	private int steps;
 	private final static int mustWalk = 10;
 	private int score = 0;
+	private boolean blocked = false;
 
 
 	public int getScore() {
@@ -39,6 +40,10 @@ public class Player {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+	
+	public boolean getBlocked() {
+		return this.blocked;
 	}
 
 	public Player(Context context, int avatar, Pair coordinates){
@@ -261,6 +266,7 @@ public class Player {
 					else{
 						this.working= false;
 						this.keyTouched = false;
+						this.blocked = true;
 					}
 			}
 			else {

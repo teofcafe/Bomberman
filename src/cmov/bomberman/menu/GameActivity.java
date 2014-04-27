@@ -124,11 +124,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+					if(gameBoard.getPlayer().getBlocked())
+						gameBoard.getPlayer().setDirection(2);
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false) && (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setDirection(2);
 						gameBoard.getPlayer().setWorking(true);
-						
+
 						gameBoard.getPlayer().setTouched(true);
 						break;
 					}
@@ -154,7 +155,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		public void run() {
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
 					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
-			
+
 			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
 				Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
 				gameBoard.exitGame();	
