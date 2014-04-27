@@ -61,12 +61,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+					if (gameBoard.getPlayer().getWorking() == false){
+						gameBoard.getPlayer().setDirection(3);
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setDirection(3);
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
 						break;
-					}
+					}}
 
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
@@ -81,13 +83,15 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+					if (gameBoard.getPlayer().getWorking() == false){
+						gameBoard.getPlayer().setDirection(0);
+					if( (!gameBoard.getPlayer().isPaused()) &&  (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setDirection(0);
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
 						break;
 
-					}
+					}}
 
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
@@ -103,12 +107,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false) && (gameBoard.getPlayer().canMove())){
+					if (gameBoard.getPlayer().getWorking() == false){
+						gameBoard.getPlayer().setDirection(1);
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(1);
 						gameBoard.getPlayer().setTouched(true);
 						break;
-					}
+					}}
 
 
 				case MotionEvent.ACTION_UP:
@@ -123,14 +129,15 @@ public class GameActivity extends Activity implements OnTouchListener{
 			public boolean onTouch(View v, MotionEvent event) {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if(gameBoard.getPlayer().getBlocked())
+					if (gameBoard.getPlayer().getWorking() == false) {
 						gameBoard.getPlayer().setDirection(2);
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false) && (gameBoard.getPlayer().canMove())){
-						gameBoard.getPlayer().setDirection(2);
-						gameBoard.getPlayer().setWorking(true);
+						if( (!gameBoard.getPlayer().isPaused())  && (gameBoard.getPlayer().canMove())){
 
-						gameBoard.getPlayer().setTouched(true);
-						break;
+							gameBoard.getPlayer().setWorking(true);
+							gameBoard.getPlayer().setDirection(2);
+							gameBoard.getPlayer().setTouched(true);
+							break;
+						}
 					}
 
 

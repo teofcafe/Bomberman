@@ -39,7 +39,7 @@ public class Player {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
+
 	public boolean getBlocked() {
 		return this.blocked;
 	}
@@ -89,10 +89,11 @@ public class Player {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair nextPosition(){
 		int nextX = 0, nextY = 0;
+		System.out.println("||||||||||||||||| Direct." + getDirection());
 		switch (getDirection()) {
 		case 0:{
 			nextX = this.getX();
-			nextY=this.getY() + 1;
+			nextY=this.getY() + 21;
 			break;
 		}
 		case 1:{
@@ -101,7 +102,7 @@ public class Player {
 			break;
 		}
 		case 2:{
-			nextX = this.getX() + 1;
+			nextX = this.getX() + 21;
 			nextY=this.getY();
 			break;
 		}
@@ -197,7 +198,8 @@ public class Player {
 	}
 
 	public boolean canMove(){
-		return !LevelProperties.hasObjectByScreenCoordinates(x-1, y);
+		Pair next = nextPosition();
+		return !LevelProperties.hasObjectByScreenCoordinates((Integer)next.getKey(), (Integer)next.getValue());
 	}
 
 	public void update() {
@@ -248,7 +250,12 @@ public class Player {
 				if(!isKeyTouched())
 					this.working= false;
 				else
-					moveDown();
+					if(canMove())
+						moveDown();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
 			else{
 				stepsIncrement();
@@ -269,7 +276,6 @@ public class Player {
 					else{
 						this.working= false;
 						this.keyTouched = false;
-						this.blocked = true;
 					}
 			}
 			else {
@@ -286,7 +292,12 @@ public class Player {
 				if(!isKeyTouched())
 					this.working= false;
 				else 
-					moveRight();
+					if(canMove())
+						moveRight();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
 			else{
 				stepsIncrement();
@@ -303,9 +314,13 @@ public class Player {
 
 				if(!isKeyTouched())
 					this.working= false;
-				// e aqui que temos de ter a verificacao
 				else
-					moveUp();
+					if(canMove())
+						moveUp();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
 			else{
 				stepsIncrement();
