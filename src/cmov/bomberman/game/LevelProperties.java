@@ -44,7 +44,7 @@ public class LevelProperties {
 		this.walls = new ArrayList<Wall>();
 		this.players = new ArrayList<Player>();
 		//TODO ALTERAR ISTO
-		this.obstacles = new ArrayBlockingQueue(100);
+		this.obstacles = new ArrayBlockingQueue(1000);
 		this.robots = new ArrayBlockingQueue(4);
 	}
 	
