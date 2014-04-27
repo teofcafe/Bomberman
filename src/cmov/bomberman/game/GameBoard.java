@@ -200,7 +200,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 					continue;
 				else{
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
-					deleteObjects(i,j);
+					
 				}
 
 		bomb = null;
@@ -215,9 +215,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				e.printStackTrace();
 			}
 		}
-
-		for(Explosion explosion : explosions) 
+		
+		for(Explosion explosion : explosions) {
+			deleteObjects(explosion.getX(),explosion.getY());
 			explosion = null;
+		}
 
 		bombExploded = false;
 		bombDroped = false;
