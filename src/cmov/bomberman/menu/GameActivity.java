@@ -17,12 +17,11 @@ import cmov.bomberman.game.GameBoard;
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
 	public static String packageName;
-	Handler timeHandler;
 	Handler updateTimeHander;
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
@@ -46,15 +45,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
 
-
 		gameBoard.gameStart(avatar, level);
-		
-		timeHandler = new Handler();
+
 		updateTimeHander = new Handler();
-		timeHandler.postDelayed(timeControler, gameBoard.getLevelProperties().getGameDuration());
 		updateTimeHander.post(updateDashboard);
-
-
 
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
@@ -153,24 +147,23 @@ public class GameActivity extends Activity implements OnTouchListener{
 		return true;
 	}
 
-	private final Runnable timeControler = new Runnable() {
-		public void run(){
-			Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
-			gameBoard.exitGame();
-		}
-	};
-
 	Runnable updateDashboard = new Runnable() {
-		
+
 		public void run() {
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
-								Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
-			gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
-			
-			playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
-			numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
-			
-			updateTimeHander.postDelayed(this, 1000);
+					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
+				Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
+				gameBoard.exitGame();	
+				updateTimeHander.removeCallbacks(updateDashboard);
+			} else {
+				gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
+
+				playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
+				numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
+
+				updateTimeHander.postDelayed(this, 1000);
+			}
 		}
 	};
 
@@ -186,7 +179,6 @@ public class GameActivity extends Activity implements OnTouchListener{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		timeHandler.removeCallbacks(timeControler);
 		updateTimeHander.removeCallbacks(updateDashboard);
 	}
 
