@@ -121,7 +121,7 @@ public class Player {
 		Pair position = new Pair(x,y);
 		return position;
 	}
-	
+
 	public Pair getMapCoordinatesPosition(){
 		Pair coordinates = Mapping.screenToMap(new Pair(x,y));
 		return coordinates;
@@ -255,11 +255,15 @@ public class Player {
 				resetSteps();
 				if(!isKeyTouched())
 					this.working= false;
-				else 
-					moveLeft();
+				else
+					if(canMove())
+						moveLeft();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
-			else{
-	
+			else {
 				stepsIncrement();
 				x -= 1 * VELOCITY;
 			}
