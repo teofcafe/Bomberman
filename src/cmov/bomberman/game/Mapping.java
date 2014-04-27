@@ -19,8 +19,8 @@ public class Mapping {
 	}
 	
 	public static Pair screenToMap(Pair coordinates){
-		int x = (Integer) coordinates.getKey();
-		int y = (Integer) coordinates.getValue();
+		int y = (Integer) coordinates.getKey();
+		int x = (Integer) coordinates.getValue();
 		
 		int newX = (x/10)/2;
 		int newY = (y/10)/2;

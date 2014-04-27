@@ -121,6 +121,11 @@ public class Player {
 		Pair position = new Pair(x,y);
 		return position;
 	}
+	
+	public Pair getMapCoordinatesPosition(){
+		Pair coordinates = Mapping.screenToMap(new Pair(x,y));
+		return coordinates;
+	}
 
 	public void setPosition(Pair coordinates){
 		this.y = (Integer) coordinates.getKey();
@@ -184,7 +189,7 @@ public class Player {
 	}
 
 	public boolean canMove(){
-		return !LevelProperties.getGridLayout(y, x-1);
+		return !LevelProperties.hasObjectByScreenCoordinates(x-1, y);
 	}
 
 	public void update() {

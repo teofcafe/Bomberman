@@ -62,7 +62,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		setMaxWidth(maxWidth);
 
 		for(Obstacle obstacle : levelProperties.getObstacles()){
-//			System.out.println("coordenada obstaculo: " + obstacle.getX() + " , " + obstacle.getY());
 			obstacle.draw(canvas);
 		}
 	}
@@ -201,7 +200,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 					continue;
 				else{
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
-					deleteObjects(j,i);
+					deleteObjects(i,j);
 				}
 
 		bomb = null;
