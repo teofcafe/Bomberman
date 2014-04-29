@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import android.content.Context;
+import android.media.JetPlayer.OnJetEventListener;
 import android.util.Log;
 import cmov.bomberman.pair.*;
 import cmov.bomberman.game.components.*;
@@ -231,7 +232,7 @@ public class LevelProperties {
 		}
 	}
 
-	public void dumpMap(){
+	public static void dumpMap(){
 		for(int i=0;i<gridMap.length;i++){
 			for(int j=0;j<gridMap[i].length;j++)
 				System.out.print(gridMap[i][j]);
@@ -240,7 +241,7 @@ public class LevelProperties {
 
 	}
 
-	public void dumpGrid(){
+	public static void dumpGrid(){
 		for(int i=0;i<gridLayout.length;i++){
 			for(int j=0;j<gridLayout[i].length;j++)
 				System.out.print(gridLayout[i][j] ? '1' : '0');
@@ -311,6 +312,27 @@ public class LevelProperties {
 		return null;
 	}
 	
+	//Game Coordinates
+	//Method to be used by Players and Robots
+	public static void insert(char object,Pair coordinates){
+		Pair newCoordinates = Mapping.screenToMap(coordinates);
+		int x = (Integer)newCoordinates.getKey();
+		int y = (Integer)newCoordinates.getValue();
+		gridMap[x][y]=object;
+		gridLayout[x][y]=true;
+	}
+	
+	//Method to be used by Players and Robots
+	public static void delete(Pair coordinates){
+		Pair newCoordinates = Mapping.screenToMap(coordinates);
+		int x = (Integer)newCoordinates.getKey();
+		int y = (Integer)newCoordinates.getValue();
+		Log.d("posicaoplayer", "estou a eliminar X="+x+" Y="+y+" CH="+gridMap[x][y]);
+		gridLayout[x][y]=false;
+		gridMap[x][y]='-';
+	}
+	
+	//Map Coordinates
 	public void delete(int x,int y){
 		char objectToDelete = gridMap[x][y];
 		switch(objectToDelete){
@@ -321,8 +343,13 @@ public class LevelProperties {
 				}
 				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removi);
 				gridLayout[x][y]=false;
+				gridMap[x][y]='-';
 				break;
-			
+			case '1':
+				gridLayout[x][y]=false;
+				gridMap[x][y]='-';
+				Log.d("posicaoplayer","removi o player na posicao "+x+" "+y+" com o conteudo "+objectToDelete);
+				break;
 		}
 	}
 	

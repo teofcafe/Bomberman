@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
+import cmov.bomberman.game.Mapping;
 import cmov.bomberman.pair.Pair;
 
 public class GameActivity extends Activity implements OnTouchListener{
@@ -66,6 +68,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 						gameBoard.getPlayer().setDirection(3);
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
+						
 						break;
 					}
 
@@ -108,6 +111,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(1);
 						gameBoard.getPlayer().setTouched(true);
+						
 						break;
 					}
 
@@ -126,10 +130,17 @@ public class GameActivity extends Activity implements OnTouchListener{
 				case MotionEvent.ACTION_DOWN:
 
 					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+						Pair coordinates = gameBoard.getPlayer().getPosition();
+						Pair newcoordinates = Mapping.screenToMap(coordinates);
+						int x=(Integer)newcoordinates.getKey();
+						int y =(Integer) newcoordinates.getValue();
+						Log.d("posicaoplayer","Mover direita: X="+x+" Y="+y);
+						Log.d("posicaoplayer","Deleting player in: X="+gameBoard.getPlayer().getX()+" Y="+gameBoard.getPlayer().getY());
 						gameBoard.getPlayer().setDirection(2);
 						gameBoard.getPlayer().setWorking(true);
-						
 						gameBoard.getPlayer().setTouched(true);
+					
+						
 						break;
 					}
 

@@ -166,6 +166,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		return player;
 	}
 
+	
 	//arguments as gameCoordinates
 	public void deleteObjects(int x, int y){
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
@@ -240,4 +241,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			updateBomb.start();
 		}
 	}
+
+
 }

@@ -1,6 +1,9 @@
 package cmov.bomberman.game.components;
 
 
+import java.util.logging.Level;
+
+import cmov.bomberman.game.GameBoard;
 import cmov.bomberman.game.Mapping;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
@@ -87,6 +90,7 @@ public class Player {
 		switch (getDirection()) {
 		case 0:{
 			nextX = this.getX();
+			//			nextY=this.getY() + 21;
 			nextY=this.getY() + 1;
 			break;
 		}
@@ -96,6 +100,7 @@ public class Player {
 			break;
 		}
 		case 2:{
+			//			nextX = this.getX() + 21;
 			nextX = this.getX() + 1;
 			nextY=this.getY();
 			break;
@@ -199,17 +204,17 @@ public class Player {
 
 			switch (getDirection()) {
 			case 0:
-				moveDown();
+				prepareToMoveDown();
 				break;
 			case 1:
-				moveLeft();
+				prepareToMoveLeft();
 				break;
 			case 2:{
-				moveRight();
+				prepareToMoveRight();
 				break;
 			}
 			case 3:
-				moveUp();
+				prepareToMoveUp();
 				break;
 			}	
 		}
@@ -233,8 +238,48 @@ public class Player {
 		currentFrame = ++currentFrame % BMP_COLUMNS;
 	}
 
+	public void updatePosition(){
+		LevelProperties.insert('1', this.getPosition());
+	}
+
+
+	public void prepareToMoveRight() {
+		if(this.working){
+			LevelProperties.delete(this.getPosition());
+			moveRight();
+			this.updatePosition();
+		}
+
+	}
+
+	public void prepareToMoveLeft() {
+		if(this.working){
+			LevelProperties.delete(this.getPosition());
+			moveLeft();
+			this.updatePosition();
+		}
+
+	}
+
+	public void prepareToMoveDown() {
+		if(this.working){
+			LevelProperties.delete(this.getPosition());
+			moveDown();
+			this.updatePosition();
+		}
+
+	}
+
+	public void prepareToMoveUp() {
+		if(this.working){
+			LevelProperties.delete(this.getPosition());
+			moveUp();
+			this.updatePosition();
+		}
+
+	}
 	public void moveDown() {
-		if(this.working ){
+		if(this.working){
 			if( ((this.steps)  + 1) > mustWalk){
 				resetSteps();
 				if(!isKeyTouched())
@@ -247,7 +292,9 @@ public class Player {
 				y += 1 * VELOCITY;
 			}
 		}
+
 	}
+
 
 	public void moveLeft() {
 		if(this.working){
@@ -267,7 +314,7 @@ public class Player {
 				stepsIncrement();
 				x -= 1 * VELOCITY;
 			}
-		}			
+		}
 	}
 
 	public void moveRight() {
@@ -291,10 +338,8 @@ public class Player {
 
 			if( ((this.steps)  + 1) > mustWalk){
 				resetSteps();
-
 				if(!isKeyTouched())
 					this.working= false;
-				// e aqui que temos de ter a verificacao
 				else
 					moveUp();
 			}
@@ -302,7 +347,7 @@ public class Player {
 				stepsIncrement();
 				y -=1 * VELOCITY;
 			}
-		}			
+		}
 	}
 }
 
