@@ -26,13 +26,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Thread updateBomb;
 	private Player player;
 	private Bomb bomb;
+	@SuppressWarnings("unused")
 	private Wall[] wall;
+	@SuppressWarnings("unused")
+	private Robot[] robots;
 	private boolean bombDroped = false;
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
 	//layout size max
+	@SuppressWarnings("unused")
 	private int maxWidth, maxHeight;
-	public Robot bot;
 
 	private LevelProperties levelProperties;
 
@@ -74,13 +77,22 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		setMaxWidth(maxWidth);
 
 		for(Wall wall : levelProperties.getWalls()){
-//			System.out.println("coordenada parede: " + wall.getX() + " , " + wall.getY());
 			wall.draw(canvas);
 		}
 	}
 
+	private void drawRobots(Canvas canvas) {
+		int maxHeight=this.getHeight();
+		int maxWidth=this.getWidth();
+		setMaxHeight(maxHeight);
+		setMaxWidth(maxWidth);
+
+		for(Robot robot : levelProperties.getRobots())
+			robot.draw(canvas);
+
+	}
+	
 	public void gameStart(int avatar, String levelName) {	
-//		bot = new Robot(getContext(), 55,55);
 		try {
 			
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
@@ -111,6 +123,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		canvas.drawColor(Color.BLACK);
 		drawWall(canvas);
 		drawObstacle(canvas);
+		drawRobots(canvas);
 
 		if(this.bombDroped)
 			if(this.bombExploded) 
@@ -158,9 +171,12 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void update() {
-//		bot.update(player.getX(), player.getY(), player.isPaused());
 		player.update();
+		//TODO tratar da actualizacao dos robots
+//		for(Robot robot : levelProperties.getRobots())
+//			robot.update(player.getX(), player.getY(), player.isPaused());
 	}
+
 
 	public Player getPlayer() {
 		return player;

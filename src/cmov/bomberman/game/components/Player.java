@@ -248,7 +248,6 @@ public class Player {
 
 	public void updatePosition(){
 		LevelProperties.insert('1', this.getPosition());
-		LevelProperties.dumpMap();
 	}
 
 
