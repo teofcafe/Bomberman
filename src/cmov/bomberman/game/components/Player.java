@@ -13,8 +13,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-
 import cmov.bomberman.game.LevelProperties;
 
 public class Player {
@@ -34,6 +32,7 @@ public class Player {
 	private int steps;
 	private final static int mustWalk = 10;
 	private int score = 0;
+	private boolean blocked = false;
 
 
 	public int getScore() {
@@ -44,6 +43,11 @@ public class Player {
 		this.score = score;
 	}
 
+	public boolean getBlocked() {
+		return this.blocked;
+	}
+
+	@SuppressWarnings("rawtypes")
 	public Player(Context context, int avatar, Pair coordinates){
 		switch (avatar) {
 		case 0:
@@ -85,13 +89,14 @@ public class Player {
 		return this.working;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair nextPosition(){
 		int nextX = 0, nextY = 0;
+		System.out.println("||||||||||||||||| Direct." + getDirection());
 		switch (getDirection()) {
 		case 0:{
 			nextX = this.getX();
-			//			nextY=this.getY() + 21;
-			nextY=this.getY() + 1;
+			nextY=this.getY() + 21;
 			break;
 		}
 		case 1:{
@@ -100,8 +105,7 @@ public class Player {
 			break;
 		}
 		case 2:{
-			//			nextX = this.getX() + 21;
-			nextX = this.getX() + 1;
+			nextX = this.getX() + 21;
 			nextY=this.getY();
 			break;
 		}
@@ -122,16 +126,19 @@ public class Player {
 		return y;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair getPosition(){
 		Pair position = new Pair(x,y);
 		return position;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Pair getMapCoordinatesPosition(){
 		Pair coordinates = Mapping.screenToMap(new Pair(x,y));
 		return coordinates;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setPosition(Pair coordinates){
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();
@@ -194,7 +201,8 @@ public class Player {
 	}
 
 	public boolean canMove(){
-		return !LevelProperties.hasObjectByScreenCoordinates(x-1, y);
+		Pair next = nextPosition();
+		return !LevelProperties.hasObjectByScreenCoordinates((Integer)next.getKey(), (Integer)next.getValue());
 	}
 
 	public void update() {
@@ -240,6 +248,7 @@ public class Player {
 
 	public void updatePosition(){
 		LevelProperties.insert('1', this.getPosition());
+		LevelProperties.dumpMap();
 	}
 
 
@@ -285,7 +294,12 @@ public class Player {
 				if(!isKeyTouched())
 					this.working= false;
 				else
-					moveDown();
+					if(canMove())
+						moveDown();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
 			else{
 				stepsIncrement();
@@ -324,7 +338,12 @@ public class Player {
 				if(!isKeyTouched())
 					this.working= false;
 				else 
-					moveRight();
+					if(canMove())
+						moveRight();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
 			else{
 				stepsIncrement();
@@ -341,7 +360,12 @@ public class Player {
 				if(!isKeyTouched())
 					this.working= false;
 				else
-					moveUp();
+					if(canMove())
+						moveUp();
+					else{
+						this.working= false;
+						this.keyTouched = false;
+					}
 			}
 			else{
 				stepsIncrement();

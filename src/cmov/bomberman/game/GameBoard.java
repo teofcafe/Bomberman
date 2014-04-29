@@ -80,7 +80,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void gameStart(int avatar, String levelName) {	
-		bot = new Robot(getContext(), 55,55);
+//		bot = new Robot(getContext(), 55,55);
 		try {
 			
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
@@ -158,7 +158,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void update() {
-		bot.update(player.getX(), player.getY(), player.isPaused());
+//		bot.update(player.getX(), player.getY(), player.isPaused());
 		player.update();
 	}
 
@@ -172,7 +172,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
-		Log.d("explodi", "X="+xvalue + " Y="+yvalue + " CH="+levelProperties.gridMap[xvalue][yvalue]);
 		levelProperties.delete(xvalue,yvalue);
 	}
 	

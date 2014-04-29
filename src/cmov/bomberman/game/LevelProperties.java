@@ -24,7 +24,7 @@ public class LevelProperties {
 	private ArrayList<Player> players;
 	private ArrayList<Wall> walls;
 	private ArrayBlockingQueue<Obstacle> obstacles;
-	private ArrayList<Robot> robots;
+	private ArrayBlockingQueue<Robot> robots;
 
 	
 
@@ -45,8 +45,8 @@ public class LevelProperties {
 		this.walls = new ArrayList<Wall>();
 		this.players = new ArrayList<Player>();
 		//TODO ALTERAR ISTO
-		this.obstacles = new ArrayBlockingQueue(100);
-		this.robots = new ArrayList<Robot>();
+		this.obstacles = new ArrayBlockingQueue(1000);
+		this.robots = new ArrayBlockingQueue(4);
 	}
 	
 	public ArrayList<Player> getPlayers() {
@@ -73,11 +73,11 @@ public class LevelProperties {
 		this.obstacles = obstacles;
 	}
 
-	public ArrayList<Robot> getRobots() {
+	public ArrayBlockingQueue<Robot> getRobots() {
 		return robots;
 	}
 
-	public void setRobots(ArrayList<Robot> robots) {
+	public void setRobots(ArrayBlockingQueue<Robot> robots) {
 		this.robots = robots;
 	}
 
@@ -97,8 +97,8 @@ public class LevelProperties {
 		this.players.add(new Player(context,avatar, Mapping.mapToScreen(coordinates)));	
 	}
 	
-	public void addRobot(){
-		this.numberOfRobots++;
+	public void addRobot(Context context, Pair coordinates){
+		this.robots.add(new Robot(context, Mapping.mapToScreen(coordinates)));
 	}
 
 	public void setNumberOfwalls(int numberOfwalls) {
@@ -304,6 +304,24 @@ public class LevelProperties {
 		return null;
 	}
 	
+	public Robot getRobotByMapCoordinates(int x, int y){
+		return this.getRobotByMapCoordinates(new Pair(x,y));
+	}
+	
+	public Robot getRobotByMapCoordinates(Pair coordinates){
+		
+		Pair screenCoordinates = Mapping.mapToScreen(coordinates);
+		int xvalue = (Integer)screenCoordinates.getValue();
+		int yvalue = (Integer)screenCoordinates.getKey();
+		
+		for(Robot robot : this.getRobots()){
+			if(robot.getX()==xvalue && robot.getY()==yvalue)
+				return robot;
+		}
+		
+		return null;
+	}
+	
 	public Obstacle getObstacleByGameCoordinates(int x,int y){
 		for(Obstacle obstacle : this.getObstacles()){
 			if(obstacle.getX()==x && obstacle.getY()==y)
@@ -312,6 +330,7 @@ public class LevelProperties {
 		return null;
 	}
 	
+
 	//Game Coordinates
 	//Method to be used by Players and Robots
 	public static void insert(char object,Pair coordinates){
@@ -333,7 +352,8 @@ public class LevelProperties {
 	}
 	
 	//Map Coordinates
-	public void delete(int x,int y){
+	public void delete(int x,int y) {
+
 		char objectToDelete = gridMap[x][y];
 		switch(objectToDelete){
 			case 'O': 
@@ -350,6 +370,15 @@ public class LevelProperties {
 				gridMap[x][y]='-';
 				Log.d("posicaoplayer","removi o player na posicao "+x+" "+y+" com o conteudo "+objectToDelete);
 				break;
+
+			case 'R':
+				boolean removed = this.getRobots().remove(getRobotByMapCoordinates(x, y));
+				for(Robot robot : this.getRobots())
+					Log.d("robot","ROBOT: X="+robot.getX() +" Y="+robot.getY());
+				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removed);
+				gridLayout[x][y] = false;
+				break;	
+
 		}
 	}
 	

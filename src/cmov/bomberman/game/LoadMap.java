@@ -41,7 +41,8 @@ public class LoadMap {
     public static boolean[][] gridLayout = new boolean[LINES][COLUMNS];
     
 	
-	 protected static LevelProperties loadMap(InputStream filename, Context context,int avatar, int maxWidth, int maxHeight) throws IOException {
+	 @SuppressWarnings({ "unchecked", "rawtypes" })
+	protected static LevelProperties loadMap(InputStream filename, Context context,int avatar, int maxWidth, int maxHeight) throws IOException {
 		 LevelProperties levelProperties = new LevelProperties(PLAYERS,LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
@@ -117,7 +118,7 @@ public class LoadMap {
 	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }
 	                    else if (ch== 'O') levelProperties.addObstacle(context,new Pair(i,j));
-//	                    else if (ch == 'R') levelProperties.addRobot();
+	                    else if (ch == 'R') levelProperties.addRobot(context,new Pair(i,j));
 	                }
 
 	            }

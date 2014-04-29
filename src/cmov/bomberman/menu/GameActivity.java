@@ -14,8 +14,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
+
 import cmov.bomberman.game.Mapping;
 import cmov.bomberman.pair.Pair;
+
 
 public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
@@ -64,14 +66,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+					if (gameBoard.getPlayer().getWorking() == false){
+						gameBoard.getPlayer().setDirection(3);
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setDirection(3);
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
-						
 						break;
-					}
-
+					}}
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
 				}  	
@@ -85,13 +87,15 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
+					if (gameBoard.getPlayer().getWorking() == false){
+						gameBoard.getPlayer().setDirection(0);
+					if( (!gameBoard.getPlayer().isPaused()) &&  (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setDirection(0);
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setTouched(true);
 						break;
 
-					}
+					}}
 
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
@@ -107,13 +111,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false) && (gameBoard.getPlayer().canMove())){
+					if (gameBoard.getPlayer().getWorking() == false){
+						gameBoard.getPlayer().setDirection(1);
+					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
 						gameBoard.getPlayer().setWorking(true);
 						gameBoard.getPlayer().setDirection(1);
 						gameBoard.getPlayer().setTouched(true);
-						
 						break;
-					}
+					}}
 
 
 				case MotionEvent.ACTION_UP:
@@ -129,21 +134,16 @@ public class GameActivity extends Activity implements OnTouchListener{
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().getWorking() == false)){
-						Pair coordinates = gameBoard.getPlayer().getPosition();
-						Pair newcoordinates = Mapping.screenToMap(coordinates);
-						int x=(Integer)newcoordinates.getKey();
-						int y =(Integer) newcoordinates.getValue();
-						Log.d("posicaoplayer","Mover direita: X="+x+" Y="+y);
-						Log.d("posicaoplayer","Deleting player in: X="+gameBoard.getPlayer().getX()+" Y="+gameBoard.getPlayer().getY());
+					if (gameBoard.getPlayer().getWorking() == false) {
 						gameBoard.getPlayer().setDirection(2);
-						gameBoard.getPlayer().setWorking(true);
-						gameBoard.getPlayer().setTouched(true);
-					
-						
-						break;
-					}
+						if( (!gameBoard.getPlayer().isPaused())  && (gameBoard.getPlayer().canMove())){
 
+							gameBoard.getPlayer().setWorking(true);
+							gameBoard.getPlayer().setDirection(2);
+							gameBoard.getPlayer().setTouched(true);
+							break;
+						}
+					}
 
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
@@ -165,9 +165,9 @@ public class GameActivity extends Activity implements OnTouchListener{
 		public void run() {
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
 					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
-			
+
 			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
-				Toast.makeText(getApplicationContext(), "Tempo acabou...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
 				gameBoard.exitGame();	
 				updateTimeHander.removeCallbacks(updateDashboard);
 			} else {

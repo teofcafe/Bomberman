@@ -4,6 +4,7 @@ import cmov.bomberman.pair.*;
 
 public class Mapping {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Pair mapToScreen(Pair coordinates){
 		int x = (Integer) coordinates.getKey();
 		int y = (Integer) coordinates.getValue();
@@ -18,6 +19,7 @@ public class Mapping {
 		return screen;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Pair screenToMap(Pair coordinates){
 		int y = (Integer) coordinates.getKey();
 		int x = (Integer) coordinates.getValue();

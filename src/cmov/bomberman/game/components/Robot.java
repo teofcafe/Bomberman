@@ -2,6 +2,7 @@ package cmov.bomberman.game.components;
 
 
 import cmov.bomberman.menu.R;
+import cmov.bomberman.pair.Pair;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,13 +17,16 @@ public class Robot {
 	private static final int BMP_COLUMNS = 3;
 	private int currentFrame = 1;
 	private final static float VELOCITY = 2;
-	private int direction = 2;
+	private int direction = 0;
 	private int width;
 	private int height;
+	private int steps = 0;
+	private final static int mustWalk = 10;
 
-	public Robot(Context context, int x, int y) {
-		this.x = x;
-		this.y = y;
+	@SuppressWarnings("rawtypes")
+	public Robot(Context context,  Pair coordinates) {
+		this.y = (Integer) coordinates.getKey();
+		this.x = (Integer) coordinates.getValue();
 		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bot);
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
@@ -129,29 +133,49 @@ public class Robot {
 		}
 	}
 
+	private void update() {
+		currentFrame = ++currentFrame % BMP_COLUMNS;
+		steps++;		
+	}
+
+	public void resetSteps(){
+		this.steps = 0;
+		this.currentFrame = 1;
+	}
 
 	public void moveUp() {
 		direction = 3;
-		y -= 1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while(this.steps + 1 <= mustWalk) {
+			y -= 1 * VELOCITY;
+			update();
+		} 
+		resetSteps();
 	}
 
 	public void moveLeft() {
 		direction = 1;
-		x -= 1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while(this.steps  + 1 <= mustWalk) {
+			x -= 1 * VELOCITY;
+			update();
+		}
+		resetSteps();
 	}
 
 	public void moveRight() {
 		direction = 2;
-		x += 1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while (this.steps  + 1 <= mustWalk) {
+			x += 1 * VELOCITY;
+			update();
+		}
+		resetSteps();
 	}
 
 	public void moveDown() {
 		direction = 0;	
-		y +=1 * VELOCITY;
-		currentFrame = ++currentFrame % BMP_COLUMNS;
+		while (this.steps + 1 <= mustWalk) {
+			y += 1 * VELOCITY;
+			update();
+		}
+		resetSteps();
 	}
-
 }
