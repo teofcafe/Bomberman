@@ -70,7 +70,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void drawWall(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
@@ -189,6 +188,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
 		levelProperties.delete(xvalue,yvalue);
+		System.out.println("Obstaculos: " + levelProperties.getObstacles().size());
 	}
 	
 	@SuppressWarnings({ "static-access", "unused" })

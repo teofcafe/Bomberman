@@ -16,7 +16,7 @@ public class LevelProperties {
 	private int explosionDuration;
 	private int explosionRange;
 
-
+	private int numberOfPlayers;
 	private int numberOfWalls;
 	private int numberOfObstacles;
 	private int numberOfRobots;
@@ -26,7 +26,6 @@ public class LevelProperties {
 	private ArrayBlockingQueue<Obstacle> obstacles;
 	private ArrayBlockingQueue<Robot> robots;
 
-	
 
 	//grid layout
 	public static char[][] gridMap;
@@ -39,15 +38,35 @@ public class LevelProperties {
 	int pointsPerRobotKilled;
 	int pointsPerOponentKilled;
 
-	public LevelProperties(int players, int lines, int columns){
+	public LevelProperties(int lines, int columns){
 		this.gridMap = new char[lines][columns];
 		this.gridLayout = new boolean[lines][columns];
 		this.walls = new ArrayList<Wall>();
-		this.players = new ArrayList<Player>();
-		//TODO ALTERAR ISTO
-		this.obstacles = new ArrayBlockingQueue(1000);
-		this.robots = new ArrayBlockingQueue(4);
+		this.players = new ArrayList<Player>();	
+		
 	}
+	
+	public void initialize() {
+		this.obstacles = new ArrayBlockingQueue(this.numberOfObstacles);
+		this.robots = new ArrayBlockingQueue(this.numberOfRobots);
+	}
+	
+	public int getNumberOfPlayers() {
+		return this.players.size();
+	}
+
+	public void setNumberOfPlayers(int numberOfPlayers) {
+		this.numberOfPlayers = numberOfPlayers;
+	}
+
+	public int getNumberOfWalls() {
+		return this.walls.size();
+	}
+
+	public void setNumberOfWalls(int numberOfWalls) {
+		this.numberOfWalls = numberOfWalls;
+	}
+
 	
 	public ArrayList<Player> getPlayers() {
 		return players;
@@ -81,9 +100,6 @@ public class LevelProperties {
 		this.robots = robots;
 	}
 
-	public int getNumberOfwalls() {
-		return numberOfWalls;
-	}
 	
 	public void addWall(Context context,Pair coordinates){
 		this.walls.add(new Wall(context, Mapping.mapToScreen(coordinates)));
@@ -101,26 +117,23 @@ public class LevelProperties {
 		this.robots.add(new Robot(context, Mapping.mapToScreen(coordinates)));
 	}
 
-	public void setNumberOfwalls(int numberOfwalls) {
-		this.numberOfWalls = numberOfwalls;
-	}
 
 	public int getNumberOfObstacles() {
-		return numberOfObstacles;
+		return this.obstacles.size();
 	}
 
 	public void setNumberOfObstacles(int numberOfObstacles) {
 		this.numberOfObstacles = numberOfObstacles;
+	
 	}
 
 	public int getNumberOfRobots() {
-		return numberOfRobots;
+		return this.robots.size();
 	}
 
 	public void setNumberOfRobots(int numberOfRobots) {
 		this.numberOfRobots = numberOfRobots;
 	}
-
 
 	public char[][] getGridMap() {
 		return gridMap;
@@ -238,7 +251,6 @@ public class LevelProperties {
 				System.out.print(gridMap[i][j]);
 			System.out.printf("\n");	
 		}
-
 	}
 
 	public static void dumpGrid(){
@@ -394,5 +406,7 @@ public class LevelProperties {
 		return properties;
 
 	}
+
+	
 
 }
