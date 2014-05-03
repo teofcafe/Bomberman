@@ -26,10 +26,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Thread updateBomb;
 	private Player player;
 	private Bomb bomb;
-	@SuppressWarnings("unused")
-	private Wall[] wall;
-	@SuppressWarnings("unused")
-	private Robot[] robots;
+
 	private boolean bombDroped = false;
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
@@ -58,7 +55,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void drawObstacle(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);

@@ -16,6 +16,7 @@ import android.graphics.Rect;
 import cmov.bomberman.game.LevelProperties;
 
 public class Player {
+	private short id;
 	private Bitmap bitmap;	// the actual bitmap
 	private int x;			// the X coordinate
 	private int y;			// the Y coordinate
@@ -48,7 +49,7 @@ public class Player {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Player(Context context, int avatar, Pair coordinates){
+	public Player(Context context, int avatar,short id, Pair coordinates){
 		switch (avatar) {
 		case 0:
 			this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.player_1);
@@ -70,7 +71,7 @@ public class Player {
 			break;
 		}
 
-
+		this.id=id;
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();
 

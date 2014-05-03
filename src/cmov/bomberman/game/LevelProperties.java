@@ -110,7 +110,7 @@ public class LevelProperties {
 	}
 	
 	public void addPlayer(Context context,int avatar, Pair coordinates){
-		this.players.add(new Player(context,avatar, Mapping.mapToScreen(coordinates)));	
+		this.players.add(new Player(context,avatar, (short) this.players.size(), Mapping.mapToScreen(coordinates)));	
 	}
 	
 	public void addRobot(Context context, Pair coordinates){
