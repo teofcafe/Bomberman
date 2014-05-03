@@ -364,7 +364,7 @@ public class LevelProperties {
 	}
 	
 	//Map Coordinates
-	public void delete(int x,int y) {
+	public char delete(int x,int y) {
 
 		char objectToDelete = gridMap[x][y];
 		switch(objectToDelete){
@@ -389,9 +389,11 @@ public class LevelProperties {
 					Log.d("robot","ROBOT: X="+robot.getX() +" Y="+robot.getY());
 				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removed);
 				gridLayout[x][y] = false;
-				break;	
+				break;
 
 		}
+		
+		return objectToDelete;
 	}
 	
 	public String toString(){
