@@ -164,12 +164,13 @@ public class Robot {
 	public void runRandom(){
 		int j;
 		working = -1;
-		if(randomSteps < 5){
+		if(randomSteps < 4){
 			Random generator = new Random(); 
 			int i = generator.nextInt(3) + 1;					
-			Log.d("NOVO", "GEREI ||||||||||||||||||||||||| "+ i);
+			Log.d("NOVO", "GEREI ||||||||||||||cccccc||||||||||| "+ i);
 			direction = i;
 			if(canMove()){
+				Log.d("rd", "GEREI random e vou | ");
 				inRandomMove = true;
 				randomSteps++;
 				redirectMoves(working);
@@ -180,6 +181,7 @@ public class Robot {
 					if(canMove()){
 						redirectMoves(working);
 						randomSteps++;
+						inRandomMove = true;
 					}
 					break;
 				}
@@ -244,7 +246,7 @@ public class Robot {
 					direction = 1;
 					LevelProperties.delete(this.getPosition());
 					if(canMove()) {
-						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT ||||||||x|||||||||");
 						moveLeft();
 					} else {
 						working = -1;
@@ -255,7 +257,7 @@ public class Robot {
 					LevelProperties.delete(this.getPosition());
 
 					if(canMove()) {
-						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  RIGHT|||||||x|||||||||");
 						moveRight();
 					} else {
 						working = -1;
@@ -266,7 +268,7 @@ public class Robot {
 				direction = 0;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  UPPPP||||||||x|||||||||");
 					moveUp();
 				} else {
 					working = -1;
@@ -277,7 +279,7 @@ public class Robot {
 				direction = 3;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  DOWN|||||||x|||||||||");
 					moveDown();
 				} else {
 					working = -1;
