@@ -21,7 +21,7 @@ public class LevelProperties {
 	private int numberOfObstacles;
 	private int numberOfRobots;
 	
-	private ArrayList<Player> players;
+	private ArrayBlockingQueue<Player> players;
 	private ArrayList<Wall> walls;
 	private ArrayBlockingQueue<Obstacle> obstacles;
 	private ArrayBlockingQueue<Robot> robots;
@@ -42,15 +42,14 @@ public class LevelProperties {
 		this.gridMap = new char[lines][columns];
 		this.gridLayout = new boolean[lines][columns];
 		this.walls = new ArrayList<Wall>();
-		this.players = new ArrayList<Player>();
-		this.obstacles = new ArrayBlockingQueue(1000);
-		this.robots = new ArrayBlockingQueue(4);
+	
 
 	}
 	
 	public void initialize() {
 		this.obstacles = new ArrayBlockingQueue(this.numberOfObstacles);
 		this.robots = new ArrayBlockingQueue(this.numberOfRobots);
+		this.players = new ArrayBlockingQueue(this.numberOfPlayers);
 	}
 	
 	public int getNumberOfPlayers() {
@@ -70,11 +69,11 @@ public class LevelProperties {
 	}
 
 	
-	public ArrayList<Player> getPlayers() {
+	public ArrayBlockingQueue<Player> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(ArrayList<Player> players) {
+	public void setPlayers(ArrayBlockingQueue<Player> players) {
 		this.players = players;
 	}
 
@@ -112,7 +111,7 @@ public class LevelProperties {
 	}
 	
 	public void addPlayer(Context context,int avatar, Pair coordinates){
-		this.players.add(new Player(context,avatar, (short) this.players.size(), Mapping.mapToScreen(coordinates)));	
+		this.players.add(new Player(context,avatar, (byte) this.players.size(), Mapping.mapToScreen(coordinates)));	
 	}
 	
 	public void addRobot(Context context, Pair coordinates){
@@ -168,13 +167,15 @@ public class LevelProperties {
 		this.gridLayout = gridLayout;
 	}
 
-	public Pair getPlayerPositions(int player) {
-		return this.getPlayers().get(player-1).getPosition();
+	
+	
+	public Pair getPlayerPositions(byte player) {
+		return this.getPlayerById((byte)(player-1)).getPosition();
 	}
 
 //arguments as game coordinates
-	public void setPlayerPositions(int player, Pair pair) {
-		this.getPlayers().get(player-1).setPosition(pair);
+	public void setPlayerPositions(byte player, Pair pair) {
+		this.getPlayerById((byte)(player-1)).setPosition(pair);
 	}
 	
 	public String getLevelName() {
@@ -233,8 +234,6 @@ public class LevelProperties {
 	public void dumpPlayerPositions(){
 		
 		for(Player player : this.getPlayers()){
-			//TODO adicionar nome aos players
-//			String player =
 			Pair position = player.getPosition();
 			String x = position.getKey().toString();
 			String y = position.getValue().toString();
@@ -340,6 +339,13 @@ public class LevelProperties {
 	}
 	
 
+	public Player getPlayerById(byte id){
+		for(Player player : this.getPlayers())
+			if(player.getId()==id)
+				return player;
+		return null;
+	}
+	
 	//Game Coordinates
 	//Method to be used by Players and Robots
 	public static void insert(char object,Pair coordinates){

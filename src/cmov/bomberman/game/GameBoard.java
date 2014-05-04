@@ -82,7 +82,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
-		System.out.println("********************************NR: " + levelProperties.getRobots().size());
 		for(Robot robot : levelProperties.getRobots())
 			robot.draw(canvas);
 
@@ -96,7 +95,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			InputStream level = getResources().openRawResource(resID);
 			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
 			//TODO alterar o index para o player respectivo 
-			player = this.levelProperties.getPlayers().get(0);
+			player = this.levelProperties.getPlayerById((byte)0);
 
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
