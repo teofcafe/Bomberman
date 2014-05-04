@@ -2,7 +2,6 @@ package cmov.bomberman.game.components;
 
 
 import java.util.Random;
-
 import cmov.bomberman.game.LevelProperties;
 import cmov.bomberman.game.Mapping;
 import cmov.bomberman.menu.R;
@@ -80,8 +79,6 @@ public class Robot {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair getPosition(){
 		Pair position = new Pair(x,y);
-		Pair newPosition = Mapping.screenToMap(position);
-		Log.d("POSICAOROBOT","x= " +  newPosition.getKey() + " y= " + newPosition.getValue());
 		return position;
 	}
 
@@ -136,9 +133,6 @@ public class Robot {
 			working = direction;
 
 		}
-
-		//LevelProperties.delete(this.getPosition());
-		Log.d("NOVO", "REDIRECTTTTTTTTT");
 		LevelProperties.delete(this.getPosition());
 		switch (working) {
 		case 0:{
@@ -158,7 +152,6 @@ public class Robot {
 			break;
 		}
 		}
-		//this.updatePosition();
 	}
 
 	public void runRandom(){
@@ -167,10 +160,8 @@ public class Robot {
 		if(randomSteps < 4){
 			Random generator = new Random(); 
 			int i = generator.nextInt(3) + 1;					
-			Log.d("NOVO", "GEREI ||||||||||||||cccccc||||||||||| "+ i);
 			direction = i;
 			if(canMove()){
-				Log.d("rd", "GEREI random e vou | ");
 				inRandomMove = true;
 				randomSteps++;
 				redirectMoves(working);
@@ -204,7 +195,6 @@ public class Robot {
 				direction = 2;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveRight();
 				} else runRandom();
 			}
@@ -213,7 +203,6 @@ public class Robot {
 				direction = 1;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveLeft();
 				} else runRandom();
 			}
@@ -222,7 +211,6 @@ public class Robot {
 				direction = 0;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveUp();
 				} else runRandom();
 			}
@@ -231,7 +219,6 @@ public class Robot {
 				direction = 3;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveDown();
 				} else runRandom();
 			}
@@ -246,7 +233,6 @@ public class Robot {
 					direction = 1;
 					LevelProperties.delete(this.getPosition());
 					if(canMove()) {
-						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT ||||||||x|||||||||");
 						moveLeft();
 					} else {
 						working = -1;
@@ -257,7 +243,6 @@ public class Robot {
 					LevelProperties.delete(this.getPosition());
 
 					if(canMove()) {
-						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  RIGHT|||||||x|||||||||");
 						moveRight();
 					} else {
 						working = -1;
@@ -268,7 +253,6 @@ public class Robot {
 				direction = 0;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  UPPPP||||||||x|||||||||");
 					moveUp();
 				} else {
 					working = -1;
@@ -279,7 +263,6 @@ public class Robot {
 				direction = 3;
 				LevelProperties.delete(this.getPosition());
 				if(canMove()) {
-					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  DOWN|||||||x|||||||||");
 					moveDown();
 				} else {
 					working = -1;
