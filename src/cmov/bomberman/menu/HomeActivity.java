@@ -69,8 +69,8 @@ public class HomeActivity extends Activity {
 		HomeActivity.this.finish();
 	}
 	
-	public void levelSelectionMenu(View v) {
-		Intent intent = new Intent(this.getApplicationContext(), LevelSelectionActivity.class);
+	public void modeSelectionMenu(View v) {
+		Intent intent = new Intent(this.getApplicationContext(), ModeSelectionActivity.class);
 		startActivity(intent);
 		HomeActivity.this.finish();
 	}

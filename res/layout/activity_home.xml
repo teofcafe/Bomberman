@@ -53,14 +53,14 @@
 		        android:textAppearance="?android:attr/textAppearanceLarge" />
         
     </LinearLayout>
-    
+
         <Button
             android:id="@+id/startGamebutton"
             android:layout_width="290dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:onClick="levelSelectionMenu"
             android:background="@drawable/button"
+            android:onClick="modeSelectionMenu"
             android:text="Start Game" />
 
         <Button

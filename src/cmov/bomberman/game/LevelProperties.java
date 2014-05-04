@@ -164,18 +164,14 @@ public class LevelProperties {
 		return LevelProperties.gridLayout[x][y];
 	}
 	
-
 	public void setGridLayout(boolean[][] gridLayout) {
 		this.gridLayout = gridLayout;
 	}
-
-
 
 	public Pair getPlayerPositions(int player) {
 		return this.getPlayers().get(player-1).getPosition();
 	}
 
-	
 //arguments as game coordinates
 	public void setPlayerPositions(int player, Pair pair) {
 		this.getPlayers().get(player-1).setPosition(pair);
@@ -233,7 +229,6 @@ public class LevelProperties {
 	public void setGridMap(int x,int y, char value){
 		this.gridMap[x][y]=value;
 	}
-
 
 	public void dumpPlayerPositions(){
 		

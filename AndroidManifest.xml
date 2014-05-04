@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name="SettingsActivity" />
+        <activity android:name="ModeSelectionActivity" />
+        <activity android:name="RoleSelectionActivity" />
         <activity android:name="LevelSelectionActivity" />
         <activity android:name="GameActivity" />
     </application>

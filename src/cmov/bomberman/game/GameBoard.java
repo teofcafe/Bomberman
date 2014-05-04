@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 import cmov.bomberman.game.components.Robot;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
@@ -81,7 +82,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
 		setMaxWidth(maxWidth);
-
+		System.out.println("********************************NR: " + levelProperties.getRobots().size());
 		for(Robot robot : levelProperties.getRobots())
 			robot.draw(canvas);
 
@@ -191,6 +192,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 		case 'O': 
 			player.setScore(player.getScore() + levelProperties.getPointsPerOponentKilled());
+			break;
+		case '1':
+			//exitGame(); //TODO Game Over	
 			break;
 		}
 		

@@ -27,10 +27,10 @@ public class LevelSelectionActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		Intent intent;
-
-		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
-		startActivity(intent);
+//		Intent intent;
+//		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+//		startActivity(intent);
+		super.onBackPressed();
 		LevelSelectionActivity.this.finish();
 	}
 
