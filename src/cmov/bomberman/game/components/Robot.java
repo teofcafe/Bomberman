@@ -1,6 +1,10 @@
 package cmov.bomberman.game.components;
 
 
+import java.util.Random;
+
+import cmov.bomberman.game.LevelProperties;
+import cmov.bomberman.game.Mapping;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
 import android.content.Context;
@@ -8,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
+
 
 public class Robot {
 
@@ -17,20 +23,80 @@ public class Robot {
 	private static final int BMP_COLUMNS = 3;
 	private int currentFrame = 1;
 	private final static float VELOCITY = 2;
-	private int direction = 0;
+	private int direction = 1;
 	private int width;
 	private int height;
-	private int steps = 0;
 	private final static int mustWalk = 10;
+	private byte working = -1;
+	private byte walked = 0;
+	private boolean inRandomMove = false;
+	private byte randomSteps = 0;
+	private byte id;
+
 
 	@SuppressWarnings("rawtypes")
-	public Robot(Context context,  Pair coordinates) {
+	public Robot(Context context, byte id, Pair coordinates) {
 		this.y = (Integer) coordinates.getKey();
 		this.x = (Integer) coordinates.getValue();
 		this.bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.bot);
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
+		this.id = id;
 	}
+
+	public int getDirection(){
+		return this.direction;
+	}
+
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Pair nextPosition(){
+		int nextX = 0, nextY = 0;
+		switch (getDirection()) {
+		case 0:{
+			nextX = this.getX();
+			nextY=this.getY() - 1;
+			break;
+		}
+		case 1:{
+			nextX = this.getX() -1;
+			nextY=this.getY();
+			break;
+		}
+		case 2:{
+			nextX = this.getX() + 21;
+			nextY=this.getY();
+			break;
+		}
+		case 3:{
+			nextX = this.getX();
+			nextY=this.getY() + 21;
+			break;
+		}
+		}
+		return new Pair(nextX, nextY);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Pair getPosition(){
+		Pair position = new Pair(x,y);
+		Pair newPosition = Mapping.screenToMap(position);
+		Log.d("POSICAOROBOT","x= " +  newPosition.getKey() + " y= " + newPosition.getValue());
+		return position;
+	}
+
+	public void updatePosition(){
+		LevelProperties.insert('R', this.getPosition());
+		LevelProperties.dumpMap();
+	}
+
+
+	@SuppressWarnings("rawtypes")
+	public boolean canMove(){
+		Pair next = nextPosition();
+		return !LevelProperties.hasObjectByScreenCoordinates((Integer)next.getKey(), (Integer)next.getValue());
+	}
+
 
 	public int getX() {
 		return x;
@@ -65,117 +131,278 @@ public class Robot {
 		canvas.drawBitmap(bitmap, src, dst, null);
 	}
 
+	public void redirectMoves(int working){
+		if(working == -1){
+			working = direction;
+
+		}
+
+		//LevelProperties.delete(this.getPosition());
+		Log.d("NOVO", "REDIRECTTTTTTTTT");
+		switch (working) {
+		case 0:{
+			moveUp();
+			break;
+		}
+		case 1:{
+			moveLeft();
+			break;
+		}
+		case 2:{
+			moveRight();
+			break;
+		}
+		case 3:{
+			moveDown();
+			break;
+		}
+		}
+		//this.updatePosition();
+	}
+
+	public void runRandom(){
+		int j;
+		working = -1;
+		if(randomSteps < 5){
+			Random generator = new Random(); 
+			int i = generator.nextInt(3) + 1;					
+			Log.d("NOVO", "GEREI ||||||||||||||||||||||||| "+ i);
+			direction = i;
+			if(canMove()){
+				inRandomMove = true;
+				randomSteps++;
+				redirectMoves(working);
+			}
+			else
+				for (j = 0; j < 4; j++){
+					direction = j;
+					if(canMove()){
+						redirectMoves(working);
+						randomSteps++;
+					}
+					break;
+					}
+		}
+		else {
+			inRandomMove = false;
+			randomSteps = 0;
+			working = -1;
+		}
+	}
+
 
 	public void checkDirection(int distX, int distY){
 
 		//Aproxima.se do player pelo eixo x ou y
 		if(Math.abs(distX) <=5 || Math.abs(distY) <=5){
 
-			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX <0)
-				moveRight();
 
-			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX >0)
-				moveLeft();
+			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX <0)
+			{
+				direction = 2;
+				if(canMove()){
+					LevelProperties.delete(this.getPosition());
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					moveRight();
+				}
+				else
+					runRandom();
+
+
+			}
+
+			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX >0){
+				direction = 1;
+				if(canMove()){
+					LevelProperties.delete(this.getPosition());
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					moveLeft();
+				}
+				else
+					runRandom();
+
+			}
 
 			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY >0)
-				moveUp();
+			{
+				direction = 0;
+				if(canMove()){
+					LevelProperties.delete(this.getPosition());
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					moveUp();
+				}
+				else
+					runRandom();
+
+
+			}
 
 			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY <0)
-				moveDown();
+			{
+				direction = 3;
+				if(canMove()){
+					LevelProperties.delete(this.getPosition());
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					moveDown();
+				}
+				else
+					runRandom();
+
+			}
 		}
+
+
+		/**************************************************************************************/
 
 		//Escolhe o eixo com menos distancia ate ao player e posiciona.se la
 		else{
+
+
 			if (Math.abs(distX) < Math.abs(distY)){
-				if(distX > 0)
-					moveLeft();
+				if(distX > 0){
+					direction = 1;
+					if(canMove()){
+						LevelProperties.delete(this.getPosition());
+						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+						moveLeft();
+					}
+					else{
+						working = -1;
+						runRandom();
+						}
+
+				}
+
 				else
-					moveRight();
+				{
+					direction = 2;
+					if(canMove()){
+						LevelProperties.delete(this.getPosition());
+						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+						moveRight();
+					}
+					else{
+						working = -1;
+						runRandom();
+						
+					}
+
+				}
+
 			}
 			else
-				if(distY > 0)
-					moveUp();
-				else
-					moveDown();
+				if(distY > 0){
+					direction = 0;
+					if(canMove()){
+						LevelProperties.delete(this.getPosition());
+						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+						moveUp();
+					}
+					else{
+						
+						working = -1;
+						runRandom();
+					}
+				}
+				else{
+					direction = 3;
+					if(canMove()){
+						LevelProperties.delete(this.getPosition());
+						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+						moveDown();
+					}
+					else{
+						working = -1;
+						runRandom();
+					}
+				}
 		}
 	}
 
 	public void update(int playerX, int playerY, boolean paused) {
 		int distX = this.getX() - playerX;
 		int distY = this.getY() - playerY;
-		if(!paused)
-			//heuristic #1
-			checkDirection(distX, distY);
-		else
-			//heuristic #2
-			autoMove();
-	}
+		
+		
 
-	public void autoMove(){
-		switch ((int)(Math.random() * ((3) + 1))) 
-		{ 
-		case 0:
-			for(int i = 0; i <=3; i++)
-				moveUp();
-			break; 
-		case 1:
-			for(int i = 0; i <=3; i++)
-				moveLeft(); 
-			break;
-		case 2: 
-			for(int i = 0; i <=3; i++)
-				moveRight();
-			break;
-		case 3: 
-			for(int i = 0; i <=3; i++)
-				moveDown(); 
-			break;
+		if(!(working < 0))
+			redirectMoves(working);
+
+		else 
+
+		{
+			if(inRandomMove)
+				runRandom();
+
+			else //if(!paused)
+				//heuristic #1
+				checkDirection(distX, distY);
 		}
 	}
+
 
 	private void update() {
 		currentFrame = ++currentFrame % BMP_COLUMNS;
-		steps++;		
-	}
-
-	public void resetSteps(){
-		this.steps = 0;
-		this.currentFrame = 1;
+		walked++;		
 	}
 
 	public void moveUp() {
-		direction = 3;
-		while(this.steps + 1 <= mustWalk) {
+		
+		if(walked < mustWalk){
+			working = 0;
+			direction = 3;
 			y -= 1 * VELOCITY;
 			update();
-		} 
-		resetSteps();
+		}
+		else{
+			walked = 0;
+			working = -1;
+			this.currentFrame = 1;
+		}
+
 	}
 
 	public void moveLeft() {
-		direction = 1;
-		while(this.steps  + 1 <= mustWalk) {
+		
+		if(walked < mustWalk){
+			working = 1;
 			x -= 1 * VELOCITY;
 			update();
 		}
-		resetSteps();
+		else{
+			walked = 0;
+			working = -1;
+			this.currentFrame = 1;
+		}
 	}
 
 	public void moveRight() {
-		direction = 2;
-		while (this.steps  + 1 <= mustWalk) {
+		
+		if(walked < mustWalk){
+			working = 2;
+			direction = 2;
 			x += 1 * VELOCITY;
 			update();
 		}
-		resetSteps();
+		else{
+			walked = 0;
+			working = -1;
+			this.currentFrame = 1;
+		}
 	}
 
 	public void moveDown() {
-		direction = 0;	
-		while (this.steps + 1 <= mustWalk) {
+		
+		if(walked < mustWalk){
+			working = 3;
+			direction = 0;	
 			y += 1 * VELOCITY;
 			update();
 		}
-		resetSteps();
+		else{
+			walked = 0;
+			working = -1;
+			this.currentFrame = 1;
+		}
 	}
 }

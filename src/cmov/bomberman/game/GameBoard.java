@@ -172,9 +172,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void update() {
 		player.update();
-		//TODO tratar da actualizacao dos robots
-//		for(Robot robot : levelProperties.getRobots())
-//			robot.update(player.getX(), player.getY(), player.isPaused());
+		for(Robot robot : levelProperties.getRobots())
+			robot.update(player.getX(), player.getY(), player.isPaused());
 	}
 
 

@@ -44,7 +44,6 @@ public class LevelProperties {
 		this.gridLayout = new boolean[lines][columns];
 		this.walls = new ArrayList<Wall>();
 		this.players = new ArrayList<Player>();
-		//TODO ALTERAR ISTO
 		this.obstacles = new ArrayBlockingQueue(1000);
 		this.robots = new ArrayBlockingQueue(4);
 	}
@@ -98,7 +97,7 @@ public class LevelProperties {
 	}
 	
 	public void addRobot(Context context, Pair coordinates){
-		this.robots.add(new Robot(context, Mapping.mapToScreen(coordinates)));
+		this.robots.add(new Robot(context,(byte) robots.size(), Mapping.mapToScreen(coordinates)));
 	}
 
 	public void setNumberOfwalls(int numberOfwalls) {
