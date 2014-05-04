@@ -28,7 +28,7 @@ public class Robot {
 	private boolean inRandomMove = false;
 	private byte randomSteps = 0;
 	private byte id; 
-	private boolean blocked = false;
+	private boolean blocked;
 
 
 	@SuppressWarnings("rawtypes")
@@ -39,6 +39,7 @@ public class Robot {
 		this.width = bitmap.getWidth() / BMP_COLUMNS;
 		this.height = bitmap.getHeight() / BMP_ROWS;
 		this.id = id;
+		this.blocked = false;
 	}
 
 	public int getDirection(){
@@ -282,9 +283,9 @@ public class Robot {
 		if(!(working < 0))
 			redirectMoves(working);
 		
-		if(blocked);
+		else if(!blocked)
 
-		else{
+		{
 			if(!paused){
 				if(inRandomMove)
 					runRandom();
@@ -292,9 +293,9 @@ public class Robot {
 					//heuristic #1
 					checkDirection(distX, distY);
 			}
-			else
+			/*else
 				//heuristic #2
-				runRandom();
+				runRandom();*/
 		}
 	}
 
