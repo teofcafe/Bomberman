@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class Robot {
 
@@ -279,23 +280,20 @@ public class Robot {
 	public void update(int playerX, int playerY, boolean paused) {
 		int distX = this.getX() - playerX;
 		int distY = this.getY() - playerY;
-
-		if(!(working < 0))
+		Log.d("NEW", "PLAYER ESTA COM O PAUSE A "+ paused);
+		if(!(working < 0)){
 			redirectMoves(working);
-		
-		else if(!blocked)
+			Log.d("NEW", "REDIRECT");
+		}
 
+		else if(!blocked)
 		{
-			if(!paused){
-				if(inRandomMove)
-					runRandom();
-				else 
-					//heuristic #1
-					checkDirection(distX, distY);
-			}
-			/*else
+			if(paused || inRandomMove)
 				//heuristic #2
-				runRandom();*/
+				runRandom();
+			else 
+				//heuristic #1
+				checkDirection(distX, distY);
 		}
 	}
 
