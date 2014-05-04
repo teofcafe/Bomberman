@@ -367,4 +367,8 @@ public class Robot {
 			this.updatePosition();
 		}
 	}
+	
+	public void freeze() {
+		blocked = true;
+	}
 }

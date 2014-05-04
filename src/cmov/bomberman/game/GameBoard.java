@@ -200,6 +200,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		System.out.println("Obstaculos: " + levelProperties.getObstacles().size());
 	}
 	
+	private void freezeObjects(int x, int y) {
+		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+		int xvalue = (Integer) mapCoordinates.getKey();
+		int yvalue = (Integer) mapCoordinates.getValue();
+		
+		levelProperties.freeze(xvalue,yvalue);
+	}
+	
 	@SuppressWarnings({ "static-access", "unused" })
 	public void updateBomb() {
 		while(!bomb.isExploded()) {
@@ -232,8 +240,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		bombExploded = true;
 
 		while(explosions.get(0).isAlive()) {
-			for(Explosion explosion : explosions) 
+			for(Explosion explosion : explosions) {
+				freezeObjects(explosion.getX(),explosion.getY());
 				explosion.update();
+			}
 			try {
 				updateBomb.sleep((levelProperties.getExplosionDuration())/4);
 			} catch (InterruptedException e) {

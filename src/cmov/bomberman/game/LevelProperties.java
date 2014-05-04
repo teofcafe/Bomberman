@@ -398,6 +398,15 @@ public class LevelProperties {
 		return objectToDelete;
 	}
 	
+	public void freeze(int x, int y) {
+		char objectToDelete = gridMap[x][y];
+		switch(objectToDelete){
+			case 'R':
+				getRobotByMapCoordinates(x, y).freeze();
+				break;
+		}	
+	}
+	
 	public String toString(){
 		String properties = "LEVEL NAME="+this.getLevelName() + "\n" + "GAME DURATION="+this.getGameDuration() +
 				"\n" + "EXPLOSTION TIMEOUT="+this.getExplosionTimeout()+"\n"+"EXPLOSION RANGE="+this.getExplosionRange()+
@@ -410,7 +419,4 @@ public class LevelProperties {
 		return properties;
 
 	}
-
-	
-
 }
