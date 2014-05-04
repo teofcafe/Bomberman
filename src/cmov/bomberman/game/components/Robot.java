@@ -3,7 +3,6 @@ package cmov.bomberman.game.components;
 
 import java.util.Random;
 import cmov.bomberman.game.LevelProperties;
-import cmov.bomberman.game.Mapping;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
 import android.content.Context;
@@ -11,8 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
-
 
 public class Robot {
 
@@ -30,7 +27,8 @@ public class Robot {
 	private byte walked = 0;
 	private boolean inRandomMove = false;
 	private byte randomSteps = 0;
-	private byte id;
+	private byte id; 
+	private boolean blocked = false;
 
 
 	@SuppressWarnings("rawtypes")
@@ -187,6 +185,9 @@ public class Robot {
 
 	public void checkDirection(int distX, int distY){
 
+		/**************************************************************************************/
+		/**************************************************************************************/
+
 		//Aproxima.se do player pelo eixo x ou y
 		if(Math.abs(distX) <=5 || Math.abs(distY) <=5){
 
@@ -225,6 +226,7 @@ public class Robot {
 		}
 
 		/**************************************************************************************/
+		/**************************************************************************************/
 
 		//Escolhe o eixo com menos distancia ate ao player e posiciona.se la
 		else {
@@ -258,7 +260,6 @@ public class Robot {
 					working = -1;
 					runRandom();
 				}
-				this.updatePosition();
 			} else {
 				direction = 3;
 				LevelProperties.delete(this.getPosition());
@@ -270,6 +271,8 @@ public class Robot {
 				}
 			}
 		}
+		/**************************************************************************************/
+		/**************************************************************************************/
 	}
 
 	public void update(int playerX, int playerY, boolean paused) {
@@ -278,17 +281,22 @@ public class Robot {
 
 		if(!(working < 0))
 			redirectMoves(working);
+		
+		if(blocked);
 
-		else {
-			if(inRandomMove)
+		else{
+			if(!paused){
+				if(inRandomMove)
+					runRandom();
+				else 
+					//heuristic #1
+					checkDirection(distX, distY);
+			}
+			else
+				//heuristic #2
 				runRandom();
-
-			else //if(!paused)
-				//heuristic #1
-				checkDirection(distX, distY);
 		}
 	}
-
 
 	private void update() {
 		currentFrame = ++currentFrame % BMP_COLUMNS;
@@ -356,30 +364,6 @@ public class Robot {
 			working = -1;
 			this.currentFrame = 1;
 			this.updatePosition();
-		}
-	}
-	
-	//adapt to use with delete and update position and remove for cicle.
-	//use When game is paused
-	public void autoMove(){
-		switch ((int)(Math.random() * ((3) + 1))) 
-		{ 
-		case 0:
-			for(int i = 0; i <=3; i++)
-				moveUp();
-			break; 
-		case 1:
-			for(int i = 0; i <=3; i++)
-				moveLeft(); 
-			break;
-		case 2: 
-			for(int i = 0; i <=3; i++)
-				moveRight();
-			break;
-		case 3: 
-			for(int i = 0; i <=3; i++)
-				moveDown(); 
-			break;
 		}
 	}
 }
