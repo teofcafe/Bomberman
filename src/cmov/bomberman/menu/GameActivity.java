@@ -166,6 +166,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
 					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
 
+			playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
+			
 			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
 				Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
 				gameBoard.exitGame();	

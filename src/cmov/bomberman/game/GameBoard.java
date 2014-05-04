@@ -26,10 +26,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private Thread updateBomb;
 	private Player player;
 	private Bomb bomb;
-	@SuppressWarnings("unused")
-	private Wall[] wall;
-	@SuppressWarnings("unused")
-	private Robot[] robots;
+
 	private boolean bombDroped = false;
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
@@ -58,7 +55,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void drawObstacle(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
@@ -70,7 +66,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void drawWall(Canvas canvas) {
-		int posX=0,posY=0;
 		int maxHeight=this.getHeight();
 		int maxWidth=this.getWidth();
 		setMaxHeight(maxHeight);
@@ -184,10 +179,22 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	
 	//arguments as gameCoordinates
 	public void deleteObjects(int x, int y){
+		char type;
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
-		levelProperties.delete(xvalue,yvalue);
+		type = levelProperties.delete(xvalue,yvalue);
+		
+		switch(type) {
+		case 'R': 
+			player.setScore(player.getScore() + levelProperties.getPointsPerRobotKilled());
+			break;
+		case 'O': 
+			player.setScore(player.getScore() + levelProperties.getPointsPerOponentKilled());
+			break;
+		}
+		
+		System.out.println("Obstaculos: " + levelProperties.getObstacles().size());
 	}
 	
 	@SuppressWarnings({ "static-access", "unused" })

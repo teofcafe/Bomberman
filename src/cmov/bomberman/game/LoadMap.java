@@ -13,8 +13,7 @@ public class LoadMap {
 	
 	protected final static int LINES=18;
 	protected final static int COLUMNS=16;
-	private final static int PLAYERS=3; 
-	
+
     //level properties
     String levelName = "";
     int gameDuration;
@@ -27,13 +26,7 @@ public class LoadMap {
     int pointsPerRobotKilled;
     int pointsPerOponentKilled;
     
-    
-    int numberOfwalls;
-    int numberOfObstacles;
-    int numberOfRobots;
-    
-    //max 3 players
-    int[] playersPositions = new int[PLAYERS];
+
     
     //grid layout
     public static char[][] gridMap = new char[LINES][COLUMNS];
@@ -43,7 +36,7 @@ public class LoadMap {
 	
 	 @SuppressWarnings({ "unchecked", "rawtypes" })
 	protected static LevelProperties loadMap(InputStream filename, Context context,int avatar, int maxWidth, int maxHeight) throws IOException {
-		 LevelProperties levelProperties = new LevelProperties(PLAYERS,LINES,COLUMNS);
+		 LevelProperties levelProperties = new LevelProperties(LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
 	        int height = 0;
@@ -99,6 +92,35 @@ public class LoadMap {
 	           
 	        }
 	        height = lines.size();
+	        int numberOfPlayers=0;
+	        int numberOfWalls=0;
+	        int numberOfObstacles=0;
+	        int numberOfRobots=0;
+	        //Faz contagem de elementos
+	        for (int i = 0; i < height; i++) {
+	            String line = (String) lines.get(i);
+	            for (int j = 0; j < width; j++) {
+	                if (j < line.length()) {
+	                    char ch = line.charAt(j);
+	                    //player verification
+	                    if((ch > 47 )&& (ch < 58)){
+	                    	if(ch == '1')
+	                    		numberOfPlayers++;
+	                    }
+	                    if(ch == 'W') {
+	                    	numberOfWalls++;
+	                    }
+	                    else if (ch== 'O') numberOfObstacles++;
+	                    else if (ch == 'R') numberOfRobots++;
+	                }
+
+	            }
+	        }
+	        levelProperties.setNumberOfWalls(numberOfWalls);
+	        levelProperties.setNumberOfObstacles(numberOfObstacles);
+	        levelProperties.setNumberOfRobots(numberOfRobots);
+	        levelProperties.setNumberOfPlayers(numberOfPlayers);
+	        levelProperties.initialize();
 	        
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);
