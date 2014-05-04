@@ -47,7 +47,6 @@ public class Obstacle {
 		this.bitmap = bitmap;
 	}
 	public void draw(Canvas canvas) {
-//		canvas.drawBitmap(bitmap, x - (bitmap.getWidth() / 2), y - (bitmap.getHeight() / 2), null);
 		canvas.drawBitmap(bitmap, x, y, null);
 	}
 

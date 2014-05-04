@@ -96,6 +96,7 @@ public class LoadMap {
 	        int numberOfWalls=0;
 	        int numberOfObstacles=0;
 	        int numberOfRobots=0;
+	        
 	        //Faz contagem de elementos
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);

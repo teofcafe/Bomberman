@@ -17,9 +17,9 @@ import cmov.bomberman.game.LevelProperties;
 
 public class Player {
 	private byte id;
-	private Bitmap bitmap;	// the actual bitmap
-	private int x;			// the X coordinate
-	private int y;			// the Y coordinate
+	private Bitmap bitmap;
+	private int x;
+	private int y;
 	private static final int BMP_ROWS = 4;
 	private static final int BMP_COLUMNS = 3;
 	private int currentFrame = 1;

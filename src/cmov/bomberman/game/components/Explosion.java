@@ -9,9 +9,9 @@ import android.graphics.Rect;
 
 public class Explosion {
 
-	private Bitmap bitmap;	// the actual bitmap
-	private int x; // the X coordinate
-	private int y; // the Y coordinate
+	private Bitmap bitmap;
+	private int x;
+	private int y;
 	private static final int BMP_COLUMNS = 4;
 	private int currentFrame = -1; 
 	private int width;
@@ -57,7 +57,7 @@ public class Explosion {
 
 	public void draw(Canvas canvas) {
 		int srcX = currentFrame * width;
-		int srcY = 0; //so ha uma linha
+		int srcY = 0;
 		Rect src = new Rect(srcX, srcY, srcX + width, srcY + height);
 		Rect dst = new Rect(x, y, x + width, y + height);
 		canvas.drawBitmap(bitmap, src, dst, null);
@@ -66,7 +66,7 @@ public class Explosion {
 	}
 
 	public void update() {
-		currentFrame = ++currentFrame % BMP_COLUMNS; //update
+		currentFrame = ++currentFrame % BMP_COLUMNS;
 	}
 
 }
