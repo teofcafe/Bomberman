@@ -249,7 +249,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void dropBomb() {
-		if(!bombDroped && !player.isPaused()) {
+		if(!bombDroped && !player.isPaused() && player.getWorking() == false) {
 			bomb = new Bomb(getContext(), this.player.getX(), this.player.getY());
 			this.bombDroped = true;
 

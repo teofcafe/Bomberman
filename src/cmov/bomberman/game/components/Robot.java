@@ -139,6 +139,7 @@ public class Robot {
 
 		//LevelProperties.delete(this.getPosition());
 		Log.d("NOVO", "REDIRECTTTTTTTTT");
+		LevelProperties.delete(this.getPosition());
 		switch (working) {
 		case 0:{
 			moveUp();
@@ -181,7 +182,7 @@ public class Robot {
 						randomSteps++;
 					}
 					break;
-					}
+				}
 		}
 		else {
 			inRandomMove = false;
@@ -197,140 +198,103 @@ public class Robot {
 		if(Math.abs(distX) <=5 || Math.abs(distY) <=5){
 
 
-			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX <0)
-			{
+			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX < 0) {
 				direction = 2;
-				if(canMove()){
-					LevelProperties.delete(this.getPosition());
+				LevelProperties.delete(this.getPosition());
+				if(canMove()) {
 					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveRight();
-				}
-				else
-					runRandom();
-
-
+				} else runRandom();
 			}
 
-			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX >0){
+			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX > 0) {
 				direction = 1;
-				if(canMove()){
-					LevelProperties.delete(this.getPosition());
+				LevelProperties.delete(this.getPosition());
+				if(canMove()) {
 					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveLeft();
-				}
-				else
-					runRandom();
-
+				} else runRandom();
 			}
 
-			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY >0)
-			{
+			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY > 0) {
 				direction = 0;
-				if(canMove()){
-					LevelProperties.delete(this.getPosition());
+				LevelProperties.delete(this.getPosition());
+				if(canMove()) {
 					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveUp();
-				}
-				else
-					runRandom();
-
-
+				} else runRandom();
 			}
 
-			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY <0)
-			{
+			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY < 0) {
 				direction = 3;
-				if(canMove()){
-					LevelProperties.delete(this.getPosition());
+				LevelProperties.delete(this.getPosition());
+				if(canMove()) {
 					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 					moveDown();
-				}
-				else
-					runRandom();
-
+				} else runRandom();
 			}
 		}
-
 
 		/**************************************************************************************/
 
 		//Escolhe o eixo com menos distancia ate ao player e posiciona.se la
-		else{
-
-
-			if (Math.abs(distX) < Math.abs(distY)){
-				if(distX > 0){
+		else {
+			if (Math.abs(distX) < Math.abs(distY)) {
+				if(distX > 0) {
 					direction = 1;
-					if(canMove()){
-						LevelProperties.delete(this.getPosition());
+					LevelProperties.delete(this.getPosition());
+					if(canMove()) {
 						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 						moveLeft();
-					}
-					else{
+					} else {
 						working = -1;
 						runRandom();
-						}
-
-				}
-
-				else
-				{
+					}
+				} else {
 					direction = 2;
-					if(canMove()){
-						LevelProperties.delete(this.getPosition());
+					LevelProperties.delete(this.getPosition());
+
+					if(canMove()) {
 						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
 						moveRight();
-					}
-					else{
+					} else {
 						working = -1;
 						runRandom();
-						
 					}
-
 				}
-
+			} else if(distY > 0) {
+				direction = 0;
+				LevelProperties.delete(this.getPosition());
+				if(canMove()) {
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					moveUp();
+				} else {
+					working = -1;
+					runRandom();
+				}
+				this.updatePosition();
+			} else {
+				direction = 3;
+				LevelProperties.delete(this.getPosition());
+				if(canMove()) {
+					Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
+					moveDown();
+				} else {
+					working = -1;
+					runRandom();
+				}
 			}
-			else
-				if(distY > 0){
-					direction = 0;
-					if(canMove()){
-						LevelProperties.delete(this.getPosition());
-						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
-						moveUp();
-					}
-					else{
-						
-						working = -1;
-						runRandom();
-					}
-				}
-				else{
-					direction = 3;
-					if(canMove()){
-						LevelProperties.delete(this.getPosition());
-						Log.d("NOVO", "EstiveAQUI|||||||||||||||||||||||||  LEFT 2||||||||x|||||||||");
-						moveDown();
-					}
-					else{
-						working = -1;
-						runRandom();
-					}
-				}
 		}
 	}
 
 	public void update(int playerX, int playerY, boolean paused) {
 		int distX = this.getX() - playerX;
 		int distY = this.getY() - playerY;
-		
-		
 
 		if(!(working < 0))
 			redirectMoves(working);
 
-		else 
-
-		{
+		else {
 			if(inRandomMove)
 				runRandom();
 
@@ -347,7 +311,7 @@ public class Robot {
 	}
 
 	public void moveUp() {
-		
+
 		if(walked < mustWalk){
 			working = 0;
 			direction = 3;
@@ -358,12 +322,13 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
+			this.updatePosition();
 		}
 
 	}
 
 	public void moveLeft() {
-		
+
 		if(walked < mustWalk){
 			working = 1;
 			x -= 1 * VELOCITY;
@@ -373,26 +338,28 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
+			this.updatePosition();
 		}
 	}
 
 	public void moveRight() {
-		
+
 		if(walked < mustWalk){
 			working = 2;
 			direction = 2;
 			x += 1 * VELOCITY;
 			update();
 		}
-		else{
+		else {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
+			this.updatePosition();
 		}
 	}
 
 	public void moveDown() {
-		
+
 		if(walked < mustWalk){
 			working = 3;
 			direction = 0;	
@@ -403,6 +370,7 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
+			this.updatePosition();
 		}
 	}
 }
