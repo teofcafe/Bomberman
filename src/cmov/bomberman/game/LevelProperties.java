@@ -45,6 +45,26 @@ public class LevelProperties {
 
 	}
 	
+	public void clean(){
+		cleanMap();
+		cleanGrid();
+	}
+	
+	private void cleanGrid() {
+		for(int i=0;i<gridLayout.length;i++)
+			for(int j=0;j<gridLayout[i].length;j++)
+				gridLayout[i][j]=false;
+		
+	}
+
+	private void cleanMap() {
+		for(int i=0;i<gridMap.length;i++)
+			for(int j=0;j<gridMap[i].length;j++)
+				gridMap[i][j]='-';
+		
+		
+	}
+
 	public void initialize() {
 		this.obstacles = new ArrayBlockingQueue(this.numberOfObstacles);
 		this.robots = new ArrayBlockingQueue(this.numberOfRobots);
@@ -153,12 +173,16 @@ public class LevelProperties {
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
 		Log.d("gridlayout","XValue="+xvalue +" yvalue="+yvalue + " cH="+gridMap[xvalue][yvalue] + " Ocupado="+gridLayout[xvalue][yvalue]);
+		dumpMap();
+		dumpGrid();
 		return LevelProperties.gridLayout[xvalue][yvalue];
 	}
 	
 	// Screen coordinates
 	public static boolean hasObjectByMapCoordinates(int x, int y){
 		Log.d("gridlayout","XValue="+x +" yvalue="+y + " cH="+gridMap[x][y] + " Ocupado="+gridLayout[x][y]);
+		dumpMap();
+		dumpGrid();
 		return LevelProperties.gridLayout[x][y];
 	}
 	
@@ -352,6 +376,7 @@ public class LevelProperties {
 		int x = (Integer)newCoordinates.getKey();
 		int y = (Integer)newCoordinates.getValue();
 		gridMap[x][y]=object;
+		Log.d("mz0x", "Este macaco foi chamado com X="+x+" Y="+y);
 		gridLayout[x][y]=true;
 	}
 	
@@ -399,10 +424,13 @@ public class LevelProperties {
 	}
 	
 	public void freeze(int x, int y) {
-		char objectToDelete = gridMap[x][y];
-		switch(objectToDelete){
+		char objectToFreeze = gridMap[x][y];
+		switch(objectToFreeze){
 			case 'R':
-				getRobotByMapCoordinates(x, y).freeze();
+				System.out.println("Going to freeze: " + objectToFreeze);
+				Robot r = getRobotByMapCoordinates(x, y);
+				System.out.println("Position x: " + r.getX() + " |Position y: " + r.getY());
+				r.freeze();
 				break;
 		}	
 	}

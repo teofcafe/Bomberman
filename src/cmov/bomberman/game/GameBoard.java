@@ -87,12 +87,15 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 	
+	
+	
 	public void gameStart(int avatar, String levelName) {	
 		try {
 			
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 
 			InputStream level = getResources().openRawResource(resID);
+			
 			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
 			//TODO alterar o index para o player respectivo 
 			player = this.levelProperties.getPlayerById((byte)0);
@@ -167,8 +170,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void update() {
 		player.update();
-		for(Robot robot : levelProperties.getRobots())
-			robot.update(player.getX(), player.getY(), player.isPaused());
+//		for(Robot robot : levelProperties.getRobots())
+//			robot.update(player.getX(), player.getY(), player.isPaused());
 	}
 
 

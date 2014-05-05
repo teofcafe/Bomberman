@@ -41,6 +41,7 @@ public class LoadMap {
 	        int width = 0;
 	        int height = 0;
 	        
+	        levelProperties.clean();
 	        
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(filename));
 	        while (true) {
@@ -123,15 +124,25 @@ public class LoadMap {
 	        levelProperties.setNumberOfPlayers(numberOfPlayers);
 	        levelProperties.initialize();
 	        
+	        System.out.println("****************************************************************************");
+	        LevelProperties.dumpMap();
+	        LevelProperties.dumpGrid();
+	        System.out.println("*****************************************************************************");
+	        boolean teste[][]= new boolean[LINES][COLUMNS];
+	        
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);
 	            for (int j = 0; j < width; j++) {
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
 	                    gridMap[i][j]=ch;
-	                    Log.d("mapa","X="+i+" Y="+j+" CH="+ch);
-	                    if(!(ch == '-'))
+	                    Log.d("mapa","X="+i+" Y="+j+" CpH="+ch);
+	                    System.out.println("BEFORE: ["+i+"]["+j+"]="+"->"+gridLayout[i][j]);
+	                    if(!(ch == '-')){
 	                    	gridLayout[i][j]=true;
+	                    	teste[i][j]=true;
+	                    	System.out.println("["+i+"]["+j+"]="+ch+"->"+gridLayout[i][j]);
+	                    }
 	                    //player verification
 	                    if((ch > 47 )&& (ch < 58)){
 	                    	if(ch == '1')
@@ -149,7 +160,15 @@ public class LoadMap {
 	        
 	        levelProperties.setGridLayout(gridLayout);
 	        levelProperties.setGridMap(gridMap);
-	        
+	        levelProperties.dumpMap();
+	        System.out.println("****ORIGINAL****");
+	        levelProperties.dumpGrid();
+	        System.out.println("****COPIA****");
+	        for(int i=0;i<LINES;i++){
+	        	for(int j=0;j<COLUMNS;j++)
+	        		System.out.print(gridLayout[i][j] ? '1' : '0');
+				System.out.printf("\n");	
+	        }
 	        return levelProperties;
 
 	    }

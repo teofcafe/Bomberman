@@ -83,7 +83,7 @@ public class Robot {
 	}
 
 	public void updatePosition(){
-		LevelProperties.insert('R', this.getPosition());
+//		LevelProperties.insert('R', this.getPosition());
 		LevelProperties.dumpMap();
 	}
 
