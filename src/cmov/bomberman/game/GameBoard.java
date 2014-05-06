@@ -234,10 +234,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				//para fazer cruzamento
 				if(j != bombY && i != bombX) 
 					continue;
-				else{
+				else if((j > 0 && j < this.getHeight()) && (i > 0 && i < this.getWidth())) 
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
-					
-				}
 
 		bomb = null;
 		bombExploded = true;
