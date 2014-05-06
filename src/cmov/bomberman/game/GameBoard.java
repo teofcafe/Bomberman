@@ -187,13 +187,15 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
 		type = levelProperties.delete(xvalue,yvalue);
-		
+
 		switch(type) {
 		case 'R': 
 			player.setScore(player.getScore() + levelProperties.getPointsPerRobotKilled());
+			levelProperties.insert('-', new Pair(x,y));
 			break;
 		case 'O': 
 			player.setScore(player.getScore() + levelProperties.getPointsPerOponentKilled());
+			levelProperties.insert('-', new Pair(x,y));
 			break;
 		case '1':
 			//exitGame(); //TODO Game Over	

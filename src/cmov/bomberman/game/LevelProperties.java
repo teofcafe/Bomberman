@@ -356,7 +356,7 @@ public class LevelProperties {
 		int x = (Integer)newCoordinates.getKey();
 		int y = (Integer)newCoordinates.getValue();
 		gridMap[x][y]=object;
-		Log.d("mz0x", "Este macaco foi chamado com X="+x+" Y="+y);
+//		Log.d("mz0x", "Este macaco foi chamado com X="+x+" Y="+y);
 		gridLayout[x][y]=true;
 	}
 	
