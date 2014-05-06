@@ -44,26 +44,6 @@ public class LevelProperties {
 	
 
 	}
-	
-	public void clean(){
-		cleanMap();
-		cleanGrid();
-	}
-	
-	private void cleanGrid() {
-		for(int i=0;i<gridLayout.length;i++)
-			for(int j=0;j<gridLayout[i].length;j++)
-				gridLayout[i][j]=false;
-		
-	}
-
-	private void cleanMap() {
-		for(int i=0;i<gridMap.length;i++)
-			for(int j=0;j<gridMap[i].length;j++)
-				gridMap[i][j]='-';
-		
-		
-	}
 
 	public void initialize() {
 		this.obstacles = new ArrayBlockingQueue(this.numberOfObstacles);

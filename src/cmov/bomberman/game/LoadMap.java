@@ -41,8 +41,6 @@ public class LoadMap {
 	        int width = 0;
 	        int height = 0;
 	        
-	        levelProperties.clean();
-	        
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(filename));
 	        while (true) {
 	            String line = reader.readLine();
@@ -133,12 +131,15 @@ public class LoadMap {
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);
 	            for (int j = 0; j < width; j++) {
+	            	gridMap[i][j]='-';
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
 	                    gridMap[i][j]=ch;
 	                    Log.d("mapa","X="+i+" Y="+j+" CpH="+ch);
+	                    //inicializacao
+	                    gridLayout[i][j]=false;
 	                    System.out.println("BEFORE: ["+i+"]["+j+"]="+"->"+gridLayout[i][j]);
-	                    if(!(ch == '-')){
+	                    if(!(ch == '-')) {
 	                    	gridLayout[i][j]=true;
 	                    	teste[i][j]=true;
 	                    	System.out.println("["+i+"]["+j+"]="+ch+"->"+gridLayout[i][j]);
