@@ -10,7 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.util.Log;
+
 
 public class Robot {
 
@@ -30,6 +30,8 @@ public class Robot {
 	private byte randomSteps = 0;
 	private byte id; 
 	private boolean blocked;
+	Pair memPos;
+	
 
 
 	@SuppressWarnings("rawtypes")
@@ -41,6 +43,7 @@ public class Robot {
 		this.height = bitmap.getHeight() / BMP_ROWS;
 		this.id = id;
 		this.blocked = false;
+		memPos = this.getPosition();
 	}
 
 	public int getDirection(){
@@ -83,8 +86,8 @@ public class Robot {
 	}
 
 	public void updatePosition(){
-//		LevelProperties.insert('R', this.getPosition());
-		LevelProperties.dumpMap();
+		LevelProperties.insert('R', this.getPosition());
+		
 	}
 
 
@@ -133,7 +136,7 @@ public class Robot {
 			working = direction;
 
 		}
-		LevelProperties.delete(this.getPosition());
+		
 		switch (working) {
 		case 0:{
 			moveUp();
@@ -152,6 +155,8 @@ public class Robot {
 			break;
 		}
 		}
+		
+		
 	}
 
 	public void runRandom(){
@@ -189,14 +194,14 @@ public class Robot {
 
 		/**************************************************************************************/
 		/**************************************************************************************/
-
+		
 		//Aproxima.se do player pelo eixo x ou y
 		if(Math.abs(distX) <=5 || Math.abs(distY) <=5){
 
 
 			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX < 0) {
 				direction = 2;
-				LevelProperties.delete(this.getPosition());
+				
 				if(canMove()) {
 					moveRight();
 				} else runRandom();
@@ -204,7 +209,7 @@ public class Robot {
 
 			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX > 0) {
 				direction = 1;
-				LevelProperties.delete(this.getPosition());
+				
 				if(canMove()) {
 					moveLeft();
 				} else runRandom();
@@ -212,7 +217,7 @@ public class Robot {
 
 			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY > 0) {
 				direction = 0;
-				LevelProperties.delete(this.getPosition());
+				
 				if(canMove()) {
 					moveUp();
 				} else runRandom();
@@ -220,7 +225,7 @@ public class Robot {
 
 			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY < 0) {
 				direction = 3;
-				LevelProperties.delete(this.getPosition());
+				
 				if(canMove()) {
 					moveDown();
 				} else runRandom();
@@ -235,7 +240,7 @@ public class Robot {
 			if (Math.abs(distX) < Math.abs(distY)) {
 				if(distX > 0) {
 					direction = 1;
-					LevelProperties.delete(this.getPosition());
+					
 					if(canMove()) {
 						moveLeft();
 					} else {
@@ -244,7 +249,7 @@ public class Robot {
 					}
 				} else {
 					direction = 2;
-					LevelProperties.delete(this.getPosition());
+
 
 					if(canMove()) {
 						moveRight();
@@ -255,7 +260,7 @@ public class Robot {
 				}
 			} else if(distY > 0) {
 				direction = 0;
-				LevelProperties.delete(this.getPosition());
+				
 				if(canMove()) {
 					moveUp();
 				} else {
@@ -264,7 +269,7 @@ public class Robot {
 				}
 			} else {
 				direction = 3;
-				LevelProperties.delete(this.getPosition());
+				
 				if(canMove()) {
 					moveDown();
 				} else {
@@ -280,10 +285,10 @@ public class Robot {
 	public void update(int playerX, int playerY, boolean paused) {
 		int distX = this.getX() - playerX;
 		int distY = this.getY() - playerY;
-		Log.d("NEW", "PLAYER ESTA COM O PAUSE A "+ paused);
+		
 		if(!(working < 0)){
 			redirectMoves(working);
-			Log.d("NEW", "REDIRECT");
+			
 		}
 
 		else if(!blocked)
@@ -314,7 +319,7 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
-			this.updatePosition();
+			delete();
 		}
 
 	}
@@ -330,7 +335,7 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
-			this.updatePosition();
+			delete();
 		}
 	}
 
@@ -346,7 +351,7 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
-			this.updatePosition();
+			delete();
 		}
 	}
 
@@ -362,11 +367,19 @@ public class Robot {
 			walked = 0;
 			working = -1;
 			this.currentFrame = 1;
-			this.updatePosition();
+			delete();
 		}
 	}
 	
 	public void freeze() {
 		blocked = true;
+	}
+	
+	public void delete(){
+		if(!blocked){
+			this.updatePosition();
+			LevelProperties.delete(memPos);
+			memPos = this.getPosition();
+		}
 	}
 }

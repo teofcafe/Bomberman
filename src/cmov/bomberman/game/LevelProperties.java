@@ -152,9 +152,8 @@ public class LevelProperties {
 	 	Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
 		int xvalue = (Integer) mapCoordinates.getKey();
 		int yvalue = (Integer) mapCoordinates.getValue();
-		Log.d("gridlayout","XValue="+xvalue +" yvalue="+yvalue + " cH="+gridMap[xvalue][yvalue] + " Ocupado="+gridLayout[xvalue][yvalue]);
-		dumpMap();
-		dumpGrid();
+//		Log.d("gridlayout","XValue="+xvalue +" yvalue="+yvalue + " cH="+gridMap[xvalue][yvalue] + " Ocupado="+gridLayout[xvalue][yvalue]);
+
 		return LevelProperties.gridLayout[xvalue][yvalue];
 	}
 	
@@ -357,7 +356,8 @@ public class LevelProperties {
 		int y = (Integer)newCoordinates.getValue();
 		gridMap[x][y]=object;
 //		Log.d("mz0x", "Este macaco foi chamado com X="+x+" Y="+y);
-		gridLayout[x][y]=true;
+		if(!(object=='-'))
+			gridLayout[x][y]=true;
 	}
 	
 	//Method to be used by Players and Robots
@@ -404,15 +404,20 @@ public class LevelProperties {
 	}
 	
 	public void freeze(int x, int y) {
-		char objectToFreeze = gridMap[x][y];
-		switch(objectToFreeze){
-			case 'R':
-				System.out.println("Going to freeze: " + objectToFreeze);
-				Robot r = getRobotByMapCoordinates(x, y);
-				System.out.println("Position x: " + r.getX() + " |Position y: " + r.getY());
-				r.freeze();
-				break;
-		}	
+
+			char objectToFreeze = gridMap[x][y];
+			dumpMap();
+			Log.d("freeze","estou a eliminar x="+x+" y="+y);
+			switch(objectToFreeze){
+				case 'R':
+					System.out.println("Going to freeze: " + objectToFreeze);
+					Robot r = getRobotByMapCoordinates(x, y);
+					System.out.println("Position x: " + r.getX() + " |Position y: " + r.getY());
+					r.freeze();
+					break;
+			}	
+		
+		
 	}
 	
 	public String toString(){

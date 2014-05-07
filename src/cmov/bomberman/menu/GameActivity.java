@@ -14,8 +14,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
+import cmov.bomberman.game.LevelProperties;
 
 import cmov.bomberman.game.Mapping;
+import cmov.bomberman.game.components.Robot;
 import cmov.bomberman.pair.Pair;
 
 
@@ -204,6 +206,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 	public void pauseGame(View view) {
 		gameBoard.getPlayer().setPaused();
+	
 	}
 
 	@Override

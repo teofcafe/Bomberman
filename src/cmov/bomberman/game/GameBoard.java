@@ -3,6 +3,8 @@ package cmov.bomberman.game;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.ArrayBlockingQueue;
+
 import cmov.bomberman.game.components.Bomb;
 import cmov.bomberman.game.components.Explosion;
 import cmov.bomberman.game.components.Obstacle;
@@ -170,8 +172,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void update() {
 		player.update();
-//		for(Robot robot : levelProperties.getRobots())
-//			robot.update(player.getX(), player.getY(), player.isPaused());
+		for(Robot robot : levelProperties.getRobots())
+			robot.update(player.getX(), player.getY(), player.isPaused());
+		
 	}
 
 
@@ -179,7 +182,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		return player;
 	}
 
-	
 	//arguments as gameCoordinates
 	public void deleteObjects(int x, int y){
 		char type;
@@ -202,7 +204,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			break;
 		}
 		
-		System.out.println("Obstaculos: " + levelProperties.getObstacles().size());
+//		System.out.println("Obstaculos: " + levelProperties.getObstacles().size());
 	}
 	
 	private void freezeObjects(int x, int y) {
