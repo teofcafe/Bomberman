@@ -195,10 +195,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			player.setScore(player.getScore() + levelProperties.getPointsPerRobotKilled());
 			levelProperties.insert('-', new Pair(x,y));
 			break;
-		case 'O': 
-			player.setScore(player.getScore() + levelProperties.getPointsPerOponentKilled());
-			levelProperties.insert('-', new Pair(x,y));
-			break;
+//		case 'O': 
+//			player.setScore(player.getScore() + levelProperties.getPointsPerOponentKilled());
+//			levelProperties.insert('-', new Pair(x,y));
+//			break;
 		case '1':
 			//exitGame(); //TODO Game Over	
 			break;
@@ -208,11 +208,34 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 	
 	private void freezeObjects(int x, int y) {
-		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
-		int xvalue = (Integer) mapCoordinates.getKey();
-		int yvalue = (Integer) mapCoordinates.getValue();
+//		Pair mapBombCoordinates = Mapping.screenToMap(new Pair(x,y));
+//		int xvalue = (Integer) mapBombCoordinates.getKey();
+//		int yvalue = (Integer) mapBombCoordinates.getValue();
 		
-		levelProperties.freeze(xvalue,yvalue);
+		//20 devido ao tamanho da caixa 
+		int expRange=levelProperties.getExplosionRange();
+		Log.d("exprange","exp range " + expRange);
+		Pair xptoMenosX = Mapping.screenToMap(new Pair(x-expRange,y));
+		Pair xptoMaisX = Mapping.screenToMap(new Pair(x+expRange,y));
+		Pair xptoMenosY = Mapping.screenToMap(new Pair(x,y-expRange));
+		Pair xptoMaisY = Mapping.screenToMap(new Pair(x,y+expRange));
+		Log.d("max","xpto menos x " + "x="+xptoMenosX.getKey()+" y="+xptoMenosX.getValue());
+		Log.d("max","xpto mais x " + "x="+xptoMaisX.getKey()+" y="+xptoMaisX.getValue());
+		Log.d("max","xpto menos y " + "x="+xptoMenosY.getKey()+" y="+xptoMenosY.getValue());
+		Log.d("max","xpto mais y " + "x="+xptoMaisY.getKey()+" y="+xptoMaisY.getValue());
+		
+		for(Robot r : levelProperties.getRobots()){
+			Pair robotCoordinates = Mapping.screenToMap(r.getPosition());
+			Log.d("robots","X="+robotCoordinates.getKey()+" y="+robotCoordinates.getValue());
+			int robotX=r.getX();
+			int robotY=r.getY();
+			if((robotX == x || robotY==y) &&(robotX > (x-expRange)) && (robotX < (x+expRange)) && 
+					(robotY > (y-expRange)) && (robotY < (y+expRange))){
+				Log.d("robots","consegui bloquear em "+ robotX + " y="+robotY);
+				r.freeze();
+			}
+		}
+		
 	}
 	
 	@SuppressWarnings({ "static-access", "unused" })
@@ -220,7 +243,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		while(!bomb.isExploded()) {
 			bomb.update();
 			try {
-				updateBomb.sleep((levelProperties.getExplosionTimeout())/4);
+				updateBomb.sleep((levelProperties.getExplosionTimeout())/2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -238,26 +261,43 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				//para fazer cruzamento
 				if(j != bombY && i != bombX) 
 					continue;
-				else if((j > 0 && j < this.getHeight()) && (i > 0 && i < this.getWidth())) 
+				else if((j > 0 && j < this.getHeight()) && (i > 0 && i < this.getWidth())) {
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
+					
+				}
 
 		bomb = null;
 		bombExploded = true;
 
 		while(explosions.get(0).isAlive()) {
+			freezeObjects(bombX,bombY);
 			for(Explosion explosion : explosions) {
-				freezeObjects(explosion.getX(),explosion.getY());
 				explosion.update();
+//				freezeObjects(bombX,bombY);
 			}
+			
 			try {
 				updateBomb.sleep((levelProperties.getExplosionDuration())/4);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
+	
+			
 		for(Explosion explosion : explosions) {
-			deleteObjects(explosion.getX(),explosion.getY());
+//			deleteObjects(explosion.getX(),explosion.getY());
+			int x = explosion.getX();
+			int y = explosion.getY();
+			int expRange=levelProperties.getExplosionRange();
+			for(Robot robot : levelProperties.getRobots()){
+				int robotX=robot.getX();
+				int robotY=robot.getY();
+				if((robotX == x || robotY==y) &&(robotX > (x-expRange)) && (robotX < (x+expRange)) && 
+						(robotY > (y-expRange)) && (robotY < (y+expRange))){
+					Log.d("robots","consegui bloquear em "+ robotX + " y="+robotY);
+					deleteObjects(robotX, robotY);
+				}
+			}
 			explosion = null;
 		}
 

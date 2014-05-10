@@ -121,9 +121,7 @@ public class LoadMap {
 	        levelProperties.setNumberOfRobots(numberOfRobots);
 	        levelProperties.setNumberOfPlayers(numberOfPlayers);
 	        levelProperties.initialize();
-	        
-
-	        boolean teste[][]= new boolean[LINES][COLUMNS];
+	       
 	        
 	        for (int i = 0; i < height; i++) {
 	            String line = (String) lines.get(i);
@@ -135,11 +133,8 @@ public class LoadMap {
 	                    Log.d("mapa","X="+i+" Y="+j+" CpH="+ch);
 	                    //inicializacao
 	                    gridLayout[i][j]=false;
-	                    System.out.println("BEFORE: ["+i+"]["+j+"]="+"->"+gridLayout[i][j]);
 	                    if(!(ch == '-')) {
 	                    	gridLayout[i][j]=true;
-	                    	teste[i][j]=true;
-	                    	System.out.println("["+i+"]["+j+"]="+ch+"->"+gridLayout[i][j]);
 	                    }
 	                    //player verification
 	                    if((ch > 47 )&& (ch < 58)){

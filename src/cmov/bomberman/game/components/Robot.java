@@ -2,6 +2,8 @@ package cmov.bomberman.game.components;
 
 
 import java.util.Random;
+import java.util.logging.Level;
+
 import cmov.bomberman.game.LevelProperties;
 import cmov.bomberman.menu.R;
 import cmov.bomberman.pair.Pair;
@@ -10,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.util.Log;
 
 
 public class Robot {
@@ -138,22 +141,22 @@ public class Robot {
 		}
 		
 		switch (working) {
-		case 0:{
-			moveUp();
-			break;
-		}
-		case 1:{
-			moveLeft();
-			break;
-		}
-		case 2:{
-			moveRight();
-			break;
-		}
-		case 3:{
-			moveDown();
-			break;
-		}
+			case 0:{
+				moveUp();
+				break;
+			}
+			case 1:{
+				moveLeft();
+				break;
+			}
+			case 2:{
+				moveRight();
+				break;
+			}
+			case 3:{
+				moveDown();
+				break;
+			}
 		}
 		
 		
@@ -376,10 +379,19 @@ public class Robot {
 	}
 	
 	public void delete(){
-		if(!blocked){
-			this.updatePosition();
+//			Log.d("freeze","deleting x="+memPos.getKey() +" y="+memPos.getValue());
+//			System.out.println("ANTES DE ELIMINAR");
+//			LevelProperties.dumpMap();
 			LevelProperties.delete(memPos);
 			memPos = this.getPosition();
-		}
+//			Log.d("freeze","inserting x="+memPos.getKey() +" y="+memPos.getValue());
+//			System.out.println("DEPOIS DE ELIMINAR");
+			this.updatePosition();
+			if(blocked)
+				LevelProperties.dumpMap();
+//			LevelProperties.dumpGrid();
+			
+			
+		
 	}
 }

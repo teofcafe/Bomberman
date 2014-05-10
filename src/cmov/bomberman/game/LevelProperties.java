@@ -355,6 +355,7 @@ public class LevelProperties {
 		int x = (Integer)newCoordinates.getKey();
 		int y = (Integer)newCoordinates.getValue();
 		gridMap[x][y]=object;
+		Log.d("novaposicaorobot","[X]="+x+" [y]="+y);
 //		Log.d("mz0x", "Este macaco foi chamado com X="+x+" Y="+y);
 		if(!(object=='-'))
 			gridLayout[x][y]=true;
@@ -365,7 +366,7 @@ public class LevelProperties {
 		Pair newCoordinates = Mapping.screenToMap(coordinates);
 		int x = (Integer)newCoordinates.getKey();
 		int y = (Integer)newCoordinates.getValue();
-		Log.d("posicaoplayer", "estou a eliminar X="+x+" Y="+y+" CH="+gridMap[x][y]);
+//		Log.d("posicaoplayer", "estou a eliminar X="+x+" Y="+y+" CH="+gridMap[x][y]);
 		gridLayout[x][y]=false;
 		gridMap[x][y]='-';
 	}
@@ -377,24 +378,24 @@ public class LevelProperties {
 		switch(objectToDelete){
 			case 'O': 
 				boolean removi=this.getObstacles().remove(getObstacleByMapCoordinates(x, y));
-				for(Obstacle obstacle : this.getObstacles()){
-					Log.d("obstaculo","Obstaculo: X="+obstacle.getX() +" Y="+obstacle.getY());
-				}
-				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removi);
+//				for(Obstacle obstacle : this.getObstacles()){
+//					Log.d("obstaculo","Obstaculo: X="+obstacle.getX() +" Y="+obstacle.getY());
+//				}
+//				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removi);
 				gridLayout[x][y]=false;
 				gridMap[x][y]='-';
 				break;
 			case '1':
 				gridLayout[x][y]=false;
 				gridMap[x][y]='-';
-				Log.d("posicaoplayer","removi o player na posicao "+x+" "+y+" com o conteudo "+objectToDelete);
+//				Log.d("posicaoplayer","removi o player na posicao "+x+" "+y+" com o conteudo "+objectToDelete);
 				break;
 
 			case 'R':
 				boolean removed = this.getRobots().remove(getRobotByMapCoordinates(x, y));
 				for(Robot robot : this.getRobots())
 					Log.d("robot","ROBOT: X="+robot.getX() +" Y="+robot.getY());
-				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removed);
+//				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removed);
 				gridLayout[x][y] = false;
 				break;
 
@@ -403,22 +404,6 @@ public class LevelProperties {
 		return objectToDelete;
 	}
 	
-	public void freeze(int x, int y) {
-
-			char objectToFreeze = gridMap[x][y];
-			dumpMap();
-			Log.d("freeze","estou a eliminar x="+x+" y="+y);
-			switch(objectToFreeze){
-				case 'R':
-					System.out.println("Going to freeze: " + objectToFreeze);
-					Robot r = getRobotByMapCoordinates(x, y);
-					System.out.println("Position x: " + r.getX() + " |Position y: " + r.getY());
-					r.freeze();
-					break;
-			}	
-		
-		
-	}
 	
 	public String toString(){
 		String properties = "LEVEL NAME="+this.getLevelName() + "\n" + "GAME DURATION="+this.getGameDuration() +
