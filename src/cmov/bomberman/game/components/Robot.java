@@ -53,6 +53,13 @@ public class Robot {
 		return this.direction;
 	}
 
+	public byte getId(){
+		return this.id;
+	}
+	
+	public void setId(byte id){
+		this.id=id;
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Pair nextPosition(){

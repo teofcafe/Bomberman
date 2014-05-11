@@ -26,7 +26,7 @@ import cmov.bomberman.game.components.Robot;
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	private MainThread thread;
-	private Thread updateBomb, kill;
+	private Thread updateBomb;
 	private Player player;
 	private Bomb bomb;
 
@@ -181,56 +181,39 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public Player getPlayer() {
 		return player;
 	}
-
-	//arguments as gameCoordinates
-	public void deleteObjects(int x, int y){
-		char type;
-		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
-		int xvalue = (Integer) mapCoordinates.getKey();
-		int yvalue = (Integer) mapCoordinates.getValue();
-		type = levelProperties.delete(xvalue,yvalue);
-
-		switch(type) {
-		case 'R': 
-			player.setScore(player.getScore() + levelProperties.getPointsPerRobotKilled());
-			levelProperties.insert('-', new Pair(x,y));
-			break;
-			//		case 'O': 
-			//			player.setScore(player.getScore() + levelProperties.getPointsPerOponentKilled());
-			//			levelProperties.insert('-', new Pair(x,y));
-			//			break;
-		case '1':
-			//exitGame(); //TODO Game Over	
-			break;
-		}
-
-		//		System.out.println("Obstaculos: " + levelProperties.getObstacles().size());
+	
+	public void robotKilled(Robot robot, int x, int y){
+		levelProperties.deleteRobot(robot,x,y);
+		player.setScore(player.getScore() + levelProperties.getPointsPerRobotKilled());
 	}
 
-	private void freezeObjects() {
-		int expRange=levelProperties.getExplosionRange();
 
-		for(Explosion e : explosions) {
-			int x = e.getX();
-			int y = e.getY();
-			for(Robot r : levelProperties.getRobots()){
-				Pair robotCoordinates = Mapping.screenToMap(r.getPosition());
-				Log.d("robots","X="+robotCoordinates.getKey()+" y="+robotCoordinates.getValue());
-				int robotX=r.getX();
-				int robotY=r.getY();
-				if((robotX == x || robotY==y) &&(robotX > (x-expRange)) && (robotX < (x+expRange)) && 
-						(robotY > (y-expRange)) && (robotY < (y+expRange))){
-					Log.d("robots","consegui bloquear em "+ robotX + " y="+robotY);
-					r.freeze();
-				}
-			}	
-		}
-		
-		try {
-			kill.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	private void freezeObjects(int x, int y) {
+		int expRange=levelProperties.getExplosionRange();
+//		Log.d("exprange","exp range " + expRange);
+//
+//		Log.d("minhaposicao","X=" + player.getMapCoordinatesPosition().getKey() + " Y=" + player.getMapCoordinatesPosition().getValue());
+//		
+//				Pair xptoMenosX = Mapping.screenToMap(new Pair(x-expRange,y));
+//				Pair xptoMaisX = Mapping.screenToMap(new Pair(x+expRange,y));
+//				Pair xptoMenosY = Mapping.screenToMap(new Pair(x,y-expRange));
+//				Pair xptoMaisY = Mapping.screenToMap(new Pair(x,y+expRange));
+//				Log.d("max","xpto menos x " + "x="+xptoMenosX.getKey()+" y="+xptoMenosX.getValue());
+//				Log.d("max","xpto mais x " + "x="+xptoMaisX.getKey()+" y="+xptoMaisX.getValue());
+//				Log.d("max","xpto menos y " + "x="+xptoMenosY.getKey()+" y="+xptoMenosY.getValue());
+//				Log.d("max","xpto mais y " + "x="+xptoMaisY.getKey()+" y="+xptoMaisY.getValue());
+				for(Robot r : levelProperties.getRobots()){
+					Pair robotCoordinates = Mapping.screenToMap(r.getPosition());
+					Log.d("robots","X="+robotCoordinates.getKey()+" y="+robotCoordinates.getValue());
+					int robotX=r.getX();
+					int robotY=r.getY();
+					if((robotX == x || robotY==y) &&(robotX > (x-expRange)) && (robotX < (x+expRange)) && 
+							(robotY > (y-expRange)) && (robotY < (y+expRange))){
+						Log.d("robots","consegui bloquear em "+ robotX + " y="+robotY);
+						robotKilled(r,robotX,robotY);
+					}
+				
+			}
 	}
 
 	@SuppressWarnings({ "static-access", "unused" })
@@ -263,17 +246,14 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 		bomb = null;
 		bombExploded = true;
-		kill = new Thread() {
-			public void run() {
-				freezeObjects();
-			}
-		};
-		
-		kill.start();
-		
+
+
 		while(explosions.get(0).isAlive()) {
-			for(Explosion explosion : explosions)
+			for(Explosion explosion : explosions){
+				freezeObjects(bombX, bombY);
 				explosion.update();
+			}
+			
 
 			try {
 				updateBomb.sleep((levelProperties.getExplosionDuration())/4);
@@ -282,28 +262,34 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
-		kill.interrupt();
+	
 
 		for(Explosion explosion : explosions) {
 			//			deleteObjects(explosion.getX(),explosion.getY());
-			int x = explosion.getX();
-			int y = explosion.getY();
-			int expRange=levelProperties.getExplosionRange();
-			for(Robot robot : levelProperties.getRobots()){
-				int robotX=robot.getX();
-				int robotY=robot.getY();
-				if((robotX == x || robotY==y) &&(robotX > (x-expRange)) && (robotX < (x+expRange)) && 
-						(robotY > (y-expRange)) && (robotY < (y+expRange))){
-					Log.d("robots","consegui bloquear em "+ robotX + " y="+robotY);
-					deleteObjects(robotX, robotY);
-				}
-			}
+//			int x = explosion.getX();
+//			int y = explosion.getY();
+//			int expRange=levelProperties.getExplosionRange()/10;
+//			for(Robot robot : levelProperties.getRobots()){
+//				int robotX=robot.getX();
+//				int robotY=robot.getY();
+//				if((robotX == x || robotY==y) &&(robotX > (x-expRange)) && (robotX < (x+expRange)) && 
+//						(robotY > (y-expRange)) && (robotY < (y+expRange))){
+//					Log.d("robots","consegui bloquear em "+ robotX + " y="+robotY);
+//					deleteObjects(robotX, robotY);
+//				}
+//			}
+			deleteObstacles(explosion.getX(),explosion.getY());
 			explosion = null;
 		}
 
 		bombExploded = false;
 		bombDroped = false;
 		updateBomb.interrupt();
+	}
+
+	private void deleteObstacles(int x, int y) {
+		levelProperties.deleteObstacle(x,y);
+		
 	}
 
 	public void dropBomb() {

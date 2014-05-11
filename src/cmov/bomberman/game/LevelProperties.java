@@ -371,37 +371,68 @@ public class LevelProperties {
 		gridMap[x][y]='-';
 	}
 	
+	public Robot getRobotById(byte id){
+		for(Robot robot: this.getRobots())
+			if(robot.getId()==id)
+				return robot;
+		return null;
+	}
+	
+	//Game Coordinates
+	public void deleteRobot(Robot robot, int x, int y){
+		byte id=robot.getId();
+		Robot robotToDelete = getRobotById(id);
+		boolean removed = this.getRobots().remove(robotToDelete);
+		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+		int xvalue = (Integer) mapCoordinates.getKey();
+		int yvalue = (Integer) mapCoordinates.getValue();
+		if(removed)
+			delete(xvalue,yvalue);
+	}
+	
+	//Game Coordinates
+	public void deleteObstacle(int x, int y){
+		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+		int xvalue = (Integer) mapCoordinates.getKey();
+		int yvalue = (Integer) mapCoordinates.getValue();
+		boolean removed = this.getObstacles().remove(getObstacleByMapCoordinates(xvalue, yvalue));
+		if(removed)
+			delete(xvalue,yvalue);
+	}
+	
 	//Map Coordinates
-	public char delete(int x,int y) {
+	public void delete(int x,int y) {
+		gridLayout[x][y]=false;
+		gridMap[x][y]='-';
 
-		char objectToDelete = gridMap[x][y];
-		switch(objectToDelete){
-			case 'O': 
-				boolean removi=this.getObstacles().remove(getObstacleByMapCoordinates(x, y));
+//		char objectToDelete = gridMap[x][y];
+//		switch(objectToDelete){
+//			case 'O': 
+//				boolean removi=this.getObstacles().remove(getObstacleByMapCoordinates(x, y));
 //				for(Obstacle obstacle : this.getObstacles()){
 //					Log.d("obstaculo","Obstaculo: X="+obstacle.getX() +" Y="+obstacle.getY());
 //				}
 //				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removi);
-				gridLayout[x][y]=false;
-				gridMap[x][y]='-';
-				break;
-			case '1':
-				gridLayout[x][y]=false;
-				gridMap[x][y]='-';
-//				Log.d("posicaoplayer","removi o player na posicao "+x+" "+y+" com o conteudo "+objectToDelete);
-				break;
-
-			case 'R':
-				boolean removed = this.getRobots().remove(getRobotByMapCoordinates(x, y));
-				for(Robot robot : this.getRobots())
-					Log.d("robot","ROBOT: X="+robot.getX() +" Y="+robot.getY());
-//				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removed);
-				gridLayout[x][y] = false;
-				break;
-
-		}
-		
-		return objectToDelete;
+//				gridLayout[x][y]=false;
+//				gridMap[x][y]='-';
+//				break;
+//			case '1':
+//				gridLayout[x][y]=false;
+//				gridMap[x][y]='-';
+////				Log.d("posicaoplayer","removi o player na posicao "+x+" "+y+" com o conteudo "+objectToDelete);
+//				break;
+//
+//			case 'R':
+//				boolean removed = this.getRobots().remove(getRobotByMapCoordinates(x, y));
+//				for(Robot robot : this.getRobots())
+//					Log.d("robot","ROBOT: X="+robot.getX() +" Y="+robot.getY());
+////				Log.d("posicao","remover x= " +x + " y="+y +" removi " + removed);
+//				gridLayout[x][y] = false;
+//				break;
+//
+//		}
+//		
+//		return objectToDelete;
 	}
 	
 	
