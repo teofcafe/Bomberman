@@ -1,8 +1,16 @@
 package cmov.bomberman.menu;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,17 +36,24 @@ public class GameActivity extends Activity implements OnTouchListener{
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
+	WifiP2pManager mManager;
+	Channel mChannel;
+	BroadcastReceiver mReceiver;
+	IntentFilter mIntentFilter;
+	@SuppressWarnings("rawtypes")
+	private ArrayList peersLst = new ArrayList();
+	ArrayList<WifiP2pDevice> specialPeers = new ArrayList<WifiP2pDevice>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
 		TextView usernameTextView;
-
 		String username;
 		int avatar;
 		String level;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
+
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		packageName = getApplicationContext().getPackageName();
 		settings =  getSharedPreferences("UserInfo", 0);
@@ -48,9 +63,18 @@ public class GameActivity extends Activity implements OnTouchListener{
 		playerScore = (TextView)findViewById(R.id.playerScoreTextView);
 		numberPlayers = (TextView)findViewById(R.id.numberPlayersTextView);
 		usernameTextView.setText(username);	
-
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
+
+		mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+		mChannel = mManager.initialize(this, getMainLooper(), null);
+		mReceiver = new WifiBroadcast(mManager, mChannel, this);
+
+		mIntentFilter = new IntentFilter();
+		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
 		gameBoard.gameStart(avatar, level);
 
@@ -70,12 +94,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 				case MotionEvent.ACTION_DOWN:
 					if (gameBoard.getPlayer().getWorking() == false){
 						gameBoard.getPlayer().setDirection(3);
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
-						gameBoard.getPlayer().setDirection(3);
-						gameBoard.getPlayer().setWorking(true);
-						gameBoard.getPlayer().setTouched(true);
-						break;
-					}}
+						if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
+							gameBoard.getPlayer().setDirection(3);
+							gameBoard.getPlayer().setWorking(true);
+							gameBoard.getPlayer().setTouched(true);
+							break;
+						}}
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
 				}  	
@@ -91,13 +115,13 @@ public class GameActivity extends Activity implements OnTouchListener{
 				case MotionEvent.ACTION_DOWN:
 					if (gameBoard.getPlayer().getWorking() == false){
 						gameBoard.getPlayer().setDirection(0);
-					if( (!gameBoard.getPlayer().isPaused()) &&  (gameBoard.getPlayer().canMove())){
-						gameBoard.getPlayer().setDirection(0);
-						gameBoard.getPlayer().setWorking(true);
-						gameBoard.getPlayer().setTouched(true);
-						break;
+						if( (!gameBoard.getPlayer().isPaused()) &&  (gameBoard.getPlayer().canMove())){
+							gameBoard.getPlayer().setDirection(0);
+							gameBoard.getPlayer().setWorking(true);
+							gameBoard.getPlayer().setTouched(true);
+							break;
 
-					}}
+						}}
 
 				case MotionEvent.ACTION_UP:
 					gameBoard.getPlayer().setTouched(false);
@@ -115,12 +139,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 				case MotionEvent.ACTION_DOWN:
 					if (gameBoard.getPlayer().getWorking() == false){
 						gameBoard.getPlayer().setDirection(1);
-					if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
-						gameBoard.getPlayer().setWorking(true);
-						gameBoard.getPlayer().setDirection(1);
-						gameBoard.getPlayer().setTouched(true);
-						break;
-					}}
+						if( (!gameBoard.getPlayer().isPaused()) && (gameBoard.getPlayer().canMove())){
+							gameBoard.getPlayer().setWorking(true);
+							gameBoard.getPlayer().setDirection(1);
+							gameBoard.getPlayer().setTouched(true);
+							break;
+						}}
 
 
 				case MotionEvent.ACTION_UP:
@@ -153,69 +177,92 @@ public class GameActivity extends Activity implements OnTouchListener{
 				}
 				return true;
 			}});
+
+		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+			@Override
+			public void onSuccess() {
+				Toast.makeText(getBaseContext(), "finding peers", Toast.LENGTH_SHORT).show();
+			}
+				@Override
+				public void onFailure(int reasonCode) {
+					Toast.makeText(getBaseContext(), " not finding peers", Toast.LENGTH_SHORT).show();
+				}
+			});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home, menu);
-		return true;
-	}
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			// Inflate the menu; this adds items to the action bar if it is present.
+			getMenuInflater().inflate(R.menu.home, menu);
+			return true;
+		}
 
-	Runnable updateDashboard = new Runnable() {
+		Runnable updateDashboard = new Runnable() {
 
-		public void run() {
-			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
-					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
-
-			playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
-			
-			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
-				Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
-				gameBoard.exitGame();	
-				updateTimeHander.removeCallbacks(updateDashboard);
-			} else {
-				gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
+			public void run() {
+				timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
+						Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
 
 				playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
-				numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
 
-				updateTimeHander.postDelayed(this, 1000);
+				if(gameBoard.getLevelProperties().getGameDuration() == 0) {
+					Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
+					gameBoard.exitGame();	
+					updateTimeHander.removeCallbacks(updateDashboard);
+				} else {
+					gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
+
+					playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
+					numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
+
+					updateTimeHander.postDelayed(this, 1000);
+				}
 			}
+		};
+
+		@Override
+		public void onBackPressed() {
+			gameBoard.getPlayer().setPaused();
 		}
-	};
 
-	@Override
-	public void onBackPressed() {
-		gameBoard.getPlayer().setPaused();
+		@Override
+		protected void onDestroy() {
+			super.onDestroy();
+			updateTimeHander.removeCallbacks(updateDashboard);
+		}
+
+		public void quitGame(View view) {
+			Intent intent;
+			gameBoard.exitGame();
+			intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+			startActivity(intent);
+			GameActivity.this.finish();
+		}
+
+		public void pauseGame(View view) {
+			gameBoard.getPlayer().setPaused();
+
+		}
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			return false;
+		}
+
+		@Override
+		protected void onPause() {
+			super.onPause();
+			unregisterReceiver(mReceiver);
+		}
+
+		@Override
+		protected void onResume() {
+			super.onResume();
+			registerReceiver(mReceiver, mIntentFilter);
+		}
+
+		public void dropBomb(View view) {
+			this.gameBoard.dropBomb();
+		}
+
 	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		updateTimeHander.removeCallbacks(updateDashboard);
-	}
-
-	public void quitGame(View view) {
-		Intent intent;
-		gameBoard.exitGame();
-		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
-		startActivity(intent);
-		GameActivity.this.finish();
-	}
-
-	public void pauseGame(View view) {
-		gameBoard.getPlayer().setPaused();
-	
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		return false;
-	}
-
-	public void dropBomb(View view) {
-		this.gameBoard.dropBomb();
-	}
-
-}
