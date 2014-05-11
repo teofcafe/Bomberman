@@ -1,8 +1,22 @@
 package cmov.bomberman.menu;
 
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.ActionListener;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -28,6 +42,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
+	
+	WifiP2pManager mManager;
+	Channel mChannel;
+	BroadcastReceiver mReceiver;
+	IntentFilter mIntentFilter;
+	 private List peersLst = new ArrayList();
+	 ArrayList<WifiP2pDevice> specialPeers = new ArrayList<WifiP2pDevice>(); 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +61,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		String level;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
+
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		packageName = getApplicationContext().getPackageName();
 		settings =  getSharedPreferences("UserInfo", 0);
@@ -61,6 +84,17 @@ public class GameActivity extends Activity implements OnTouchListener{
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
 		ImageButton upButton = (ImageButton)findViewById(R.id.upButton);
 		ImageButton downButton = (ImageButton) findViewById(R.id.downButton);
+		
+	    mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+	    mChannel = mManager.initialize(this, getMainLooper(), null);
+	    mReceiver = new WifiBroadcast(mManager, mChannel, this);
+	    
+	    mIntentFilter = new IntentFilter();
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+	    mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+	   
 
 		upButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -82,6 +116,19 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 				return true;
 			}});
+		
+		
+		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+		    @Override
+		    public void onSuccess() {
+		    	Toast.makeText(getBaseContext(), "finding peers", Toast.LENGTH_SHORT).show();
+		    }
+
+		    @Override
+		    public void onFailure(int reasonCode) {
+		    	Toast.makeText(getBaseContext(), " not  ttt t  ttt tfinding peers", Toast.LENGTH_SHORT).show();
+		    }
+		});
 
 		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -153,6 +200,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 				}
 				return true;
 			}});
+		
+		
 	}
 
 	@Override
@@ -184,6 +233,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 			}
 		}
 	};
+	
+	
 
 	@Override
 	public void onBackPressed() {
@@ -215,7 +266,42 @@ public class GameActivity extends Activity implements OnTouchListener{
 	}
 
 	public void dropBomb(View view) {
-		this.gameBoard.dropBomb();
-	}
+		//this.gameBoard.dropBomb();
+		WifiP2pDeviceList myPeers = ((WifiBroadcast) mReceiver).getPeers();
+		peersLst.addAll(myPeers.getDeviceList());
+		Log.d("CN",peersLst.get(0).toString() );
+		specialPeers.addAll(myPeers.getDeviceList());
+		WifiP2pDevice device = specialPeers.get(0);
+		//Log.d("CN",specialPeers.get(0).toString() );
+		
+		WifiP2pConfig config = new WifiP2pConfig();
+		config.deviceAddress = device.deviceAddress;
+		mManager.connect(mChannel, config, new ActionListener() {
 
+		    @Override
+		    public void onSuccess() {
+		    	Log.d("CN","CONECTADOOOOO" );
+		    }
+
+		    @Override
+		    public void onFailure(int reason) {
+		    	Log.d("CN","fail" );
+		    }
+		});
+		
+    }
+	
+	
+	/* register the broadcast receiver with the intent values to be matched */
+	@Override
+	protected void onResume() {
+	    super.onResume();
+	    registerReceiver(mReceiver, mIntentFilter);
+	}
+	/* unregister the broadcast receiver */
+	@Override
+	protected void onPause() {
+	    super.onPause();
+	    unregisterReceiver(mReceiver);
+	}
 }
