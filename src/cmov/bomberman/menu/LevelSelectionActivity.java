@@ -27,9 +27,19 @@ public class LevelSelectionActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-//		Intent intent;
-//		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
-//		startActivity(intent);
+		Intent intent = getIntent(); // gets the previously created intent
+		String mode = intent.getStringExtra("mode");
+		String role= intent.getStringExtra("role"); 
+
+		if(mode.equals("singleplayer")) {
+			intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+			startActivity(intent);
+		} else {
+			intent = new Intent(this.getApplicationContext(), RoleSelectionActivity.class);
+			startActivity(intent);
+			
+		}
+		
 		super.onBackPressed();
 		LevelSelectionActivity.this.finish();
 	}
@@ -53,7 +63,15 @@ public class LevelSelectionActivity extends Activity {
 	}
 
 	public void startGameMenu(View view){
-		Intent intent = new Intent(this.getApplicationContext(),GameActivity.class);
+		Intent intent = getIntent(); // gets the previously created intent
+		String mode = intent.getStringExtra("mode");
+		String role= intent.getStringExtra("role"); 
+		
+		if(mode.equals("singleplayer"))
+			intent = new Intent(this.getApplicationContext(), GameActivity.class);
+		else
+			intent = new Intent(this.getApplicationContext(), MultiplayerGameActivity.class);
+		
 		startActivity(intent);
 		LevelSelectionActivity.this.finish();
 	}

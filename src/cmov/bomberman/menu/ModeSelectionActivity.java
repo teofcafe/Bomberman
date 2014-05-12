@@ -31,11 +31,13 @@ public class ModeSelectionActivity extends Activity {
 	
 	public void setSinglePlayer(View view) {
 		Intent intent = new Intent(this.getApplicationContext(),LevelSelectionActivity.class);
+		intent.putExtra("mode","singleplayer");
 		startActivity(intent);
+		ModeSelectionActivity.this.finish();
 	}
 	
 	public void setMultiplayer(View view) {
-		Intent intent = new Intent(this.getApplicationContext(),RoleSelectionActivity.class);
+		Intent intent = new Intent(this.getApplicationContext(), RoleSelectionActivity.class);
 		startActivity(intent);
 		ModeSelectionActivity.this.finish();
 	}

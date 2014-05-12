@@ -31,6 +31,8 @@ public class RoleSelectionActivity extends Activity {
 	
 	public void startServer(View view) {
 		Intent intent = new Intent(this.getApplicationContext(),LevelSelectionActivity.class);
+		intent.putExtra("mode","multiplayer");
+		intent.putExtra("role","server");
 		startActivity(intent);
 		RoleSelectionActivity.this.finish();
 	}

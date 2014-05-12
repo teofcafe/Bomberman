@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
 import cmov.bomberman.game.LevelProperties;
-
 import cmov.bomberman.game.Mapping;
 import cmov.bomberman.game.components.Robot;
 import cmov.bomberman.pair.Pair;
@@ -36,13 +35,6 @@ public class GameActivity extends Activity implements OnTouchListener{
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
-	WifiP2pManager mManager;
-	Channel mChannel;
-	BroadcastReceiver mReceiver;
-	IntentFilter mIntentFilter;
-	@SuppressWarnings("rawtypes")
-	private ArrayList peersLst = new ArrayList();
-	ArrayList<WifiP2pDevice> specialPeers = new ArrayList<WifiP2pDevice>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +57,6 @@ public class GameActivity extends Activity implements OnTouchListener{
 		usernameTextView.setText(username);	
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
-
-		mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-		mChannel = mManager.initialize(this, getMainLooper(), null);
-		mReceiver = new WifiBroadcast(mManager, mChannel, this);
-
-		mIntentFilter = new IntentFilter();
-		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-		mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
 		gameBoard.gameStart(avatar, level);
 
@@ -177,17 +159,6 @@ public class GameActivity extends Activity implements OnTouchListener{
 				}
 				return true;
 			}});
-
-		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-			@Override
-			public void onSuccess() {
-				Toast.makeText(getBaseContext(), "finding peers", Toast.LENGTH_SHORT).show();
-			}
-				@Override
-				public void onFailure(int reasonCode) {
-					Toast.makeText(getBaseContext(), " not finding peers", Toast.LENGTH_SHORT).show();
-				}
-			});
 	}
 
 		@Override
@@ -247,18 +218,6 @@ public class GameActivity extends Activity implements OnTouchListener{
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 			return false;
-		}
-
-		@Override
-		protected void onPause() {
-			super.onPause();
-			unregisterReceiver(mReceiver);
-		}
-
-		@Override
-		protected void onResume() {
-			super.onResume();
-			registerReceiver(mReceiver, mIntentFilter);
 		}
 
 		public void dropBomb(View view) {
