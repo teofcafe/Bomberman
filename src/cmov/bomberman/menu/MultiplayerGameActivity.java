@@ -51,16 +51,16 @@ public class MultiplayerGameActivity extends GameActivity {
 			}
 		});
 
-		mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
-			@Override
-			public void onGroupInfoAvailable(WifiP2pGroup group) {
-				if (group != null && mManager != null && mChannel != null
-						&& group.isGroupOwner()) {
-
-					Toast.makeText(getBaseContext(), group.describeContents(), Toast.LENGTH_LONG).show();
-				}
-			}
-		});
+//		mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
+//			@Override
+//			public void onGroupInfoAvailable(WifiP2pGroup group) {
+//				if (group != null && mManager != null && mChannel != null
+//						&& group.isGroupOwner()) {
+//
+//					Toast.makeText(getBaseContext(), group.describeContents(), Toast.LENGTH_LONG).show();
+//				}
+//			}
+//		});
 		
 //		WifiP2pDeviceList myPeers = ((WifiBroadcast) mReceiver).getPeers();
 //		peersLst.addAll(myPeers.getDeviceList());
