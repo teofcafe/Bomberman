@@ -59,7 +59,6 @@ public class WifiBroadcast extends BroadcastReceiver{
 							Toast.makeText(context, (peers.getDeviceList().toString()), Toast.LENGTH_SHORT).show();
 						myPeers = peers;
 						Toast.makeText(context, Integer.toString(peers.getDeviceList().size()), Toast.LENGTH_SHORT).show();
-						
 					}
 				});
 				

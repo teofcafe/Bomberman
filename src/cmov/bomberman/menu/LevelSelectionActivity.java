@@ -32,7 +32,7 @@ public class LevelSelectionActivity extends Activity {
 		String role= intent.getStringExtra("role"); 
 
 		if(mode.equals("singleplayer")) {
-			intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+			intent = new Intent(this.getApplicationContext(), ModeSelectionActivity.class);
 			startActivity(intent);
 		} else {
 			intent = new Intent(this.getApplicationContext(), RoleSelectionActivity.class);
