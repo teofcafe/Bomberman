@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.util.Log;
 import android.widget.Toast;
 
 public class WifiBroadcast extends BroadcastReceiver{
@@ -17,6 +21,7 @@ public class WifiBroadcast extends BroadcastReceiver{
 	private GameActivity mActivity;
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
+	private boolean connected = false;
 
 	public WifiBroadcast(WifiP2pManager manager, Channel channel,
 			GameActivity activity) {
@@ -28,6 +33,10 @@ public class WifiBroadcast extends BroadcastReceiver{
 	
 	public WifiP2pDeviceList getPeers() {
 		return this.myPeers;
+	}
+	
+	public boolean WifiChangeState(){
+		return this.connected;
 	}
 	
 
@@ -66,20 +75,19 @@ public class WifiBroadcast extends BroadcastReceiver{
 			}
 
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-			// Respond to new connection or disconnections
-		    if (mManager == null) {
-                return;
+
+            NetworkInfo netInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            this.connected = true;
+
+            if (netInfo.isConnected()) {
+            	Toast.makeText(context, " encontreiiiiiiii", Toast.LENGTH_LONG).show();	
+				this.connected = true;
+               // mManager.requestConnectionInfo(mChannel, (ConnectionInfoListener) mActivity);
             }
 
-            NetworkInfo networkInfo = (NetworkInfo) intent
-                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            
-            if(networkInfo.isConnected()){
-            	
-            }
-			
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			// Respond to this device's wifi state changing
+			this.connected = true;
 		}
 
 	}
