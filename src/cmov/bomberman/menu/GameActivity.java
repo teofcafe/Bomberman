@@ -14,9 +14,11 @@ import android.content.SharedPreferences;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -117,8 +119,55 @@ public class GameActivity extends Activity implements OnTouchListener{
 				return true;
 			}});
 		
+		mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+              public void onSuccess() {
+                  Log.d("CNN", " remove group success");
+              }
+              public void onFailure(int reason) {
+                  Log.d("CNN", " remove group fail " + reason);
+              }
+          });
 		
-		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+		mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
+            public void onSuccess() {
+                Log.d("CNN", " create group success");
+                Toast.makeText(getBaseContext(), "sucesso no create", Toast.LENGTH_SHORT).show();
+            }
+            public void onFailure(int reason) {
+                Log.d("CNN", " create group fail " + reason);
+                Toast.makeText(getBaseContext(), "fail no create", Toast.LENGTH_SHORT).show();
+            }
+        });
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/* mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
+	            @Override
+	            public void onGroupInfoAvailable(WifiP2pGroup group) {
+	                if (group != null && mManager != null && mChannel != null
+	                        && group.isGroupOwner()) {
+	                	
+	                	Toast.makeText(getBaseContext(), group.describeContents(), Toast.LENGTH_LONG).show();
+	                }
+	            }
+	        });*/
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		
+		
+	/*	mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 		    @Override
 		    public void onSuccess() {
 		    	Toast.makeText(getBaseContext(), "finding peers", Toast.LENGTH_SHORT).show();
@@ -126,9 +175,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 		    @Override
 		    public void onFailure(int reasonCode) {
-		    	Toast.makeText(getBaseContext(), " not  ttt t  ttt tfinding peers", Toast.LENGTH_SHORT).show();
+		    	Toast.makeText(getBaseContext(), " not  ttt t  tt t tfinding peers", Toast.LENGTH_SHORT).show();
 		    }
-		});
+		});*/
+		
+		
 
 		downButton.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -276,7 +327,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		
 		WifiP2pConfig config = new WifiP2pConfig();
 		config.deviceAddress = device.deviceAddress;
-		mManager.connect(mChannel, config, new ActionListener() {
+		/*mManager.connect(mChannel, config, new ActionListener() {
 
 		    @Override
 		    public void onSuccess() {
@@ -287,7 +338,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		    public void onFailure(int reason) {
 		    	Log.d("CN","fail" );
 		    }
-		});
+		});*/
 		
     }
 	
