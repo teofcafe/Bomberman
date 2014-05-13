@@ -127,9 +127,9 @@ public class MultiplayerGameActivity extends GameActivity {
 	};
 	
 	
-	/*Runnable waitForConnect = new Runnable() {
+	Runnable waitForConnect = new Runnable() {
 		public void run() {
-			boolean connect = ((WifiBroadcast) mReceiver).WifiChangeState();
+			/*boolean connect = ((WifiBroadcast) mReceiver).WifiChangeState();
 			if(connect) {
 				Toast.makeText(getBaseContext(), "CONECTADOOOOOOOOOOOOOO", Toast.LENGTH_LONG).show();
 				mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
@@ -143,9 +143,34 @@ public class MultiplayerGameActivity extends GameActivity {
 					}
 				});
 				(waitConnect).removeCallbacks(waitForConnect);
-			} else waitConnect.postDelayed(this, 1000);
+			} else waitConnect.postDelayed(this, 1000);*/
+			
+			
+			mManager.requestConnectionInfo(mChannel, new ConnectionInfoListener() {
+				 
+				@Override 
+				public void onConnectionInfoAvailable(WifiP2pInfo info) {
+	
+					mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
+							 
+							@Override 
+							public void onGroupInfoAvailable(WifiP2pGroup group) {
+								if (group == null)
+								return; 
+							} 
+						}); 
+					if (((WifiBroadcast) mReceiver).WifiChangeState() && !info.isGroupOwner) {
+						// normally stopped already 
+				//		stopDiscovery(); 
+					} else { 
+						// TODO if is master relaunch a discovery later ? 
+						; 
+					} 
+		 
+				} 
+			});
 			}
-	};*/
+	};
 	
 	/*@Override
     public void onConnectionInfoAvailable(final WifiP2pInfo info) {

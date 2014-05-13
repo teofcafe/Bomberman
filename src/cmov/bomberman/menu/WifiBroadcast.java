@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
@@ -30,15 +31,15 @@ public class WifiBroadcast extends BroadcastReceiver{
 		this.mChannel = channel;
 		this.mActivity = activity;
 	}
-	
+
 	public WifiP2pDeviceList getPeers() {
 		return this.myPeers;
 	}
-	
+
 	public boolean WifiChangeState(){
 		return this.connected;
 	}
-	
+
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -71,29 +72,49 @@ public class WifiBroadcast extends BroadcastReceiver{
 						Toast.makeText(context, Integer.toString(peers.getDeviceList().size()), Toast.LENGTH_SHORT).show();
 					}
 				});
-				
+
 			}
 
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-           // if (mManager == null) {
-                //return;
-           // }
 
-           // NetworkInfo networkInfo = (NetworkInfo) intent
-                //    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            
-            NetworkInfo netInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-            this.connected = true;
 
-            if (netInfo.isConnected()) {
-            	Toast.makeText(context, " encontreiiiiiiii", Toast.LENGTH_LONG).show();	
+			NetworkInfo netInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+
+			if (netInfo.isConnected()) {
+				Toast.makeText(context, " encontreiiiiiiii", Toast.LENGTH_LONG).show();	
 				this.connected = true;
-               // mManager.requestConnectionInfo(mChannel, (ConnectionInfoListener) mActivity);
-            }
+				mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
+
+					@Override
+					public void onConnectionInfoAvailable(WifiP2pInfo info) {
+						Toast.makeText(context, " sdfd", Toast.LENGTH_LONG).show();
+						Toast.makeText(context, Boolean.toString(info.isGroupOwner), Toast.LENGTH_LONG).show();
+						Toast.makeText(context, Boolean.toString(info.groupFormed), Toast.LENGTH_LONG).show();
+						Toast.makeText(context, String.valueOf(info.groupOwnerAddress), Toast.LENGTH_LONG).show();
+
+						mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+
+							@Override
+							public void onGroupInfoAvailable(WifiP2pGroup group) {
+								Toast.makeText(context, " Group info!!!!!", Toast.LENGTH_LONG).show();
+								Log.d("WiFi", "Owner device address: " + String.valueOf(group.getOwner().deviceAddress));
+								Log.d("WiFi", "Owner device name: " + String.valueOf(group.getOwner().deviceName));
+								Log.d("WiFi", "Owner status: " + String.valueOf(group.getOwner().status));
+								Log.d("WiFi", "Primary Device Type: " + String.valueOf(group.getOwner().primaryDeviceType));
+								Log.d("WiFi", "secondary Device Type: " + String.valueOf(group.getOwner().secondaryDeviceType));
+								Log.d("WiFi", "Nr of clients: " + String.valueOf(group.getClientList().size()));
+							}
+						});
+
+					}
+				});
+
+
+				//requestConnectionInfo(mChannel, (ConnectionInfoListener) mActivity);
+			}
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-			// Respond to this device's wifi state changing
-			this.connected = true;
+
 		}
 
 	}
