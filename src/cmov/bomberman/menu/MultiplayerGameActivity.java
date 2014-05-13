@@ -66,27 +66,6 @@ public class MultiplayerGameActivity extends GameActivity {
 	}
 	
 	
-	
-	
-	/*mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
-		@Override
-		public void onGroupInfoAvailable(WifiP2pGroup group) {
-			if (group != null && mManager != null && mChannel != null
-					&& group.isGroupOwner()) {
-				
-				Toast.makeText(context, "Interface: " + group.getInterface(), Toast.LENGTH_LONG).show();
-				Log.d("WiFi", "Interface: " + group.getInterface());
-				Log.d("WiFi", "Network name: " + group.getNetworkName());
-				Log.d("WiFi", "Pass: " + group.getPassphrase());
-				Log.d("WiFi", "Owner name: " + group.getOwner().deviceName);
-				Toast.makeText(context, group.describeContents(), Toast.LENGTH_LONG).show();
-			}
-			else{
-				Toast.makeText(context, "Nao encontreiiiiiiii", Toast.LENGTH_LONG).show();	
-			}
-		}
-	});*/
-	
 
 	Runnable waitForPeers = new Runnable() {
 
