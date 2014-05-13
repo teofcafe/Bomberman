@@ -1,16 +1,23 @@
 package cmov.bomberman.menu;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
-import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +30,12 @@ public class WifiBroadcast extends BroadcastReceiver{
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
 	private boolean connected = false;
+	String host;
+	int port;
+	int len;
+	Socket socket = new Socket();
+	byte buf[]  = new byte[1024];
+
 
 	public WifiBroadcast(WifiP2pManager manager, Channel channel,
 			GameActivity activity) {
@@ -63,10 +76,11 @@ public class WifiBroadcast extends BroadcastReceiver{
 
 			if (mManager != null) {
 				mManager.requestPeers(mChannel, myPeerListListener);
+
 				mManager.requestPeers(mChannel, new WifiP2pManager.PeerListListener() {
 					@Override
 					public void onPeersAvailable(WifiP2pDeviceList peers) {		
-						for(int i = 0; i<peers.getDeviceList().size(); i++)
+						for(int i = 0; i < peers.getDeviceList().size(); i++)
 							Toast.makeText(context, (peers.getDeviceList().toString()), Toast.LENGTH_SHORT).show();
 						myPeers = peers;
 						Toast.makeText(context, Integer.toString(peers.getDeviceList().size()), Toast.LENGTH_SHORT).show();
@@ -80,32 +94,72 @@ public class WifiBroadcast extends BroadcastReceiver{
 			NetworkInfo netInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
 			if (netInfo.isConnected()) {
-				Toast.makeText(context, " encontreiiiiiiii", Toast.LENGTH_LONG).show();	
+
+				Toast.makeText(context, " Connected!", Toast.LENGTH_LONG).show();	
 				this.connected = true;
+
 				mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
 
 					@Override
 					public void onConnectionInfoAvailable(WifiP2pInfo info) {
-						Toast.makeText(context, " sdfd", Toast.LENGTH_LONG).show();
-						Toast.makeText(context, Boolean.toString(info.isGroupOwner), Toast.LENGTH_LONG).show();
-						Toast.makeText(context, Boolean.toString(info.groupFormed), Toast.LENGTH_LONG).show();
-						Toast.makeText(context, String.valueOf(info.groupOwnerAddress), Toast.LENGTH_LONG).show();
+						Toast.makeText(context, " Connection info!", Toast.LENGTH_LONG).show();
+						Log.d("WiFi", "Group owner address: " + String.valueOf(info.groupOwnerAddress));
 
-						mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+						host = String.valueOf(info.groupOwnerAddress);
+						port = 8888;
 
-							@Override
-							public void onGroupInfoAvailable(WifiP2pGroup group) {
-								Toast.makeText(context, " Group info!!!!!", Toast.LENGTH_LONG).show();
-								Log.d("WiFi", "Owner device address: " + String.valueOf(group.getOwner().deviceAddress));
-								Log.d("WiFi", "Owner device name: " + String.valueOf(group.getOwner().deviceName));
-								Log.d("WiFi", "Owner status: " + String.valueOf(group.getOwner().status));
-								Log.d("WiFi", "Primary Device Type: " + String.valueOf(group.getOwner().primaryDeviceType));
-								Log.d("WiFi", "secondary Device Type: " + String.valueOf(group.getOwner().secondaryDeviceType));
-								Log.d("WiFi", "Nr of clients: " + String.valueOf(group.getClientList().size()));
-							}
-						});
+					
+					try {
+						
+						Log.d("WiFi", "Antes");
+						socket.bind(null);
+						Log.d("WiFi", "Entretanto");
+						Log.d("WiFi", "Host: " +  host + " Port: " + port);
+						socket.connect((new InetSocketAddress(host, port)), 5000);
+						Log.d("WiFi", "Depois");
+//						
+//						
+//						OutputStream outputStream = socket.getOutputStream();
+//						ContentResolver cr = context.getContentResolver();
+//						InputStream inputStream = null;
+//						inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
+//						while ((len = inputStream.read(buf)) != -1) {
+//							outputStream.write(buf, 0, len);
+//						}
+//						outputStream.close();
+//						inputStream.close();
+					} catch (FileNotFoundException e) {
+						//catch logic
+					} catch (IOException e) {
+						//catch logic
 					}
+					
+					finally {
+					    if (socket != null) {
+					        if (socket.isConnected()) {
+					            try {
+					                socket.close();
+					            } catch (IOException e) {
+					                //catch logic
+					            }
+					        }
+					    }
+					}
+				}
+
 				});
+
+				mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+					@Override
+					public void onGroupInfoAvailable(WifiP2pGroup group) {
+						Toast.makeText(context, " Group info!", Toast.LENGTH_LONG).show();
+						Log.d("WiFi", "Owner device address: " + String.valueOf(group.getOwner().deviceAddress));
+						Log.d("WiFi", "Owner device name: " + String.valueOf(group.getOwner().deviceName));
+						Log.d("WiFi", "Contents: " + String.valueOf(group.describeContents()));
+						Log.d("WiFi", "Owner status: " + String.valueOf(group.getOwner().status));
+						Log.d("WiFi", "Nr of clients: " + String.valueOf(group.getClientList().size()));
+					}
+				});	
 
 			}
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
