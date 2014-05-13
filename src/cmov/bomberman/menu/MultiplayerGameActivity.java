@@ -87,9 +87,6 @@ public class MultiplayerGameActivity extends GameActivity {
 		}
 	});*/
 	
-	
-	
-	
 
 	Runnable waitForPeers = new Runnable() {
 
@@ -108,6 +105,7 @@ public class MultiplayerGameActivity extends GameActivity {
 				config.deviceAddress = device.deviceAddress;
 				
 				mManager.connect(mChannel, config, new ActionListener() {
+
 		
 				    @Override
 				    public void onSuccess() {

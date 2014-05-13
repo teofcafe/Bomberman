@@ -77,8 +77,6 @@ public class WifiBroadcast extends BroadcastReceiver{
 
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-
-
 			NetworkInfo netInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
 			if (netInfo.isConnected()) {
@@ -106,16 +104,12 @@ public class WifiBroadcast extends BroadcastReceiver{
 								Log.d("WiFi", "Nr of clients: " + String.valueOf(group.getClientList().size()));
 							}
 						});
-
 					}
 				});
 
-
-				//requestConnectionInfo(mChannel, (ConnectionInfoListener) mActivity);
 			}
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
 		}
-
 	}
 }
