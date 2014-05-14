@@ -1,12 +1,30 @@
 package cmov.bomberman.menu;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class WifiBroadcast extends BroadcastReceiver{
@@ -16,6 +34,8 @@ public class WifiBroadcast extends BroadcastReceiver{
 	private GameActivity mActivity;
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
+	Handler socketWait;
+	
 
 	public WifiBroadcast(WifiP2pManager manager, Channel channel,
 			GameActivity activity) {
@@ -23,17 +43,37 @@ public class WifiBroadcast extends BroadcastReceiver{
 		this.mManager = manager;
 		this.mChannel = channel;
 		this.mActivity = activity;
+		
+		/*socketWait = new Handler();
+		socketWait.post(socketWaiting);*/
 	}
-	
+
 	public WifiP2pDeviceList getPeers(){
 		return this.myPeers;
 	}
 	
+	Runnable socketWaiting = new Runnable() {
 
+		public void run() {
+			Toast.makeText(mActivity.getBaseContext(), "escutadoutro", Toast.LENGTH_LONG).show();
+			ServerSocket serverSocket = null;
+			
+		    try {
+		        serverSocket = new ServerSocket(8888);
+		        Socket clientSocket = serverSocket.accept();
+                
+		        Toast.makeText(mActivity.getBaseContext(), "LIGASTE_TE", Toast.LENGTH_LONG).show();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+	};
+	
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 		String action = intent.getAction();
-
+		
+		
 		if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
 			// Check to see if Wi-Fi is enabled and notify appropriate activity
 			int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
@@ -49,6 +89,10 @@ public class WifiBroadcast extends BroadcastReceiver{
 			// request available peers from the wifi p2p manager. This is an
 			// asynchronous call and the calling activity is notified with a
 			// callback on PeerListListener.onPeersAvailable()
+			
+			if (mManager == null) {
+                return;
+            }
 
 			if (mManager != null) {
 				mManager.requestPeers(mChannel, myPeerListListener);
@@ -59,10 +103,10 @@ public class WifiBroadcast extends BroadcastReceiver{
 							Toast.makeText(context, (peers.getDeviceList().toString()), Toast.LENGTH_SHORT).show();
 						myPeers = peers;
 						Toast.makeText(context, Integer.toString(peers.getDeviceList().size()), Toast.LENGTH_SHORT).show();
-						
+
 					}
 				});
-				
+
 			}
 
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
@@ -72,4 +116,5 @@ public class WifiBroadcast extends BroadcastReceiver{
 		}
 
 	}
+	
 }
