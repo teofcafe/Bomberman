@@ -6,12 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -138,6 +135,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									ContentResolver cr = context.getContentResolver();
 									InputStream inputStream = socket.getInputStream();
 
+
 									BufferedReader bufferReader = new BufferedReader(new InputStreamReader(inputStream));
 									if(!bufferReader.ready()) Log.d("WiFi", "Buffer not ready");
 
@@ -146,6 +144,9 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 									((LoadingActivity) mActivity).startGame();
 
+									//outputStream.close();
+									//inputStream.close();
+									
 								} catch (FileNotFoundException e) {
 									Log.d("WiFi", "FileNotFoundException");
 									//catch logic
