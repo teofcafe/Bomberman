@@ -1,13 +1,17 @@
 package cmov.bomberman.menu;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -26,7 +30,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 	private WifiP2pManager mManager;
 	private Channel mChannel;
-	private GameActivity mActivity;
+	private ClientActivity mActivity;
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
 	private boolean connected = false;
@@ -37,21 +41,12 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 	byte buf[] = new byte[1024];
 
 	public ClientWifiBroadcast(WifiP2pManager manager, Channel channel,
-			GameActivity activity) {
+			ClientActivity activity) {
 		super();
 		this.mManager = manager;
 		this.mChannel = channel;
 		this.mActivity = activity;
 	}
-
-	public WifiP2pDeviceList getPeers() {
-		return this.myPeers;
-	}
-
-	public boolean WifiChangeState(){
-		return this.connected;
-	}
-
 
 	@Override
 	public void onReceive(final Context context, Intent intent) {
@@ -73,12 +68,17 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 			// asynchronous call and the calling activity is notified with a
 			// callback on PeerListListener.onPeersAvailable()
 
+			Log.d("WiFi", "WIFI_P2P_PEERS_CHANGED_ACTION");
+			
 			if (mManager != null) {
 				mManager.requestPeers(mChannel, myPeerListListener);
 
 				mManager.requestPeers(mChannel, new WifiP2pManager.PeerListListener() {
+
 					@Override
-					public void onPeersAvailable(WifiP2pDeviceList peers) {		
+					public void onPeersAvailable(WifiP2pDeviceList peers) {	
+						Log.d("WiFi", "onPeersAvailable");
+
 						for(int i = 0; i < peers.getDeviceList().size(); i++)
 							Toast.makeText(context, (peers.getDeviceList().toString()), Toast.LENGTH_SHORT).show();
 						myPeers = peers;
@@ -94,7 +94,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 			if (netInfo.isConnected()) {
 
-				Toast.makeText(context, " Connected!", Toast.LENGTH_LONG).show();	
+				Toast.makeText(context, " Connected AfterRequest!", Toast.LENGTH_LONG).show();	
 				this.connected = true;
 
 				mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
@@ -107,11 +107,11 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 						host = String.valueOf(info.groupOwnerAddress);
 						port = 8000;
 						new Thread(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								try {
-									
+
 									Log.d("WiFi", "Antes");
 									socket.bind(null);
 									Log.d("WiFi", "Entretanto");
@@ -119,52 +119,33 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 									String[] hostIP = host.split("/");
 									Log.d("WiFi", "Host IP: " +  hostIP[1]);
-									
+
 									String[] ip = hostIP[1].split("\\.");
-									
+
 									byte[] ipaddr = new byte[]{(byte) Integer.parseInt(ip[0]), (byte) Integer.parseInt(ip[1]), (byte) Integer.parseInt(ip[2]), (byte) Integer.parseInt(ip[3])};
-									
+
 									InetAddress addr = InetAddress.getByAddress(ipaddr);
-									
+
 									Log.d("WiFi", "IP ADDRESS: " + addr.getHostAddress());
 									InetSocketAddress address = new InetSocketAddress(addr, port);
-									
+
 									socket.connect(address, 5000);
 									Log.d("WiFi", "Depois");
 									Log.d("WiFi", "Am I connected? " + socket.isConnected());
-									
+
 									Log.d("WiFi", "Ligar os streams");
 									OutputStream outputStream = socket.getOutputStream();
 									ContentResolver cr = context.getContentResolver();
-									InputStream inputStream = null;
-									
-									//inputStream = socket.getInputStream();
-									
-//									BufferedWriter buffer = new BufferedWriter(new PrintWriter(outputStream, true));
-//									buffer.write("ola");
-//									buffer.newLine();
-//									Log.d("WiFi", "enviei o ola");
+									InputStream inputStream = socket.getInputStream();
 
-//									String ola = "Ola";
-//									buf = ola.getBytes();
-//									outputStream.write(buf, 0, ola.length());
-									
-									outputStream = socket.getOutputStream();
-						            PrintStream printStream = new PrintStream(outputStream);
-						            printStream.print("ola");
-						            printStream.close();
-						            printStream = new PrintStream(outputStream);
-						            printStream.print("exit");
-						            printStream.close();
+									BufferedReader bufferReader = new BufferedReader(new InputStreamReader(inputStream));
+									if(!bufferReader.ready()) Log.d("WiFi", "Buffer not ready");
 
-									Log.d("WiFi", "enviar o ola");
-//									inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
-//									while ((len = inputStream.read(buf)) != -1) {
-//										outputStream.write(buf, 0, len);
-//									}
-									//outputStream.close();
-									//inputStream.close();
-									
+									String result = bufferReader.readLine();
+									Log.d("WiFi", "String: " + result);
+
+									((LoadingActivity) mActivity).startGame();
+
 								} catch (FileNotFoundException e) {
 									Log.d("WiFi", "FileNotFoundException");
 									//catch logic
@@ -172,22 +153,22 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									//catch logic
 									Log.d("WiFi", "IOException");
 								}
-								
-//								finally {
-//								    if (socket != null) {
-//								        if (socket.isConnected()) {
-//								            try {
-//								                socket.close();
-//								            } catch (IOException e) {
-//								                //catch logic
-//								            }
-//								        }
-//								    }
-//								}
-								
+
+								//								finally {
+								//								    if (socket != null) {
+								//								        if (socket.isConnected()) {
+								//								            try {
+								//								                socket.close();
+								//								            } catch (IOException e) {
+								//								                //catch logic
+								//								            }
+								//								        }
+								//								    }
+								//								}
+
 							}
 						}).start();
-				}
+					}
 
 				});
 
@@ -207,5 +188,9 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
 		}
+	}
+
+	public WifiP2pDeviceList getPeers() {
+		return this.myPeers;
 	}
 }

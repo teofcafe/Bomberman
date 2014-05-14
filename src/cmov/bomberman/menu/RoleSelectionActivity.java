@@ -43,7 +43,7 @@ public class RoleSelectionActivity extends Activity {
 	}
 	
 	public void startClient(View view) {
-		Intent intent = new Intent(this.getApplicationContext(),ClientActivity.class);
+		Intent intent = new Intent(this.getApplicationContext(),SelectPeerActivity.class);
 		intent.putExtra("mode","multiplayer");
 		intent.putExtra("role","client");
 
