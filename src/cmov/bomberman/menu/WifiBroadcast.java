@@ -34,7 +34,6 @@ public class WifiBroadcast extends BroadcastReceiver{
 	private GameActivity mActivity;
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
-	Handler socketWait;
 	
 
 	public WifiBroadcast(WifiP2pManager manager, Channel channel,
@@ -43,6 +42,8 @@ public class WifiBroadcast extends BroadcastReceiver{
 		this.mManager = manager;
 		this.mChannel = channel;
 		this.mActivity = activity;
+		TextView view = new TextView(mActivity.getBaseContext());
+		//new ServerAsyncTask(mActivity, view).execute();
 		
 		/*socketWait = new Handler();
 		socketWait.post(socketWaiting);*/
@@ -51,24 +52,7 @@ public class WifiBroadcast extends BroadcastReceiver{
 	public WifiP2pDeviceList getPeers(){
 		return this.myPeers;
 	}
-	
-	Runnable socketWaiting = new Runnable() {
-
-		public void run() {
-			Toast.makeText(mActivity.getBaseContext(), "escutadoutro", Toast.LENGTH_LONG).show();
-			ServerSocket serverSocket = null;
-			
-		    try {
-		        serverSocket = new ServerSocket(8888);
-		        Socket clientSocket = serverSocket.accept();
-                
-		        Toast.makeText(mActivity.getBaseContext(), "LIGASTE_TE", Toast.LENGTH_LONG).show();
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		}
-	};
-	
+		
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 		String action = intent.getAction();
@@ -111,10 +95,84 @@ public class WifiBroadcast extends BroadcastReceiver{
 
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 			// Respond to new connection or disconnections
+			Toast.makeText(context, "Conectadoooooooooooooooooo", Toast.LENGTH_SHORT).show();
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			// Respond to this device's wifi state changing
 		}
 
 	}
 	
+	/*public static class ServerAsyncTask extends AsyncTask<Void, Void, String> {
+
+		private final Context context;
+		private final TextView statusText;
+
+		public ServerAsyncTask(Context context, View statusText) {
+			this.context = context;
+			this.statusText = (TextView) statusText;
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			try {
+				Toast.makeText(context, "Estou a escutar", Toast.LENGTH_LONG).show();
+				Log.d("CD", "escutas");
+				ServerSocket serverSocket = new ServerSocket(8888);
+				Log.d("CD", "Server: Socket opened");
+				Socket client = serverSocket.accept();
+				Log.d("CD", "Server: connection done");
+				final File f = new File(Environment.getExternalStorageDirectory() + "/"
+						+ context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
+						+ ".jpg");
+
+				File dirs = new File(f.getParent());
+				if (!dirs.exists())
+					dirs.mkdirs();
+				f.createNewFile();
+
+				Log.d("CD", "server: copying files " + f.toString());
+				InputStream inputstream = client.getInputStream();
+				copyFile(inputstream, new FileOutputStream(f));
+				serverSocket.close();
+				return f.getAbsolutePath();
+			} catch (IOException e) {
+				return null;
+			}
+		}
+	
+		@Override
+		protected void onPostExecute(String result) {
+			if (result != null) {
+				statusText.setText("File copied - " + result);
+				Intent intent = new Intent();
+				intent.setAction(android.content.Intent.ACTION_VIEW);
+				intent.setDataAndType(Uri.parse("file://" + result), "image/*");
+				context.startActivity(intent);
+			}
+
+		}
+
+		@Override
+		protected void onPreExecute() {
+			statusText.setText("Opening a server socket");
+		}
+
+	}
+
+	public static boolean copyFile(InputStream inputStream, OutputStream out) {
+		byte buf[] = new byte[1024];
+		int len;
+		try {
+			while ((len = inputStream.read(buf)) != -1) {
+				out.write(buf, 0, len);
+
+			}
+			out.close();
+			inputStream.close();
+		} catch (IOException e) {
+			Log.d("CD", e.toString());
+			return false;
+		}
+		return true;
+	}	*/
 }

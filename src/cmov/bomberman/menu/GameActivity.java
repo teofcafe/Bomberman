@@ -2,6 +2,18 @@ package cmov.bomberman.menu;
 
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +31,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -41,9 +54,12 @@ public class GameActivity extends Activity implements OnTouchListener{
 	GameBoard gameBoard;
 	public static String packageName;
 	Handler updateTimeHander;
+	Handler CliWait;
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
+	ServerSocket serverSocket = null;
+	Socket clientSocket = null;
 	
 	WifiP2pManager mManager;
 	Channel mChannel;
@@ -81,7 +97,16 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 		updateTimeHander = new Handler();
 		updateTimeHander.post(updateDashboard);
-
+		
+		
+		CliWait = new Handler();
+		//CliWait.post(clientWait);
+		
+		Log.d("ServerTask", "Server Task Pre-Create");
+		//ServerTask MyTask= new ServerTask();
+        //MyTask.execute();
+        Log.d("ServerTask", "Server Task Created");
+        
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
 		ImageButton upButton = (ImageButton)findViewById(R.id.upButton);
@@ -139,45 +164,45 @@ public class GameActivity extends Activity implements OnTouchListener{
             }
         });
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		/* mManager.requestGroupInfo(mChannel, new GroupInfoListener() {
-	            @Override
-	            public void onGroupInfoAvailable(WifiP2pGroup group) {
-	                if (group != null && mManager != null && mChannel != null
-	                        && group.isGroupOwner()) {
-	                	
-	                	Toast.makeText(getBaseContext(), group.describeContents(), Toast.LENGTH_LONG).show();
-	                }
-	            }
-	        });*/
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		
-		
-	/*	mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-		    @Override
-		    public void onSuccess() {
-		    	Toast.makeText(getBaseContext(), "finding peers", Toast.LENGTH_SHORT).show();
-		    }
+		Thread serverSocketThread =  new Thread (new Runnable() {
+			@Override
+			public void run() {
+			      try {        
+			           serverSocket = new ServerSocket(8000);
+			            
+			           int bytesRead;
+			           byte[] nm = new byte[12];
+			           
+			           all:
+				           while(true){
+				        	   
+			           clientSocket = serverSocket.accept();
+			           clientSocket.setKeepAlive(true);
+			           
+			           
+			           InputStream in = clientSocket.getInputStream();
+			           
+			           
+			        	   
+			           while((bytesRead = in.read(nm)) != -1){
+			        	   String commandReceived = new String(nm, 0, bytesRead);
+			        	   System.out.println(commandReceived);
+			        	   if(commandReceived.equals("exit"))
+			        		   break all;
+			           }
+			           
+			           }
+			         clientSocket.close();
+			         serverSocket.close(); 
 
-		    @Override
-		    public void onFailure(int reasonCode) {
-		    	Toast.makeText(getBaseContext(), " not  ttt t  tt t tfinding peers", Toast.LENGTH_SHORT).show();
-		    }
-		});*/
+			        } catch (UnknownHostException e) {
+			            System.out.println("EX1");e.printStackTrace();
+			        } catch (IOException e) {
+			        	 System.out.println("EX2");
+			            e.printStackTrace();
+			        }	
+			}
+		});serverSocketThread.start();
 		
 		
 
@@ -327,20 +352,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 		
 		WifiP2pConfig config = new WifiP2pConfig();
 		config.deviceAddress = device.deviceAddress;
-		/*mManager.connect(mChannel, config, new ActionListener() {
-
-		    @Override
-		    public void onSuccess() {
-		    	Log.d("CN","CONECTADOOOOO" );
-		    }
-
-		    @Override
-		    public void onFailure(int reason) {
-		    	Log.d("CN","fail" );
-		    }
-		});*/
 		
     }
+	
+	
 	
 	
 	/* register the broadcast receiver with the intent values to be matched */
@@ -349,10 +364,37 @@ public class GameActivity extends Activity implements OnTouchListener{
 	    super.onResume();
 	    registerReceiver(mReceiver, mIntentFilter);
 	}
+	
 	/* unregister the broadcast receiver */
 	@Override
 	protected void onPause() {
 	    super.onPause();
 	    unregisterReceiver(mReceiver);
 	}
+	
+	
+	
+	/*Runnable clientWait = new Runnable() {
+		
+		public void run() {
+			Toast.makeText(getBaseContext(), "SOCKET", Toast.LENGTH_SHORT).show();
+			ServerSocket serverSocket = null;
+		    Socket clientSocket = null;
+		    try {
+		        serverSocket = new ServerSocket(65000);
+		        
+		       
+		        clientSocket = serverSocket.accept();
+		        InputStream is = clientSocket.getInputStream(); 
+		        
+		        Toast.makeText(getBaseContext(), "PASSEI ESTA FASE", Toast.LENGTH_SHORT).show();
+		        Toast.makeText(getBaseContext(), "PASSEI ESTA FASE", Toast.LENGTH_SHORT).show();
+		        Toast.makeText(getBaseContext(), "PASSEI ESTA FASE", Toast.LENGTH_SHORT).show();
+		        Toast.makeText(getBaseContext(), "PASSEI ESTA FASE", Toast.LENGTH_SHORT).show();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		}
+	   
+	};*/
 }
