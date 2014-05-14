@@ -2,16 +2,21 @@ package cmov.bomberman.menu;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
 public class RoleSelectionActivity extends Activity {
+	SharedPreferences settings;	
+	SharedPreferences.Editor editor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_role_selection);
+		settings = getSharedPreferences("UserInfo", 0);
+		editor = settings.edit();
 	}
 
 	@Override
@@ -38,6 +43,17 @@ public class RoleSelectionActivity extends Activity {
 	}
 	
 	public void startClient(View view) {
-		//TODO
+		Intent intent = new Intent(this.getApplicationContext(),ClientActivity.class);
+		intent.putExtra("mode","multiplayer");
+		intent.putExtra("role","client");
+		
+		
+		
+		
+		
+		editor.putString("Level","level1");
+		editor.commit();
+		startActivity(intent);
+		RoleSelectionActivity.this.finish();
 	}
 }

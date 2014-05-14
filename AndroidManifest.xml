@@ -37,11 +37,13 @@
         <activity android:name="RoleSelectionActivity" />
         <activity android:name="LevelSelectionActivity" />
         <activity android:name="GameActivity" />
-        <activity android:name="MultiplayerGameActivity">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name="MultiplayerGameActivity" />
+        <activity android:name="ClientActivity" />
+        <activity android:name="ServerActivity" />
+
+        <intent-filter>
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
     </application>
 
 </manifest>

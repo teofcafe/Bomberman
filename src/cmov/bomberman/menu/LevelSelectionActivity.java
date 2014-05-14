@@ -70,7 +70,7 @@ public class LevelSelectionActivity extends Activity {
 		if(mode.equals("singleplayer"))
 			intent = new Intent(this.getApplicationContext(), GameActivity.class);
 		else
-			intent = new Intent(this.getApplicationContext(), MultiplayerGameActivity.class);
+			intent = new Intent(this.getApplicationContext(), ServerActivity.class);
 		
 		startActivity(intent);
 		LevelSelectionActivity.this.finish();

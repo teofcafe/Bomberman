@@ -4,23 +4,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,9 +35,6 @@ public class WifiBroadcast extends BroadcastReceiver {
 	int len;
 	Socket socket = new Socket();
 	byte buf[] = new byte[1024];
-	//Handler startSK = new Handler();
-	Thread startSK;
-
 
 	public WifiBroadcast(WifiP2pManager manager, Channel channel,
 			GameActivity activity) {
@@ -132,9 +127,9 @@ public class WifiBroadcast extends BroadcastReceiver {
 									InetAddress addr = InetAddress.getByAddress(ipaddr);
 									
 									Log.d("WiFi", "IP ADDRESS: " + addr.getHostAddress());
-									InetSocketAddress a = new InetSocketAddress(addr, port);
+									InetSocketAddress address = new InetSocketAddress(addr, port);
 									
-									socket.connect(a, 5000);
+									socket.connect(address, 5000);
 									Log.d("WiFi", "Depois");
 									Log.d("WiFi", "Am I connected? " + socket.isConnected());
 									
@@ -145,37 +140,50 @@ public class WifiBroadcast extends BroadcastReceiver {
 									
 									//inputStream = socket.getInputStream();
 									
-									
-									Log.d("WiFi", "enviar o ola");
-									String ola = "Ola";
-									buf = ola.getBytes();
-									Log.d("WiFi", "enviei o ola");
-//									
+//									BufferedWriter buffer = new BufferedWriter(new PrintWriter(outputStream, true));
+//									buffer.write("ola");
+//									buffer.newLine();
+//									Log.d("WiFi", "enviei o ola");
+
+//									String ola = "Ola";
+//									buf = ola.getBytes();
 //									outputStream.write(buf, 0, ola.length());
+									
+									outputStream = socket.getOutputStream();
+						            PrintStream printStream = new PrintStream(outputStream);
+						            printStream.print("ola");
+						            printStream.close();
+						            printStream = new PrintStream(outputStream);
+						            printStream.print("exit");
+						            printStream.close();
+
+									Log.d("WiFi", "enviar o ola");
 //									inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
 //									while ((len = inputStream.read(buf)) != -1) {
 //										outputStream.write(buf, 0, len);
 //									}
-									outputStream.close();
+									//outputStream.close();
 									//inputStream.close();
 									
 								} catch (FileNotFoundException e) {
+									Log.d("WiFi", "FileNotFoundException");
 									//catch logic
 								} catch (IOException e) {
 									//catch logic
+									Log.d("WiFi", "IOException");
 								}
 								
-								finally {
-								    if (socket != null) {
-								        if (socket.isConnected()) {
-								            try {
-								                socket.close();
-								            } catch (IOException e) {
-								                //catch logic
-								            }
-								        }
-								    }
-								}
+//								finally {
+//								    if (socket != null) {
+//								        if (socket.isConnected()) {
+//								            try {
+//								                socket.close();
+//								            } catch (IOException e) {
+//								                //catch logic
+//								            }
+//								        }
+//								    }
+//								}
 								
 							}
 						}).start();
@@ -200,11 +208,4 @@ public class WifiBroadcast extends BroadcastReceiver {
 
 		}
 	}
-	
-	Runnable connectSK = new Runnable() {
-
-		public void run() {
-		
-		}
-	};
 }
