@@ -22,7 +22,7 @@ import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.util.Log;
 import android.widget.Toast;
 
-public class WifiBroadcast extends BroadcastReceiver {
+public class ClientWifiBroadcast extends BroadcastReceiver {
 
 	private WifiP2pManager mManager;
 	private Channel mChannel;
@@ -36,7 +36,7 @@ public class WifiBroadcast extends BroadcastReceiver {
 	Socket socket = new Socket();
 	byte buf[] = new byte[1024];
 
-	public WifiBroadcast(WifiP2pManager manager, Channel channel,
+	public ClientWifiBroadcast(WifiP2pManager manager, Channel channel,
 			GameActivity activity) {
 		super();
 		this.mManager = manager;

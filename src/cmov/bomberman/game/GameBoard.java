@@ -82,10 +82,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 
 	public void gameStart(int avatar, String levelName) {	
+		
 		try {
 
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
-
 			InputStream level = getResources().openRawResource(resID);
 
 			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
@@ -95,9 +95,13 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
 		}
-
+		
+		startMainThread();				
+	}
+	
+	public void startMainThread() {
 		thread= new MainThread(getHolder(), this);
-		setFocusable(true);				
+		setFocusable(true);	
 	}
 
 	public void exitGame() {
