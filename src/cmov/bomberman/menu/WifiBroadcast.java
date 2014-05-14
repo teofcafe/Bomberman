@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -19,10 +20,11 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-public class WifiBroadcast extends BroadcastReceiver{
+public class WifiBroadcast extends BroadcastReceiver {
 
 	private WifiP2pManager mManager;
 	private Channel mChannel;
@@ -34,7 +36,9 @@ public class WifiBroadcast extends BroadcastReceiver{
 	int port;
 	int len;
 	Socket socket = new Socket();
-	byte buf[]  = new byte[1024];
+	byte buf[] = new byte[1024];
+	//Handler startSK = new Handler();
+	Thread startSK;
 
 
 	public WifiBroadcast(WifiP2pManager manager, Channel channel,
@@ -106,45 +110,75 @@ public class WifiBroadcast extends BroadcastReceiver{
 						Log.d("WiFi", "Group owner address: " + String.valueOf(info.groupOwnerAddress));
 
 						host = String.valueOf(info.groupOwnerAddress);
-						port = 8888;
+						port = 8000;
+						new Thread(new Runnable() {
+							
+							@Override
+							public void run() {
+								try {
+									
+									Log.d("WiFi", "Antes");
+									socket.bind(null);
+									Log.d("WiFi", "Entretanto");
+									Log.d("WiFi", "Host: " +  host + " Port: " + port);
 
-					
-					try {
-						
-						Log.d("WiFi", "Antes");
-						socket.bind(null);
-						Log.d("WiFi", "Entretanto");
-						Log.d("WiFi", "Host: " +  host + " Port: " + port);
-						socket.connect((new InetSocketAddress(host, port)), 5000);
-						Log.d("WiFi", "Depois");
-//						
-//						
-//						OutputStream outputStream = socket.getOutputStream();
-//						ContentResolver cr = context.getContentResolver();
-//						InputStream inputStream = null;
-//						inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
-//						while ((len = inputStream.read(buf)) != -1) {
-//							outputStream.write(buf, 0, len);
-//						}
-//						outputStream.close();
-//						inputStream.close();
-					} catch (FileNotFoundException e) {
-						//catch logic
-					} catch (IOException e) {
-						//catch logic
-					}
-					
-					finally {
-					    if (socket != null) {
-					        if (socket.isConnected()) {
-					            try {
-					                socket.close();
-					            } catch (IOException e) {
-					                //catch logic
-					            }
-					        }
-					    }
-					}
+									String[] hostIP = host.split("/");
+									Log.d("WiFi", "Host IP: " +  hostIP[1]);
+									
+									String[] ip = hostIP[1].split("\\.");
+									
+									byte[] ipaddr = new byte[]{(byte) Integer.parseInt(ip[0]), (byte) Integer.parseInt(ip[1]), (byte) Integer.parseInt(ip[2]), (byte) Integer.parseInt(ip[3])};
+									
+									InetAddress addr = InetAddress.getByAddress(ipaddr);
+									
+									Log.d("WiFi", "IP ADDRESS: " + addr.getHostAddress());
+									InetSocketAddress a = new InetSocketAddress(addr, port);
+									
+									socket.connect(a, 5000);
+									Log.d("WiFi", "Depois");
+									Log.d("WiFi", "Am I connected? " + socket.isConnected());
+									
+									Log.d("WiFi", "Ligar os streams");
+									OutputStream outputStream = socket.getOutputStream();
+									ContentResolver cr = context.getContentResolver();
+									InputStream inputStream = null;
+									
+									//inputStream = socket.getInputStream();
+									
+									
+									Log.d("WiFi", "enviar o ola");
+									String ola = "Ola";
+									buf = ola.getBytes();
+									Log.d("WiFi", "enviei o ola");
+//									
+//									outputStream.write(buf, 0, ola.length());
+//									inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
+//									while ((len = inputStream.read(buf)) != -1) {
+//										outputStream.write(buf, 0, len);
+//									}
+									outputStream.close();
+									//inputStream.close();
+									
+								} catch (FileNotFoundException e) {
+									//catch logic
+								} catch (IOException e) {
+									//catch logic
+								}
+								
+								finally {
+								    if (socket != null) {
+								        if (socket.isConnected()) {
+								            try {
+								                socket.close();
+								            } catch (IOException e) {
+								                //catch logic
+								            }
+								        }
+								    }
+								}
+								
+							}
+						}).start();
 				}
 
 				});
@@ -166,4 +200,11 @@ public class WifiBroadcast extends BroadcastReceiver{
 
 		}
 	}
+	
+	Runnable connectSK = new Runnable() {
+
+		public void run() {
+		
+		}
+	};
 }
