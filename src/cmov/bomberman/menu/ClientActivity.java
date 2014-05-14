@@ -20,6 +20,8 @@ public class ClientActivity extends MultiplayerGameActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		mReceiver = new ClientWifiBroadcast(mManager, mChannel, this);
 
 		waitPeers = new Handler();
 		waitPeers.postDelayed(searchForPeers, 1000);
@@ -41,7 +43,7 @@ public class ClientActivity extends MultiplayerGameActivity {
 		@SuppressWarnings("unchecked")
 		public void run() {
 
-			WifiP2pDeviceList myPeers = ((WifiBroadcast) mReceiver).getPeers();
+			WifiP2pDeviceList myPeers = ((ClientWifiBroadcast) mReceiver).getPeers();
 
 			if(myPeers != null) {
 

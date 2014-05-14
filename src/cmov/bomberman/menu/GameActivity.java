@@ -58,6 +58,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
 
+		//TODO if !client
 		gameBoard.gameStart(avatar, level);
 
 		updateTimeHander = new Handler();
