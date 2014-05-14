@@ -1,8 +1,10 @@
 package cmov.bomberman.menu;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
@@ -136,32 +138,16 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									Log.d("WiFi", "Ligar os streams");
 									OutputStream outputStream = socket.getOutputStream();
 									ContentResolver cr = context.getContentResolver();
-									InputStream inputStream = null;
+									InputStream inputStream = socket.getInputStream();
 									
-									//inputStream = socket.getInputStream();
-									
-//									BufferedWriter buffer = new BufferedWriter(new PrintWriter(outputStream, true));
-//									buffer.write("ola");
-//									buffer.newLine();
-//									Log.d("WiFi", "enviei o ola");
-
-//									String ola = "Ola";
-//									buf = ola.getBytes();
-//									outputStream.write(buf, 0, ola.length());
-									
-									outputStream = socket.getOutputStream();
-						            PrintStream printStream = new PrintStream(outputStream);
-						            printStream.print("ola");
-						            printStream.close();
-						            printStream = new PrintStream(outputStream);
-						            printStream.print("exit");
-						            printStream.close();
+									BufferedReader bufferReader = new BufferedReader(new InputStreamReader(inputStream));
+									if(!bufferReader.ready())
+									Log.d("Wifi", "BUFFER NOT READY");
+									String result = bufferReader.readLine();
+									Log.d("Wifi", "String: " + result);
 
 									Log.d("WiFi", "enviar o ola");
-//									inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
-//									while ((len = inputStream.read(buf)) != -1) {
-//										outputStream.write(buf, 0, len);
-//									}
+
 									//outputStream.close();
 									//inputStream.close();
 									

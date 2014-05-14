@@ -1,7 +1,10 @@
 package cmov.bomberman.menu;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -64,17 +67,25 @@ public class ServerActivity extends MultiplayerGameActivity {
 
 								InputStream in = clientSocket.getInputStream();
 
-
-
-								while((bytesRead = in.read(nm)) != -1){
-									String commandReceived = new String(nm, 0, bytesRead);
-									System.out.println(commandReceived);
-									if(commandReceived.equals("exit"))
-										break all;
-								}
+								PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
+								pw.println("OLALALALA!!!!!");
+								pw.flush();
+								
+								if (pw.checkError()) System.out.println("WRITE NOT DONE!!!!!");
+								
+//								BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
+//								if (!bufferReader.ready()) System.out.println("Buffer not ready!!!!!");
+								
+								break;
+//								while((bytesRead = in.read(nm)) != -1){
+//									String commandReceived = new String(nm, 0, bytesRead);
+//									System.out.println(commandReceived);
+//									if(commandReceived.equals("exit"))
+//										break all;
+//								}
 
 							}
-						clientSocket.close();
+						//clientSocket.close();
 						serverSocket.close(); 
 
 					} catch (UnknownHostException e) {
