@@ -142,7 +142,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									String result = bufferReader.readLine();
 									Log.d("WiFi", "String: " + result);
 
-									((LoadingActivity) mActivity).startGame();
+//									((LoadingActivity) mActivity).startGame();
 
 									//outputStream.close();
 									//inputStream.close();

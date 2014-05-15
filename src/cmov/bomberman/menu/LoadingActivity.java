@@ -72,8 +72,14 @@ public class LoadingActivity extends ClientActivity {
 		}
 	};
 	
-	public void startGame() {
+	public void startGame(String levelName,int timeLeft,int numberOfPlayers,byte id, char[][] gameStatus) {
 		Intent intent = new Intent(getBaseContext(), ClientActivity.class);
+		intent.putExtra("levelName", levelName);
+		intent.putExtra("timeLeft", timeLeft);
+		intent.putExtra("numberOfPlayers", numberOfPlayers);
+		intent.putExtra("idPlayer", id);
+		intent.putExtra("gameStatus",gameStatus);
+		
 		startActivity(intent);
 		LoadingActivity.this.finish();
 	}

@@ -41,9 +41,8 @@ public class LevelProperties {
 		this.gridMap = new char[lines][columns];
 		this.gridLayout = new boolean[lines][columns];
 		this.walls = new ArrayList<Wall>();
-	
-
 	}
+	
 
 	public void initialize() {
 		this.obstacles = new ArrayBlockingQueue(this.numberOfObstacles);

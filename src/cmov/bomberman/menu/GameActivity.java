@@ -1,19 +1,10 @@
 package cmov.bomberman.menu;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,10 +13,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
-import cmov.bomberman.game.LevelProperties;
-import cmov.bomberman.game.Mapping;
-import cmov.bomberman.game.components.Robot;
-import cmov.bomberman.pair.Pair;
 
 
 public class GameActivity extends Activity implements OnTouchListener{
@@ -55,16 +42,21 @@ public class GameActivity extends Activity implements OnTouchListener{
 		playerScore = (TextView)findViewById(R.id.playerScoreTextView);
 		numberPlayers = (TextView)findViewById(R.id.numberPlayersTextView);
 		usernameTextView.setText(username);	
+		 //SP
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
 
-		//TODO if !client
-		gameBoard.gameStart(avatar, level);
+
 		Intent intent = getIntent(); // gets the previously created intent
 		String mode = intent.getStringExtra("mode");
-		Log.d("mode",mode);
+		String role= intent.getStringExtra("role");
 		if(mode.equals("singleplayer"))
-			gameBoard.removeAdicionalPlayers();
+			this.singlePlayerMode(avatar,level);
+		else{
+			String levelName=intent.getStringExtra("levelName");
+			
+			this.multiplayerMode(avatar,levelName,role);
+		}
 
 		updateTimeHander = new Handler();
 		updateTimeHander.post(updateDashboard);
@@ -190,7 +182,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 					gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
 
 					playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
-					numberPlayers.setText(Integer.toString(1)); //TODO actualizar quando for MP
+					numberPlayers.setText(Integer.toString(gameBoard.getLevelProperties().getNumberOfPlayers()));
 
 					updateTimeHander.postDelayed(this, 1000);
 				}
@@ -228,6 +220,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 		public void dropBomb(View view) {
 			this.gameBoard.dropBomb();
+		}
+		
+		public void singlePlayerMode(int avatar, String level){
+			gameBoard.gameStartSinglePlayer(avatar, level);
+		}
+		
+		public void multiplayerMode(int avatar, String level, String role){
+			gameBoard.gameStartMultiplayer(avatar, level, role);
 		}
 
 	}

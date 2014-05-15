@@ -36,53 +36,30 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		getHolder().addCallback(this);
 	}
 
-	public void setMaxWidth(int maxWidth){
-	}
-
-
-	public void setMaxHeight(int maxHeight){
-	}
 
 	public LevelProperties getLevelProperties(){
 		return this.levelProperties;
 	}
 
 	private void drawObstacle(Canvas canvas) {
-		int maxHeight=this.getHeight();
-		int maxWidth=this.getWidth();
-		setMaxHeight(maxHeight);
-		setMaxWidth(maxWidth);
-
-		for(Obstacle obstacle : levelProperties.getObstacles()){
+		for(Obstacle obstacle : levelProperties.getObstacles())
 			obstacle.draw(canvas);
-		}
 	}
 
 	private void drawWall(Canvas canvas) {
-		int maxHeight=this.getHeight();
-		int maxWidth=this.getWidth();
-		setMaxHeight(maxHeight);
-		setMaxWidth(maxWidth);
-
-		for(Wall wall : levelProperties.getWalls()){
+		for(Wall wall : levelProperties.getWalls())
 			wall.draw(canvas);
-		}
 	}
 
 	private void drawRobots(Canvas canvas) {
-		int maxHeight=this.getHeight();
-		int maxWidth=this.getWidth();
-		setMaxHeight(maxHeight);
-		setMaxWidth(maxWidth);
 		for(Robot robot : levelProperties.getRobots())
 			robot.draw(canvas);
-
 	}
 
 
 
-	public void gameStart(int avatar, String levelName) {	
-		
+	public void gameStartSinglePlayer(int avatar, String levelName) {	
+
 		try {
 
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
@@ -91,14 +68,26 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
 			//TODO alterar o index para o player respectivo 
 			player = this.levelProperties.getPlayerById((byte)1);
+			removeAdicionalPlayers();
 
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
 		}
-		
+
 		startMainThread();				
 	}
-	
+
+	public void gameStartMultiplayer(int avatar, String levelName, String role) {	
+
+		if(role.equals("server"))
+			gameStartSinglePlayer(avatar, levelName);
+		else {
+			
+		}
+
+		startMainThread();				
+	}
+
 	public void startMainThread() {
 		thread= new MainThread(getHolder(), this);
 		setFocusable(true);	
@@ -184,7 +173,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	private void freezeObjects(int x, int y) {
 		int expRange=levelProperties.getExplosionRange();
-		
+
 		for(Robot r : levelProperties.getRobots()){
 			Pair robotCoordinates = Mapping.screenToMap(r.getPosition());
 			Log.d("robots","X="+robotCoordinates.getKey()+" y="+robotCoordinates.getValue());
@@ -281,4 +270,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		for(byte i=2; i<=levelProperties.getPlayers().size();i++)
 			levelProperties.deletePlayerById(i);
 	}
+
+	
 }
