@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+
+import cmov.bomberman.game.LevelProperties;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -31,7 +33,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
 	private boolean connected = false;
-	String host;
+	InetAddress host;
 	int port;
 	int len;
 	Socket socket = new Socket();
@@ -66,7 +68,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 			// callback on PeerListListener.onPeersAvailable()
 
 			Log.d("WiFi", "WIFI_P2P_PEERS_CHANGED_ACTION");
-			
+
 			if (mManager != null) {
 				mManager.requestPeers(mChannel, myPeerListListener);
 
@@ -101,10 +103,11 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 						Toast.makeText(context, " Connection info!", Toast.LENGTH_LONG).show();
 						Log.d("WiFi", "Group owner address: " + String.valueOf(info.groupOwnerAddress));
 
-						host = String.valueOf(info.groupOwnerAddress);
+						host =info.groupOwnerAddress;
 						port = 8000;
 						new Thread(new Runnable() {
 
+							@SuppressWarnings("null")
 							@Override
 							public void run() {
 								try {
@@ -112,19 +115,9 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									Log.d("WiFi", "Antes");
 									socket.bind(null);
 									Log.d("WiFi", "Entretanto");
-									Log.d("WiFi", "Host: " +  host + " Port: " + port);
+									Log.d("WiFi", "Host: " +  String.valueOf(host) + " Port: " + port);
 
-									String[] hostIP = host.split("/");
-									Log.d("WiFi", "Host IP: " +  hostIP[1]);
-
-									String[] ip = hostIP[1].split("\\.");
-
-									byte[] ipaddr = new byte[]{(byte) Integer.parseInt(ip[0]), (byte) Integer.parseInt(ip[1]), (byte) Integer.parseInt(ip[2]), (byte) Integer.parseInt(ip[3])};
-
-									InetAddress addr = InetAddress.getByAddress(ipaddr);
-
-									Log.d("WiFi", "IP ADDRESS: " + addr.getHostAddress());
-									InetSocketAddress address = new InetSocketAddress(addr, port);
+									InetSocketAddress address = new InetSocketAddress(host, port);
 
 									socket.connect(address, 5000);
 									Log.d("WiFi", "Depois");
@@ -142,11 +135,34 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									String result = bufferReader.readLine();
 									Log.d("WiFi", "String: " + result);
 
-//									((LoadingActivity) mActivity).startGame();
 
+									String[] info = result.split("\\|");
+
+									Log.d("WiFi", "Map name:" + info[0]);
+									Log.d("WiFi", "Time left: " +  info[1]);
+									Log.d("WiFi", "Nr of players: " +  info[2]);
+									Log.d("WiFi", "ID: " + info[3]);
+
+
+									String[] map = info[4].split("nl");
+
+									char[][] currentMap = new char[map.length][map[0].length()];
+
+									for(int i = 0; i < map.length; i++) {
+										for(int j = 0; j < map[i].length(); j++) 
+											currentMap[i][j] = map[i].charAt(j);
+									}
+									
+									Log.d("WiFi", "Mapa");
+									for(int i=0;i<currentMap.length;i++){
+										for(int j=0;j<currentMap[i].length;j++)
+											Log.d("WiFi", String.valueOf(currentMap[i][j]));
+									}
+									
+//									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), currentMap);
 									//outputStream.close();
 									//inputStream.close();
-									
+
 								} catch (FileNotFoundException e) {
 									Log.d("WiFi", "FileNotFoundException");
 									//catch logic
