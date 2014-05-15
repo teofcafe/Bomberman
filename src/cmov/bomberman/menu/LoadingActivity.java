@@ -18,8 +18,8 @@ import android.os.Handler;
 import android.widget.Toast;
 
 public class LoadingActivity extends ClientActivity {
-	
-	
+
+
 	ArrayList<WifiP2pDevice> specialPeers = new ArrayList<WifiP2pDevice>();
 	Handler load;
 	String peerAddr;
@@ -29,50 +29,53 @@ public class LoadingActivity extends ClientActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
-		
+
 		mReceiver = new ClientWifiBroadcast(mManager, mChannel, this);
 		Intent intent = getIntent(); // gets the previously created intent
 		peerAddr = intent.getStringExtra("peerAddr");
-		
+
 		Toast.makeText(getBaseContext(), "Peer: " + peerAddr, Toast.LENGTH_SHORT).show();
-		
+
 
 		load = new Handler();
 		load.postDelayed(loader, 1000);
 	}
-	
+
 	Runnable loader = new Runnable() {
 
 		@SuppressWarnings("unchecked")
 		public void run() {
 
-				WifiP2pConfig config = new WifiP2pConfig();
-				config.deviceAddress = peerAddr;
+			WifiP2pConfig config = new WifiP2pConfig();
+			config.deviceAddress = peerAddr;
 
-				Toast.makeText(getBaseContext(), "trying to connect", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getBaseContext(), "trying to connect", Toast.LENGTH_SHORT).show();
 
-				mManager.connect(mChannel, config, new ActionListener() {
+			mManager.connect(mChannel, config, new ActionListener() {
 
-					@Override
-					public void onSuccess() {
-						Toast.makeText(getBaseContext(), "connected", Toast.LENGTH_SHORT).show();
-						
-//						Intent intent = new Intent(getBaseContext(), ClientActivity.class);
-//						startActivity(intent);
-						
-					}
+				@Override
+				public void onSuccess() {
+					Toast.makeText(getBaseContext(), "connected", Toast.LENGTH_SHORT).show();
 
-					@Override
-					public void onFailure(int reason) {
-						Toast.makeText(getBaseContext(), " fail", Toast.LENGTH_SHORT).show();
-					}
-				});
+					//						Intent intent = new Intent(getBaseContext(), ClientActivity.class);
+					//						startActivity(intent);
 
-				load.removeCallbacks(loader);
+				}
+
+				@Override
+				public void onFailure(int reason) {
+					Toast.makeText(getBaseContext(), " fail", Toast.LENGTH_SHORT).show();
+				}
+			});
+
+			load.removeCallbacks(loader);
 		}
 	};
-	
-	public void startGame() {
+
+
+	public void startGame(String mapName, Integer timeLeft, Integer valueOf2,
+			byte id, char[][] currentMap) {
+		//TODO fazer o jogo receber isto
 		Intent intent = new Intent(getBaseContext(), ClientActivity.class);
 		startActivity(intent);
 		LoadingActivity.this.finish();

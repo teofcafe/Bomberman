@@ -28,15 +28,14 @@ public class SelectPeerActivity extends ClientActivity {
 			@Override
 			public void onSuccess() {
 				Toast.makeText(getBaseContext(), "finding peers", Toast.LENGTH_SHORT).show();
+				waitPeers = new Handler();
+				waitPeers.postDelayed(searchForPeers, 1000);
 			}
 			@Override
 			public void onFailure(int reasonCode) {
 				Toast.makeText(getBaseContext(), " not finding peers", Toast.LENGTH_SHORT).show();
 			}
 		});
-		
-		waitPeers = new Handler();
-		waitPeers.postDelayed(searchForPeers, 1000);
 	}
 	
 	Runnable searchForPeers = new Runnable() {
@@ -45,7 +44,7 @@ public class SelectPeerActivity extends ClientActivity {
 		@SuppressWarnings("unchecked")
 		public void run() {
 			
-			Toast.makeText(getBaseContext(), "int the thread", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getBaseContext(), "int the loop", Toast.LENGTH_SHORT).show();
 			
 
 			WifiP2pDeviceList myPeers = ((ClientWifiBroadcast) mReceiver).getPeers();
