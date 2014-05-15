@@ -65,6 +65,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 			InputStream level = getResources().openRawResource(resID);
 
+//			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar);
 			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
 			//TODO alterar o index para o player respectivo 
 			player = this.levelProperties.getPlayerById((byte)1);
@@ -79,13 +80,26 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void gameStartMultiplayer(int avatar, String levelName, String role) {	
 
-		if(role.equals("server"))
-			gameStartSinglePlayer(avatar, levelName);
-		else {
-			
-		}
-
-		startMainThread();				
+//		if(role.equals("server"))
+//			gameStartSinglePlayer(avatar, levelName);
+//		else {
+//			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
+//			InputStream level = getResources().openRawResource(resID);
+//
+//			try {
+//				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),avatar);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			 
+//			player = this.levelProperties.getPlayerById((byte)(avatar+1));
+//		}
+//
+//		startMainThread();			
+//		gameStartSinglePlayer(avatar,levelName);
+//		
+//		startMainThread();
 	}
 
 	public void startMainThread() {

@@ -159,7 +159,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 											Log.d("WiFi", String.valueOf(currentMap[i][j]));
 									}
 									
-//									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), currentMap);
+									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), currentMap);
 									//outputStream.close();
 									//inputStream.close();
 

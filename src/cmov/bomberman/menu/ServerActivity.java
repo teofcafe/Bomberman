@@ -118,4 +118,6 @@ public class ServerActivity extends MultiplayerGameActivity {
 		Log.d("WiFi", output);
 		return output;		
 	}
+	
+	
 }

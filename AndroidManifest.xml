@@ -40,12 +40,12 @@
         <activity android:name="MultiplayerGameActivity" />
         <activity android:name="ClientActivity" />
         <activity android:name="ServerActivity" />
-         <activity android:name="LoadingActivity" />
-          <activity android:name="SelectPeerActivity" />
-
-        <intent-filter>
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
+        <activity android:name="LoadingActivity" />
+        <activity android:name="SelectPeerActivity" >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

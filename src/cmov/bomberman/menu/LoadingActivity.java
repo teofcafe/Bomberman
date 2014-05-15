@@ -75,8 +75,6 @@ public class LoadingActivity extends ClientActivity {
 	
 	public void startGame(String levelName,int timeLeft,int numberOfPlayers,byte id, char[][] gameStatus) {
 
-		//TODO fazer o jogo receber isto
-
 		Intent intent = new Intent(getBaseContext(), ClientActivity.class);
 		intent.putExtra("levelName", levelName);
 		intent.putExtra("timeLeft", timeLeft);

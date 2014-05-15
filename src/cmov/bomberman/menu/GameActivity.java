@@ -50,13 +50,13 @@ public class GameActivity extends Activity implements OnTouchListener{
 		Intent intent = getIntent(); // gets the previously created intent
 		String mode = intent.getStringExtra("mode");
 		String role= intent.getStringExtra("role");
-		if(mode.equals("singleplayer"))
+//		if(mode.equals("singleplayer"))
 			this.singlePlayerMode(avatar,level);
-		else{
-			String levelName=intent.getStringExtra("levelName");
-			
-			this.multiplayerMode(avatar,levelName,role);
-		}
+//		else{
+//			String levelName=intent.getStringExtra("levelName");
+//			
+//			this.multiplayerMode(avatar,levelName,role);
+//		}
 
 		updateTimeHander = new Handler();
 		updateTimeHander.post(updateDashboard);
