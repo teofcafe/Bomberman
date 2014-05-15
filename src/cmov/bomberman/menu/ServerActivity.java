@@ -1,14 +1,27 @@
 package cmov.bomberman.menu;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 import cmov.bomberman.game.LevelProperties;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,15 +29,40 @@ import android.widget.Toast;
 public class ServerActivity extends MultiplayerGameActivity {
 
 	ServerSocket serverSocket = null;
+	private static String newCommand = "";
 	Socket clientSocket = null;
+	InetAddress addr = null;
+	private int id = 1;
+	private Hashtable clientsIdentification;
+	public ArrayList<Socket> clients;
+	public EchoThread[] threadCli = new EchoThread[4];
 	int nrOfPlayers = 1;
-	boolean availableIds[] = new boolean[4];
+	boolean initialState = true;
+
+	public int getPlayerIdentification(){
+		return ++id;
+	}
+	
+	@SuppressWarnings("unused")
+	public String getCurrentMap() {
+		String output = new String();
+		char[][] map = gameBoard.getLevelProperties().getGridMap();
+		
+		for(int col = 0; col < LevelProperties.gridMap.length; col++) {	
+			for(int line = 0; line < LevelProperties.gridMap[col].length; line++) 
+				output += map[col][line];
+			output+= "nl";
+		}
+
+		Log.d("WiFi", output);
+		return output;		
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		availableIds[0] = true;
+		clientsIdentification = new Hashtable<Integer , InetAddress>();
+		clients = new ArrayList<Socket>();
 
 		mReceiver = new ServerWifiBroadcast(mManager, mChannel, this);
 
@@ -49,43 +87,31 @@ public class ServerActivity extends MultiplayerGameActivity {
 		});
 
 		Thread serverSocketThread =  new Thread (new Runnable() {
-			@SuppressWarnings("unused")
 			@Override
 			public void run() {
 				try {        
 					serverSocket = new ServerSocket(8000);
 
-					int bytesRead;
-					byte[] nm = new byte[12];
 
 					all:
 						while(true){
 
 							clientSocket = serverSocket.accept();
-							clientSocket.setKeepAlive(true);
 
-							InputStream in = clientSocket.getInputStream();
+							//Get device Address
+							addr = clientSocket.getInetAddress();
 
-							PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
-							pw.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + "|" + ++nrOfPlayers + "|" + getAvailableId() + "|" + getCurrentMap());
-							pw.flush();
+							if(!clientsIdentification.contains(addr)){
+								
+								int idClient= getPlayerIdentification();
+								clientsIdentification.put(idClient , addr);
 
-							if (pw.checkError()) Log.d("WiFi", "Message not sent");
 
-							//								BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
-							//								if (!bufferReader.ready()) System.out.println("Buffer not ready!!!!!");
-
-							break;
-							//								while((bytesRead = in.read(nm)) != -1){
-							//									String commandReceived = new String(nm, 0, bytesRead);
-							//									System.out.println(commandReceived);
-							//									if(commandReceived.equals("exit"))
-							//										break all;
-							//								}
+								//Socket especialissimo para cada cliente
+								ServerActivity.this.threadCli[idClient - 2] = new EchoThread(clientSocket, idClient);
+								ServerActivity.this.threadCli[idClient - 2].start();
+							}
 						}
-					//clientSocket.close();
-					serverSocket.close(); 
-
 				} catch (UnknownHostException e) {
 					System.out.println("EX1");e.printStackTrace();
 				} catch (IOException e) {
@@ -93,31 +119,87 @@ public class ServerActivity extends MultiplayerGameActivity {
 					e.printStackTrace();
 				}	
 			}
-		}); serverSocketThread.start();
+		});serverSocketThread.start();
+
 	}
 
-	public int getAvailableId() {
-		int i;
-		for(i = 0; i < 5; i++)
-			if(availableIds[i] == false)
-				break;
-		return ++i;
-	}
 
-	@SuppressWarnings("unused")
-	public String getCurrentMap() {
-		String output = new String();
-		char[][] map = gameBoard.getLevelProperties().getGridMap();
-		
-		for(int col = 0; col < LevelProperties.gridMap.length; col++) {	
-			for(int line = 0; line < LevelProperties.gridMap[col].length; line++) 
-				output += map[col][line];
-			output+= "nl";
+	class EchoThread extends Thread {
+		protected Socket socket;
+		private String result = "startState";
+
+		private int playerNumber = 0;
+
+		private BufferedReader bufferReader = null;
+		private PrintWriter printWritter = null;
+
+		public EchoThread(Socket clientSocket, int id) {
+			this.socket = clientSocket;
+			this.playerNumber=id;
+			
+			try {
+				this.socket.setKeepAlive(true);
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				this.bufferReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+				this.printWritter = new PrintWriter(this.socket.getOutputStream());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
-		Log.d("WiFi", output);
-		return output;		
+		public void run() {
+
+			
+			if(initialState){
+			this.printWritter.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + "|" + ++nrOfPlayers + "|" + this.playerNumber + "|" + getCurrentMap());
+			//this.printWritter.write("\\|OLA");
+			this.printWritter.flush();
+
+			if (printWritter.checkError()) System.out.println("WRITE NOT DONE!!!!!");
+			ServerActivity.this.initialState = false;
+			}
+
+
+			//Fica a escutar para receber as accoes dos clientes
+			
+			while(!(result.equals("exit"))){
+				try {
+					if (!bufferReader.ready()) 
+						System.out.println("Buffer not ready!!!!!");
+					else {
+						result = bufferReader.readLine();
+						System.out.println("########################################################0" + result);
+						updateAllPlayers(1  , result);
+					}
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+
+
+			}
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public void sendCommand(String comand) {
+			this.printWritter.write(comand);
+			this.printWritter.flush();
+		}
 	}
-	
-	
+
+	public void updateAllPlayers(int i, String action){
+		for (int j = 0 ; j < ServerActivity.this.threadCli.length ; ++j)
+			//if (i != this.id) continue; 
+			if(i == 1)continue;
+			/*else */ else if (ServerActivity.this.threadCli[i] != null) ServerActivity.this.threadCli[i].sendCommand(action);
+	}
+
 }
