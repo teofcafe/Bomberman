@@ -47,7 +47,7 @@ public class RoleSelectionActivity extends Activity {
 		intent.putExtra("mode","multiplayer");
 		intent.putExtra("role","client");
 
-		//TODO para já está a ser passada a string em brute-force (so para funcar)
+		//TODO para ja esta a ser passada a string em brute-force (so para funcar)
 		editor.putString("Level","level1");
 		editor.commit();
 		startActivity(intent);

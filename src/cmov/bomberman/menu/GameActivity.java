@@ -60,6 +60,11 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 		//TODO if !client
 		gameBoard.gameStart(avatar, level);
+		Intent intent = getIntent(); // gets the previously created intent
+		String mode = intent.getStringExtra("mode");
+		Log.d("mode",mode);
+		if(mode.equals("singleplayer"))
+			gameBoard.removeAdicionalPlayers();
 
 		updateTimeHander = new Handler();
 		updateTimeHander.post(updateDashboard);

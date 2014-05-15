@@ -103,10 +103,9 @@ public class LoadMap {
 	                if (j < line.length()) {
 	                    char ch = line.charAt(j);
 	                    //player verification
-	                    if((ch > 47 )&& (ch < 58)){
-	                    	if(ch == '1')
+	                    if((ch > 47 )&& (ch < 58))
 	                    		numberOfPlayers++;
-	                    }
+	                    
 	                    if(ch == 'W') {
 	                    	numberOfWalls++;
 	                    }
@@ -137,10 +136,9 @@ public class LoadMap {
 	                    	gridLayout[i][j]=true;
 	                    }
 	                    //player verification
-	                    if((ch > 47 )&& (ch < 58)){
-	                    	if(ch == '1')
-	                    		levelProperties.addPlayer(context, avatar, new Pair(i,j));
-	                    }
+	                    if((ch > 47 )&& (ch < 58))
+	                    		levelProperties.addPlayer(context, avatar, new Pair(i,j),(byte) (ch-'0'));
+	                    
 	                    if(ch == 'W') {
 	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }

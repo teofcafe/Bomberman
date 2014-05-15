@@ -67,11 +67,13 @@ public class LevelSelectionActivity extends Activity {
 		String mode = intent.getStringExtra("mode");
 		String role= intent.getStringExtra("role"); 
 		
-		if(mode.equals("singleplayer"))
+		if(mode.equals("singleplayer")) 
 			intent = new Intent(this.getApplicationContext(), GameActivity.class);
 		else
 			intent = new Intent(this.getApplicationContext(), ServerActivity.class);
 		
+		intent.putExtra("mode",mode);
+		intent.putExtra("role",role);
 		startActivity(intent);
 		LevelSelectionActivity.this.finish();
 	}

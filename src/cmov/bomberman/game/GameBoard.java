@@ -90,7 +90,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
 			//TODO alterar o index para o player respectivo 
-			player = this.levelProperties.getPlayerById((byte)0);
+			player = this.levelProperties.getPlayerById((byte)1);
 
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
@@ -277,5 +277,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-
+	public void removeAdicionalPlayers() {
+		for(byte i=2; i<=levelProperties.getPlayers().size();i++)
+			levelProperties.deletePlayerById(i);
+	}
 }

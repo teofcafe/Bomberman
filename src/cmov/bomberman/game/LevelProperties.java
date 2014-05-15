@@ -109,8 +109,8 @@ public class LevelProperties {
 		this.obstacles.add(new Obstacle(context, Mapping.mapToScreen(coordinates)));
 	}
 	
-	public void addPlayer(Context context,int avatar, Pair coordinates){
-		this.players.add(new Player(context,avatar, (byte) this.players.size(), Mapping.mapToScreen(coordinates)));	
+	public void addPlayer(Context context,int avatar, Pair coordinates, byte id){
+		this.players.add(new Player(context,avatar, id, Mapping.mapToScreen(coordinates)));
 	}
 	
 	public void addRobot(Context context, Pair coordinates){
@@ -172,12 +172,12 @@ public class LevelProperties {
 	
 	
 	public Pair getPlayerPositions(byte player) {
-		return this.getPlayerById((byte)(player-1)).getPosition();
+		return this.getPlayerById((byte)(player)).getPosition();
 	}
 
 //arguments as game coordinates
 	public void setPlayerPositions(byte player, Pair pair) {
-		this.getPlayerById((byte)(player-1)).setPosition(pair);
+		this.getPlayerById((byte)(player)).setPosition(pair);
 	}
 	
 	public String getLevelName() {
@@ -342,9 +342,10 @@ public class LevelProperties {
 	
 
 	public Player getPlayerById(byte id){
-		for(Player player : this.getPlayers())
+		for(Player player : this.getPlayers()){
 			if(player.getId()==id)
 				return player;
+		}
 		return null;
 	}
 	
@@ -355,8 +356,6 @@ public class LevelProperties {
 		int x = (Integer)newCoordinates.getKey();
 		int y = (Integer)newCoordinates.getValue();
 		gridMap[x][y]=object;
-		Log.d("novaposicaorobot","[X]="+x+" [y]="+y);
-//		Log.d("mz0x", "Este macaco foi chamado com X="+x+" Y="+y);
 		if(!(object=='-'))
 			gridLayout[x][y]=true;
 	}
@@ -388,6 +387,17 @@ public class LevelProperties {
 		int yvalue = (Integer) mapCoordinates.getValue();
 		if(removed)
 			delete(xvalue,yvalue);
+	}
+	
+	public void deletePlayerById(byte id){
+		Log.d("mode", "Player id -> : " + id);
+		Player playerToDelete=getPlayerById(id);
+		Pair position = playerToDelete.getMapCoordinatesPosition();
+		int xValue = (Integer) position.getKey();
+		int yValue = (Integer) position.getValue();
+		boolean removed = this.getPlayers().remove(playerToDelete);
+		if(removed)
+			delete(xValue,yValue);
 	}
 	
 	//Game Coordinates
