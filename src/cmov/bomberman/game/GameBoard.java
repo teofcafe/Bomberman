@@ -67,10 +67,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			//TODO alterar o index para o player respectivo 
 			player = this.levelProperties.getPlayerById((byte)1);
 			removeAdicionalPlayers();
-			
-			Robot.setVELOCITY(this.levelProperties.getRobotSpeed());
-			int mustWalk = 20 / this.levelProperties.getRobotSpeed();
-			Robot.setMustWalk(mustWalk);
+			setRobotProperties();
 			
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
@@ -93,14 +90,18 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			if(this.levelProperties == null) System.out.println("Level Propriedades null");
 			player = this.levelProperties.getPlayerById((byte)idPlayer);
 			player.setScore(0);
-			
-			Robot.setVELOCITY(this.levelProperties.getRobotSpeed());
-			int mustWalk = 20 / this.levelProperties.getRobotSpeed();
-			Robot.setMustWalk(mustWalk);
+			setRobotProperties();
 			
 			startMainThread();
 		
 	}
+
+	private void setRobotProperties() {
+		Robot.setVELOCITY(this.levelProperties.getRobotSpeed());
+		int mustWalk = 20 / this.levelProperties.getRobotSpeed();
+		Robot.setMustWalk(mustWalk);
+	}
+
 
 	public void startMainThread() {
 		thread= new MainThread(getHolder(), this);
