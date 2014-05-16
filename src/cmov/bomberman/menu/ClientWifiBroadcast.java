@@ -113,53 +113,50 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 								try {
 
 									Log.d("WiFi", "Antes");
+									System.out.println("ANTES");
 									socket.bind(null);
 									Log.d("WiFi", "Entretanto");
 									Log.d("WiFi", "Host: " +  String.valueOf(host) + " Port: " + port);
+									System.out.println("Host: " +  String.valueOf(host) + " Port: " + port);
 
 									InetSocketAddress address = new InetSocketAddress(host, port);
 
 									socket.connect(address, 5000);
 									Log.d("WiFi", "Depois");
+									System.out.println("DEPOIS");
 									Log.d("WiFi", "Am I connected? " + socket.isConnected());
-
+									System.out.println("Am I connected? " + socket.isConnected());
 									Log.d("WiFi", "Ligar os streams");
 									OutputStream outputStream = socket.getOutputStream();
 									ContentResolver cr = context.getContentResolver();
 									InputStream inputStream = socket.getInputStream();
-
+									
+										System.out.println("estabeli sockets");
 
 									BufferedReader bufferReader = new BufferedReader(new InputStreamReader(inputStream));
-									if(!bufferReader.ready()) Log.d("WiFi", "Buffer not ready");
+									while(!bufferReader.ready()); System.out.println("Buffer not ready");
 
 									String result = bufferReader.readLine();
+									bufferReader.close();
 									Log.d("WiFi", "String: " + result);
-
+									
 
 									String[] info = result.split("\\|");
 
-									Log.d("WiFi", "Map name:" + info[0]);
-									Log.d("WiFi", "Time left: " +  info[1]);
-									Log.d("WiFi", "Nr of players: " +  info[2]);
-									Log.d("WiFi", "ID: " + info[3]);
-
-
-									String[] map = info[4].split("nl");
-
-									char[][] currentMap = new char[map.length][map[0].length()];
-
-									for(int i = 0; i < map.length; i++) {
-										for(int j = 0; j < map[i].length(); j++) 
-											currentMap[i][j] = map[i].charAt(j);
-									}
+//									Log.d("WiFi", "Map name:" + info[0]);
+//									Log.d("WiFi", "Time left: " +  info[1]);
+//									Log.d("WiFi", "Nr of players: " +  info[2]);
+//									Log.d("WiFi", "ID: " + info[3]);
 									
-									Log.d("WiFi", "Mapa");
-									for(int i=0;i<currentMap.length;i++){
-										for(int j=0;j<currentMap[i].length;j++)
-											Log.d("WiFi", String.valueOf(currentMap[i][j]));
-									}
+									System.out.println( "Map name:" + info[0]);
+									System.out.println("Time left: " +  info[1]);
+									System.out.println( "Nr of players: " +  info[2]);
+									System.out.println("ID: " + info[3]);
+									System.out.println("MAPA: " + info[4]);
 									
-									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), currentMap);
+									System.out.println("CWB");
+									
+									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), info[4]);
 									//outputStream.close();
 									//inputStream.close();
 
@@ -184,6 +181,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 								//								}
 
 							}
+							
 						}).start();
 					}
 

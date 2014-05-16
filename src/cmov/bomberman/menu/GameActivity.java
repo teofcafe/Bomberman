@@ -1,5 +1,7 @@
 package cmov.bomberman.menu;
 
+import java.io.Serializable;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +24,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 	private TextView timeLeft;
 	private TextView playerScore;
 	private TextView numberPlayers;
-
+	String mode="",role="";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		SharedPreferences settings;
@@ -33,11 +35,14 @@ public class GameActivity extends Activity implements OnTouchListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 
+		
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		packageName = getApplicationContext().getPackageName();
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
+		
+
 		timeLeft = (TextView)findViewById(R.id.timeLeftTextView);
 		playerScore = (TextView)findViewById(R.id.playerScoreTextView);
 		numberPlayers = (TextView)findViewById(R.id.numberPlayersTextView);
@@ -48,18 +53,17 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 
 		Intent intent = getIntent(); // gets the previously created intent
-		String mode = intent.getStringExtra("mode");
-		String role= intent.getStringExtra("role");
-//		if(mode.equals("singleplayer"))
+		mode = intent.getStringExtra("mode");
+		role = intent.getStringExtra("role");
+		System.out.println("MODE: " + mode);
+		System.out.println("ROLE: " + role);
+		if(mode.equals("singleplayer") || role.equals("server")){
 			this.singlePlayerMode(avatar,level);
-//		else{
-//			String levelName=intent.getStringExtra("levelName");
-//			
-//			this.multiplayerMode(avatar,levelName,role);
-//		}
+			updateTimeHander = new Handler();
+			updateTimeHander.post(updateDashboard);
+		}
 
-		updateTimeHander = new Handler();
-		updateTimeHander.post(updateDashboard);
+	
 
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
@@ -197,7 +201,8 @@ public class GameActivity extends Activity implements OnTouchListener{
 		@Override
 		protected void onDestroy() {
 			super.onDestroy();
-			updateTimeHander.removeCallbacks(updateDashboard);
+			if(mode.equals("singleplayer"))
+				updateTimeHander.removeCallbacks(updateDashboard);
 		}
 
 		public void quitGame(View view) {
@@ -226,8 +231,10 @@ public class GameActivity extends Activity implements OnTouchListener{
 			gameBoard.gameStartSinglePlayer(avatar, level);
 		}
 		
-		public void multiplayerMode(int avatar, String level, String role){
-			gameBoard.gameStartMultiplayer(avatar, level, role);
+		public void multiplayerMode(int avatar, String level, String role, int timeleft, int players, char[][] gameStatus){
+			gameBoard.gameStartMultiplayer(avatar, level, role, timeleft, players, gameStatus);
+			updateTimeHander = new Handler();
+			updateTimeHander.post(updateDashboard);
 		}
 
 	}

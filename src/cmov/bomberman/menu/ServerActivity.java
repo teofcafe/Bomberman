@@ -67,10 +67,11 @@ public class ServerActivity extends MultiplayerGameActivity {
 							InputStream in = clientSocket.getInputStream();
 
 							PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
+							System.out.println("is server connecteed : " +clientSocket.isConnected());
 							pw.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + "|" + ++nrOfPlayers + "|" + getAvailableId() + "|" + getCurrentMap());
 							pw.flush();
 
-							if (pw.checkError()) Log.d("WiFi", "Message not sent");
+							if (pw.checkError()) System.out.println("Message not sent");
 
 							//								BufferedReader bufferReader = new BufferedReader(new InputStreamReader(in));
 							//								if (!bufferReader.ready()) System.out.println("Buffer not ready!!!!!");

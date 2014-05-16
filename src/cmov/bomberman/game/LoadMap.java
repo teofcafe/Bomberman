@@ -35,7 +35,7 @@ public class LoadMap {
     
 	
 	 @SuppressWarnings({ "unchecked", "rawtypes" })
-	 protected static LevelProperties loadMap(InputStream filename, Context context,int avatar, int maxWidth, int maxHeight) throws IOException  {
+	 protected static LevelProperties loadMap(InputStream filename, Context context,int avatar) throws IOException  {
 		 LevelProperties levelProperties = new LevelProperties(LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
@@ -158,7 +158,7 @@ public class LoadMap {
 
 	 
 
-	public static LevelProperties loadMultiplayer(InputStream level, Context context, int avatar,int timeLeft, int numberPlayers, char[][] gridMap) throws IOException {
+	public static LevelProperties loadMultiplayer(InputStream level, Context context, int idPlayer,int timeLeft, int numberPlayers, char[][] gridMap) throws IOException {
 		 LevelProperties levelProperties = new LevelProperties(LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
@@ -257,13 +257,13 @@ public class LoadMap {
 	                    }
 	                    
 	                    if((ch > 47 )&& (ch < 58))
-                    		levelProperties.addPlayer(context, avatar, new Pair(i,j),(byte) (ch-'0'));
+                    		levelProperties.addPlayer(context, idPlayer-1, new Pair(i,j),(byte) idPlayer);
 	                    
 	                    else if (ch== 'O') levelProperties.addObstacle(context,new Pair(i,j));
 	                    else if (ch == 'R') levelProperties.addRobot(context,new Pair(i,j));
 	                }
 	            }
-	 
+	  
 	        levelProperties.setGridLayout(gridLayout);
 	        levelProperties.setGridMap(gridMap);
 

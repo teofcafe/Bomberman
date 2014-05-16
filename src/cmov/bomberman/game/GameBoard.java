@@ -65,8 +65,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 			InputStream level = getResources().openRawResource(resID);
 
-//			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar);
-			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar,320, 360);
+			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar);
 			//TODO alterar o index para o player respectivo 
 			player = this.levelProperties.getPlayerById((byte)1);
 			removeAdicionalPlayers();
@@ -78,28 +77,22 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		startMainThread();				
 	}
 
-	public void gameStartMultiplayer(int avatar, String levelName, String role) {	
+	public void gameStartMultiplayer(int idPlayer, String levelName, String role, int timeleft, int players, char[][] gameStatus) {	
 
-//		if(role.equals("server"))
-//			gameStartSinglePlayer(avatar, levelName);
-//		else {
-//			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
-//			InputStream level = getResources().openRawResource(resID);
-//
-//			try {
-//				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),avatar);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			 
-//			player = this.levelProperties.getPlayerById((byte)(avatar+1));
-//		}
-//
-//		startMainThread();			
-//		gameStartSinglePlayer(avatar,levelName);
-//		
-//		startMainThread();
+			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
+			InputStream level = getResources().openRawResource(resID);
+
+			try {
+				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(this.levelProperties == null) System.out.println("Level Propriedades null");
+			player = this.levelProperties.getPlayerById((byte)idPlayer);
+			player.setScore(0);
+			startMainThread();
+		
 	}
 
 	public void startMainThread() {

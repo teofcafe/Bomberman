@@ -18,7 +18,7 @@ public class SelectPeerActivity extends ClientActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, false);
 		setContentView(R.layout.activity_search);
 		
 
@@ -62,6 +62,8 @@ public class SelectPeerActivity extends ClientActivity {
 				Toast.makeText(getBaseContext(), "starting new activity", Toast.LENGTH_SHORT).show();
 
 				Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
+				intent.putExtra("mode","multiplayer");
+				intent.putExtra("role", "client");
 				intent.putExtra("peerAddr",config.deviceAddress);
 				startActivity(intent);
 				

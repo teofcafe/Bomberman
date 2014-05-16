@@ -27,7 +27,7 @@ public class LoadingActivity extends ClientActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, false);
 		setContentView(R.layout.activity_loading);
 
 		mReceiver = new ClientWifiBroadcast(mManager, mChannel, this);
@@ -57,9 +57,6 @@ public class LoadingActivity extends ClientActivity {
 				public void onSuccess() {
 					Toast.makeText(getBaseContext(), "connected", Toast.LENGTH_SHORT).show();
 
-					//						Intent intent = new Intent(getBaseContext(), ClientActivity.class);
-					//						startActivity(intent);
-
 				}
 
 				@Override
@@ -73,9 +70,11 @@ public class LoadingActivity extends ClientActivity {
 	};
 
 	
-	public void startGame(String levelName,int timeLeft,int numberOfPlayers,byte id, char[][] gameStatus) {
-
+	public void startGame(String levelName,int timeLeft,int numberOfPlayers,byte id, String gameStatus) {
+	System.out.println("LOADING ACTIVITY");
 		Intent intent = new Intent(getBaseContext(), ClientActivity.class);
+		intent.putExtra("mode", "multiplayer");
+		intent.putExtra("role","client");
 		intent.putExtra("levelName", levelName);
 		intent.putExtra("timeLeft", timeLeft);
 		intent.putExtra("numberOfPlayers", numberOfPlayers);
