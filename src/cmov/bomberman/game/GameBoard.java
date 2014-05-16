@@ -95,7 +95,6 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		try {
 				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
@@ -207,9 +206,10 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void update() {
 		player.update();
-		for(Robot robot : levelProperties.getRobots())
+		for(Robot robot : levelProperties.getRobots()){
+			deletePlayers(robot.getX(), robot.getY());
 			robot.update(player.getX(), player.getY(), player.isPaused());
-
+		}
 	}
 
 

@@ -406,8 +406,6 @@ public class Robot {
 			if(blocked)
 				LevelProperties.dumpMap();
 //			LevelProperties.dumpGrid();
-			
-			
 		
 	}
 }
