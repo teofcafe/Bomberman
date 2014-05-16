@@ -165,7 +165,6 @@ public class LevelProperties {
 		return false;
 	}
 	
-
 	// Screen coordinates
 	public static boolean hasObjectByMapCoordinates(int x, int y){
 		if(LevelProperties.gridLayout[x][y]){

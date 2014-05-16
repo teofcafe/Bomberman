@@ -120,27 +120,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void exitGame() {
-
 		thread.setRunning(false);
 	}
 
 	public void exitGame(String mode) {
-
-	
-		//			Toast.makeText(context, "Game Over", Toast.LENGTH_SHORT).show();			
-		
+		if(LevelProperties.getNumberOfPlayers()==0)
+			exitGame();			
 	}
 
 
 	public void startGame() {
-//		activity.runOnUiThread(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				Toast.makeText(activity, "Game Over", Toast.LENGTH_SHORT).show();
-//
-//			}
-//		});
 		thread.setRunning(true);
 	}
 
