@@ -57,8 +57,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	private void drawRobots(Canvas canvas) {
-		for(Robot robot : levelProperties.getRobots())
+		for(Robot robot : levelProperties.getRobots()){
 			robot.draw(canvas);
+		}
 	}
 
 
@@ -196,7 +197,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public void update() {
 		player.update();
 		for(Robot robot : levelProperties.getRobots()){
-			deletePlayers(robot.getX(), robot.getY());
+//			deletePlayers(robot.getX(), robot.getY());
 			robot.update(player.getX(), player.getY(), player.isPaused());
 		}
 	}
