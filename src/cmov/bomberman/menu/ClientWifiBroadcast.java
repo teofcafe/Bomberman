@@ -174,13 +174,13 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 				Log.d("WiFi", "Entretanto");
 				Log.d("WiFi", "Host: " +  String.valueOf(host) + " Port: " + port);
 				System.out.println("Host: " +  String.valueOf(host) + " Port: " + port);
-						
+
 				InetSocketAddress address = new InetSocketAddress(host, port);
 				socket.connect(address, 5000);
-				
+
 				this.bufferReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
 				this.printWritter = new PrintWriter(this.socket.getOutputStream());
-				
+
 				Log.d("WiFi", "Depois");
 				System.out.println("DEPOIS");
 				Log.d("WiFi", "Am I connected? " + socket.isConnected());
@@ -189,9 +189,9 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 				System.out.println("estabeli sockets");
 
-				
+
 				while(!bufferReader.ready()); System.out.println("Buffer not ready");
-					
+
 
 				String result = bufferReader.readLine();
 
@@ -214,7 +214,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 				//inputStream.close();
 				while (!result.equals("exit")){
 					result = bufferReader.readLine();
-					
+
 
 					//String []commands = result.split("\\|");
 					//int player = Integer.parseInt(commands[0]);
@@ -225,7 +225,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 						System.out.println("RECEBIMSG");
 						System.out.println("sendCommand");
 						sendCommand("recebi o andaja");
-						
+
 					}
 
 					else if(result.equals("right"))

@@ -18,30 +18,30 @@ public class HomeActivity extends Activity {
 		SharedPreferences settings;		
 		TextView homePageUsername;
 		SharedPreferences.Editor editor;
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
+
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = settings.getString("Username", "").toString();
 		imageSelected = settings.getInt("SelectedAvatar", -1);
-		
-		
+
+
 		if(username.equals("")){
 			editor = settings.edit();
 			editor.putString("Username",this.getString(R.string.guest));
 			editor.commit();
 		}
-		
+
 		if(imageSelected == -1){
 			imageSelected = 0;
 			editor = settings.edit();
 			editor.putInt("SelectedAvatar", imageSelected);
 			editor.commit();
 		}
-		
+
 		homePageUsername = (TextView)findViewById(R.id.usernameHomePage);
-		
+
 		homePageUsername.setText(settings.getString("Username", "").toString());	
 	}
 
@@ -51,24 +51,24 @@ public class HomeActivity extends Activity {
 		getMenuInflater().inflate(R.menu.home, menu);
 		return true;
 	}
-	
+
 	public void changeNameMenu(View v) {
-		
+
 		Intent intent = new Intent(this.getApplicationContext(), SettingsActivity.class);
 		startActivity(intent);
 		HomeActivity.this.finish();
 	}
-	
+
 	public void quit(View v) {
 		Intent intent;
-		
+
 		intent = new Intent(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_HOME);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 		HomeActivity.this.finish();
 	}
-	
+
 	public void modeSelectionMenu(View v) {
 		Intent intent = new Intent(this.getApplicationContext(), ModeSelectionActivity.class);
 		startActivity(intent);

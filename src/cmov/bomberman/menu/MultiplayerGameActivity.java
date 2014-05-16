@@ -13,7 +13,7 @@ public class MultiplayerGameActivity extends GameActivity {
 	Channel mChannel;
 	BroadcastReceiver mReceiver;
 	IntentFilter mIntentFilter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

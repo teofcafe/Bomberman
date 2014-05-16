@@ -47,11 +47,11 @@ public class Player {
 	public boolean getBlocked() {
 		return this.blocked;
 	}
-	
+
 	public byte getId(){
 		return this.id;
 	}
-	
+
 	public void setId(byte id){
 		this.id=id;
 	}

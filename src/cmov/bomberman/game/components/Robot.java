@@ -34,7 +34,7 @@ public class Robot {
 	private byte id; 
 	private boolean blocked;
 	Pair memPos;
-	
+
 
 
 	@SuppressWarnings("rawtypes")
@@ -48,12 +48,12 @@ public class Robot {
 		this.blocked = false;
 		memPos = this.getPosition();
 	}
-	
+
 	public static void setVELOCITY(int vELOCITY) {
 		VELOCITY = vELOCITY;
 	}
 
-	
+
 	public static void setMustWalk(int mustWalk) {
 		Robot.mustWalk = mustWalk;
 	}
@@ -65,7 +65,7 @@ public class Robot {
 	public byte getId(){
 		return this.id;
 	}
-	
+
 	public void setId(byte id){
 		this.id=id;
 	}
@@ -106,7 +106,7 @@ public class Robot {
 
 	public void updatePosition(){
 		LevelProperties.insert('R', this.getPosition());
-		
+
 	}
 
 
@@ -155,27 +155,27 @@ public class Robot {
 			working = direction;
 
 		}
-		
+
 		switch (working) {
-			case 0:{
-				moveUp();
-				break;
-			}
-			case 1:{
-				moveLeft();
-				break;
-			}
-			case 2:{
-				moveRight();
-				break;
-			}
-			case 3:{
-				moveDown();
-				break;
-			}
+		case 0:{
+			moveUp();
+			break;
 		}
-		
-		
+		case 1:{
+			moveLeft();
+			break;
+		}
+		case 2:{
+			moveRight();
+			break;
+		}
+		case 3:{
+			moveDown();
+			break;
+		}
+		}
+
+
 	}
 
 	public void runRandom(){
@@ -213,14 +213,14 @@ public class Robot {
 
 		/**************************************************************************************/
 		/**************************************************************************************/
-		
+
 		//Aproxima.se do player pelo eixo x ou y
 		if(Math.abs(distX) <=5 || Math.abs(distY) <=5){
 
 
 			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX < 0) {
 				direction = 2;
-				
+
 				if(canMove()) {
 					moveRight();
 				} else runRandom();
@@ -228,7 +228,7 @@ public class Robot {
 
 			if(Math.abs(distY) <= 5 && Math.abs(distX) >= 5 && distX > 0) {
 				direction = 1;
-				
+
 				if(canMove()) {
 					moveLeft();
 				} else runRandom();
@@ -236,7 +236,7 @@ public class Robot {
 
 			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY > 0) {
 				direction = 0;
-				
+
 				if(canMove()) {
 					moveUp();
 				} else runRandom();
@@ -244,7 +244,7 @@ public class Robot {
 
 			if(Math.abs(distX) <= 5 && Math.abs(distY) >= 5 && distY < 0) {
 				direction = 3;
-				
+
 				if(canMove()) {
 					moveDown();
 				} else runRandom();
@@ -259,7 +259,7 @@ public class Robot {
 			if (Math.abs(distX) < Math.abs(distY)) {
 				if(distX > 0) {
 					direction = 1;
-					
+
 					if(canMove()) {
 						moveLeft();
 					} else {
@@ -279,7 +279,7 @@ public class Robot {
 				}
 			} else if(distY > 0) {
 				direction = 0;
-				
+
 				if(canMove()) {
 					moveUp();
 				} else {
@@ -288,7 +288,7 @@ public class Robot {
 				}
 			} else {
 				direction = 3;
-				
+
 				if(canMove()) {
 					moveDown();
 				} else {
@@ -304,10 +304,10 @@ public class Robot {
 	public void update(int playerX, int playerY, boolean paused) {
 		int distX = this.getX() - playerX;
 		int distY = this.getY() - playerY;
-		
+
 		if(!(working < 0)){
 			redirectMoves(working);
-			
+
 		}
 
 		else if(!blocked)
@@ -389,23 +389,23 @@ public class Robot {
 			delete();
 		}
 	}
-	
+
 	public void freeze() {
 		blocked = true;
 	}
-	
+
 	public void delete(){
-//			Log.d("freeze","deleting x="+memPos.getKey() +" y="+memPos.getValue());
-//			System.out.println("ANTES DE ELIMINAR");
-//			LevelProperties.dumpMap();
-			LevelProperties.delete(memPos);
-			memPos = this.getPosition();
-//			Log.d("freeze","inserting x="+memPos.getKey() +" y="+memPos.getValue());
-//			System.out.println("DEPOIS DE ELIMINAR");
-			this.updatePosition();
-			if(blocked)
-				LevelProperties.dumpMap();
-//			LevelProperties.dumpGrid();
-		
+		//			Log.d("freeze","deleting x="+memPos.getKey() +" y="+memPos.getValue());
+		//			System.out.println("ANTES DE ELIMINAR");
+		//			LevelProperties.dumpMap();
+		LevelProperties.delete(memPos);
+		memPos = this.getPosition();
+		//			Log.d("freeze","inserting x="+memPos.getKey() +" y="+memPos.getValue());
+		//			System.out.println("DEPOIS DE ELIMINAR");
+		this.updatePosition();
+		if(blocked)
+			LevelProperties.dumpMap();
+		//			LevelProperties.dumpGrid();
+
 	}
 }

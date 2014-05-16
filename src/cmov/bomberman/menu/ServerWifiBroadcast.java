@@ -16,7 +16,7 @@ public class ServerWifiBroadcast extends BroadcastReceiver{
 	private GameActivity mActivity;
 	PeerListListener myPeerListListener;
 	WifiP2pDeviceList myPeers;
-	
+
 
 	public ServerWifiBroadcast(WifiP2pManager manager, Channel channel,
 			GameActivity activity) {
@@ -29,12 +29,12 @@ public class ServerWifiBroadcast extends BroadcastReceiver{
 	public WifiP2pDeviceList getPeers(){
 		return this.myPeers;
 	}
-		
+
 	@Override
 	public void onReceive(final Context context, Intent intent) {
 		String action = intent.getAction();
-		
-		
+
+
 		if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
 			// Check to see if Wi-Fi is enabled and notify appropriate activity
 			int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
@@ -50,10 +50,10 @@ public class ServerWifiBroadcast extends BroadcastReceiver{
 			// request available peers from the wifi p2p manager. This is an
 			// asynchronous call and the calling activity is notified with a
 			// callback on PeerListListener.onPeersAvailable()
-			
+
 			if (mManager == null) {
-                return;
-            }
+				return;
+			}
 
 			if (mManager != null) {
 				mManager.requestPeers(mChannel, myPeerListListener);
@@ -70,7 +70,7 @@ public class ServerWifiBroadcast extends BroadcastReceiver{
 			}
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 			// Respond to new connection or disconnections
-			Toast.makeText(context, "Conectadoooooooooooooooooo", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Conectado", Toast.LENGTH_SHORT).show();
 		} else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 			// Respond to this device's wifi state changing
 		}

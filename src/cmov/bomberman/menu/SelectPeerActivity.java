@@ -26,15 +26,15 @@ public class SelectPeerActivity extends ClientActivity {
 	ArrayAdapter<String> arrayAdapter;
 	private boolean selected = false;
 	private int itemSelected = 0;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, false);
 		setContentView(R.layout.activity_search);
-		
+
 		listView = (ListView) findViewById(R.id.ListaPeers);
 		arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, peers);
-		
+
 		mReceiver = new ClientWifiBroadcast(mManager, mChannel, this);
 
 		mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
@@ -47,7 +47,7 @@ public class SelectPeerActivity extends ClientActivity {
 				Toast.makeText(getBaseContext(), " not finding peers", Toast.LENGTH_SHORT).show();
 			}
 		});
-		
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -58,14 +58,14 @@ public class SelectPeerActivity extends ClientActivity {
 				Toast.makeText(SelectPeerActivity.this, "Selected = true", Toast.LENGTH_LONG).show();
 			}
 
-	    });
-		
+		});
+
 		new Thread(searchForPeers).start();
-		
-//		waitPeers = new Handler();
-//		waitPeers.postDelayed(searchForPeers, 1000);
+
+		//		waitPeers = new Handler();
+		//		waitPeers.postDelayed(searchForPeers, 1000);
 	}
-	
+
 	Runnable searchForPeers = new Runnable() {
 
 
@@ -77,14 +77,14 @@ public class SelectPeerActivity extends ClientActivity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
+
 			SelectPeerActivity.this.runOnUiThread(new Runnable() {
-			    public void run() {
-			    	Toast.makeText(SelectPeerActivity.this, "int the thread", Toast.LENGTH_SHORT).show();
-			    }
+				public void run() {
+					Toast.makeText(SelectPeerActivity.this, "int the thread", Toast.LENGTH_SHORT).show();
+				}
 			});
-			
+
 			WifiP2pDeviceList myPeers = null;
 			while (myPeers == null) {
 				myPeers = ((ClientWifiBroadcast) mReceiver).getPeers();
@@ -95,37 +95,37 @@ public class SelectPeerActivity extends ClientActivity {
 					e.printStackTrace();
 				}
 			}
-			
-				specialPeers.addAll(myPeers.getDeviceList());
-				
-				for(int i = 0; i<myPeers.getDeviceList().size(); i++)
-					peers.add(specialPeers.get(i).deviceName.toString());
-				
-				SelectPeerActivity.this.runOnUiThread(new Runnable() {
-				    public void run() {
-				    	listView.setAdapter(arrayAdapter);
-				    }
-				});
-				 
-				while(!selected);
-				
-				
-				//WifiP2pDevice device = specialPeers.get(0);
-				
-				WifiP2pDevice device = specialPeers.get(itemSelected);
-				
-				WifiP2pConfig config = new WifiP2pConfig();
-				config.deviceAddress = device.deviceAddress;
-				
 
-				Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
-				intent.putExtra("mode","multiplayer");
-				intent.putExtra("role", "client");
-				intent.putExtra("peerAddr",config.deviceAddress);
-				startActivity(intent);
-				
-				//waitPeers.removeCallbacks(searchForPeers);
-				SelectPeerActivity.this.finish();
+			specialPeers.addAll(myPeers.getDeviceList());
+
+			for(int i = 0; i<myPeers.getDeviceList().size(); i++)
+				peers.add(specialPeers.get(i).deviceName.toString());
+
+			SelectPeerActivity.this.runOnUiThread(new Runnable() {
+				public void run() {
+					listView.setAdapter(arrayAdapter);
+				}
+			});
+
+			while(!selected);
+
+
+			//WifiP2pDevice device = specialPeers.get(0);
+
+			WifiP2pDevice device = specialPeers.get(itemSelected);
+
+			WifiP2pConfig config = new WifiP2pConfig();
+			config.deviceAddress = device.deviceAddress;
+
+
+			Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
+			intent.putExtra("mode","multiplayer");
+			intent.putExtra("role", "client");
+			intent.putExtra("peerAddr",config.deviceAddress);
+			startActivity(intent);
+
+			//waitPeers.removeCallbacks(searchForPeers);
+			SelectPeerActivity.this.finish();
 
 			//}
 		}

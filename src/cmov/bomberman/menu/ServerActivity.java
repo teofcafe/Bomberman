@@ -43,7 +43,7 @@ public class ServerActivity extends MultiplayerGameActivity {
 	public int getPlayerIdentification(){
 		return LevelProperties.getNumberOfPlayers();
 	}
-	
+
 	public Pair nextPlayerPosition(){
 		return LevelProperties.findPlayerPositionNotDeleted(getPlayerIdentification() + 1);
 	}

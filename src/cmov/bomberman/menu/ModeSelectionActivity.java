@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.View;
 
 public class ModeSelectionActivity extends Activity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,14 +28,14 @@ public class ModeSelectionActivity extends Activity {
 		startActivity(intent);
 		ModeSelectionActivity.this.finish();
 	}
-	
+
 	public void setSinglePlayer(View view) {
 		Intent intent = new Intent(this.getApplicationContext(),LevelSelectionActivity.class);
 		intent.putExtra("mode","singleplayer");
 		startActivity(intent);
 		ModeSelectionActivity.this.finish();
 	}
-	
+
 	public void setMultiplayer(View view) {
 		Intent intent = new Intent(this.getApplicationContext(), RoleSelectionActivity.class);
 		startActivity(intent);

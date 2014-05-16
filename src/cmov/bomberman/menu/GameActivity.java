@@ -39,19 +39,19 @@ public class GameActivity extends Activity implements OnTouchListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game);
 
-		
+
 		gameBoard = (GameBoard)findViewById(R.id.gameBoard);
 		packageName = getApplicationContext().getPackageName();
 		settings =  getSharedPreferences("UserInfo", 0);
 		username = (settings.getString("Username", "").toString());
 		usernameTextView = (TextView)findViewById(R.id.playerNameTextView);
-		
+
 
 		timeLeft = (TextView)findViewById(R.id.timeLeftTextView);
 		playerScore = (TextView)findViewById(R.id.playerScoreTextView);
 		numberPlayers = (TextView)findViewById(R.id.numberPlayersTextView);
 		usernameTextView.setText(username);	
-		 //SP
+		//SP
 		avatar = settings.getInt("SelectedAvatar", -1);
 		level = settings.getString("Level", "").toString();
 
@@ -66,7 +66,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 			updateTimeHander.post(updateDashboard);
 		}
 
-	
+
 
 		final ImageButton rightButton = (ImageButton) findViewById(R.id.rightButton);
 		ImageButton leftButton = (ImageButton)findViewById(R.id.leftButton);
@@ -166,79 +166,79 @@ public class GameActivity extends Activity implements OnTouchListener{
 			}});
 	}
 
-		@Override
-		public boolean onCreateOptionsMenu(Menu menu) {
-			// Inflate the menu; this adds items to the action bar if it is present.
-			getMenuInflater().inflate(R.menu.home, menu);
-			return true;
-		}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.home, menu);
+		return true;
+	}
 
-		Runnable updateDashboard = new Runnable() {
+	Runnable updateDashboard = new Runnable() {
 
-			public void run() {
-				timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
-						Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+		public void run() {
+			timeLeft.setText(Integer.toString((gameBoard.getLevelProperties().getGameDuration() / (1000*60)) % 60) + ":" +
+					Integer.toString((gameBoard.getLevelProperties().getGameDuration() / 1000) % 60));
+
+			playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
+
+			if(gameBoard.getLevelProperties().getGameDuration() == 0) {
+				Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
+				gameBoard.exitGame();	
+				updateTimeHander.removeCallbacks(updateDashboard);
+			} else {
+				gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
 
 				playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
+				numberPlayers.setText(Integer.toString(gameBoard.getLevelProperties().getNumberOfPlayers()));
 
-				if(gameBoard.getLevelProperties().getGameDuration() == 0) {
-					Toast.makeText(getApplicationContext(), "Game Over", Toast.LENGTH_SHORT).show();
-					gameBoard.exitGame();	
-					updateTimeHander.removeCallbacks(updateDashboard);
-				} else {
-					gameBoard.getLevelProperties().setGameDuration(gameBoard.getLevelProperties().getGameDuration() - 1000);
-
-					playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
-					numberPlayers.setText(Integer.toString(gameBoard.getLevelProperties().getNumberOfPlayers()));
-					
-					updateTimeHander.postDelayed(this, 1000);
-				}
+				updateTimeHander.postDelayed(this, 1000);
 			}
-		};
+		}
+	};
 
-		@Override
-		public void onBackPressed() {
-			gameBoard.getPlayer().setPaused();
-		}
+	@Override
+	public void onBackPressed() {
+		gameBoard.getPlayer().setPaused();
+	}
 
-		@Override
-		protected void onDestroy() {
-			super.onDestroy();
-			if(mode.equals("singleplayer"))
-				updateTimeHander.removeCallbacks(updateDashboard);
-		}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if(mode.equals("singleplayer"))
+			updateTimeHander.removeCallbacks(updateDashboard);
+	}
 
-		public void quitGame(View view) {
-			Intent intent;
-			gameBoard.exitGame();
-			intent = new Intent(this.getApplicationContext(), HomeActivity.class);
-			startActivity(intent);
-			GameActivity.this.finish();
-		}
+	public void quitGame(View view) {
+		Intent intent;
+		gameBoard.exitGame();
+		intent = new Intent(this.getApplicationContext(), HomeActivity.class);
+		startActivity(intent);
+		GameActivity.this.finish();
+	}
 
-		public void pauseGame(View view) {
-			gameBoard.getPlayer().setPaused();
-
-		}
-
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			return false;
-		}
-
-		public void dropBomb(View view) {
-			this.gameBoard.dropBomb();
-		}
-		
-		public void singlePlayerMode(int avatar, String level){
-			gameBoard.gameStartSinglePlayer(avatar, level,mode,role);
-		}
-		
-		public void multiplayerMode(int avatar, String level, String role, int timeleft, int players, char[][] gameStatus){
-			gameBoard.gameStartMultiplayer(avatar, level, role, timeleft, players, gameStatus);
-			updateTimeHander = new Handler();
-			updateTimeHander.post(updateDashboard);
-		}
-		
+	public void pauseGame(View view) {
+		gameBoard.getPlayer().setPaused();
 
 	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		return false;
+	}
+
+	public void dropBomb(View view) {
+		this.gameBoard.dropBomb();
+	}
+
+	public void singlePlayerMode(int avatar, String level){
+		gameBoard.gameStartSinglePlayer(avatar, level,mode,role);
+	}
+
+	public void multiplayerMode(int avatar, String level, String role, int timeleft, int players, char[][] gameStatus){
+		gameBoard.gameStartMultiplayer(avatar, level, role, timeleft, players, gameStatus);
+		updateTimeHander = new Handler();
+		updateTimeHander.post(updateDashboard);
+	}
+
+
+}

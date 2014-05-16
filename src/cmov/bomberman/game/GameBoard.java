@@ -38,7 +38,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
-//		this.activity=activity;
+		//		this.activity=activity;
 	}
 
 
@@ -79,7 +79,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			removeAdicionalPlayers(mode,role);
 
 			setRobotProperties();
-			
+
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
 		}
@@ -93,17 +93,17 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		InputStream level = getResources().openRawResource(resID);
 
 		try {
-				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		
-			player = this.levelProperties.getPlayerById((byte)idPlayer);
-			player.setScore(0);
-			setRobotProperties();
-			
-			startMainThread();
-		
+			this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		player = this.levelProperties.getPlayerById((byte)idPlayer);
+		player.setScore(0);
+		setRobotProperties();
+
+		startMainThread();
+
 
 	}
 
@@ -136,7 +136,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-		
+
 		drawWall(canvas);
 		drawObstacle(canvas);
 
@@ -149,7 +149,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			player.draw(canvas);
 
 		drawRobots(canvas);	
-		
+
 		if(this.bombDroped)
 			if(this.bombExploded)
 				drawExplosion(canvas);

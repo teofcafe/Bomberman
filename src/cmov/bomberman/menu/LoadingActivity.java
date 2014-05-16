@@ -69,9 +69,9 @@ public class LoadingActivity extends ClientActivity {
 		}
 	};
 
-	
+
 	public void startGame(String levelName,int timeLeft,int numberOfPlayers,int id, String gameStatus) {
-	System.out.println("LOADING ACTIVITY");
+		System.out.println("LOADING ACTIVITY");
 		Intent intent = new Intent(getBaseContext(), ClientActivity.class);
 		intent.putExtra("mode", "multiplayer");
 		intent.putExtra("role","client");
@@ -80,7 +80,7 @@ public class LoadingActivity extends ClientActivity {
 		intent.putExtra("numberOfPlayers", numberOfPlayers);
 		intent.putExtra("idPlayer", id);
 		intent.putExtra("gameStatus",gameStatus);
-		
+
 		startActivity(intent);
 		LoadingActivity.this.finish();
 	}
