@@ -209,7 +209,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 				System.out.println("CWB");
 
-				((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), info[4]);
+				((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (info[3].charAt(0) - '0') , info[4]);
 				//outputStream.close();
 				//inputStream.close();
 				while (!result.equals("exit")){

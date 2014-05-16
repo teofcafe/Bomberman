@@ -8,12 +8,9 @@ public class Mapping {
 	public static Pair mapToScreen(Pair coordinates){
 		int x = (Integer) coordinates.getKey();
 		int y = (Integer) coordinates.getValue();
-		System.out.println("Coordenada Original: " + x + " , " + y);
 		
 		int newX = (((x*2))*10);
 		int newY = (((y*2))*10);
-		
-		System.out.println("Coordenada Original: " + newX + " , " + newY);
 
 		Pair screen = new Pair(newX,newY);
 		return screen;

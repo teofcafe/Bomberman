@@ -9,7 +9,6 @@ public class ClientActivity extends MultiplayerGameActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("BLUE");
 		getStartupProperties();
 		
 	}
@@ -40,11 +39,6 @@ public class ClientActivity extends MultiplayerGameActivity {
 				currentMap[i][j] = map[i].charAt(j);
 		}
 		
-		Log.d("WiFi", "Mapa");
-		for(int i=0;i<currentMap.length;i++){
-			for(int j=0;j<currentMap[i].length;j++)
-				Log.d("WiFi", String.valueOf(currentMap[i][j]));
-		}
 		
 		this.multiplayerMode(idPlayer,levelName,role,timeLeft,numberOfPlayers, currentMap);
 	}

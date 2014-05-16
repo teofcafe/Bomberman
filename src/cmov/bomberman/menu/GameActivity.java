@@ -3,10 +3,13 @@ package cmov.bomberman.menu;
 import java.io.Serializable;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.GetChars;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import cmov.bomberman.game.GameBoard;
+import cmov.bomberman.game.LevelProperties;
 
 
 public class GameActivity extends Activity implements OnTouchListener{
@@ -55,8 +59,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		Intent intent = getIntent(); // gets the previously created intent
 		mode = intent.getStringExtra("mode");
 		role = intent.getStringExtra("role");
-		System.out.println("MODE: " + mode);
-		System.out.println("ROLE: " + role);
+
 		if(mode.equals("singleplayer") || role.equals("server")){
 			this.singlePlayerMode(avatar,level);
 			updateTimeHander = new Handler();
@@ -187,7 +190,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 
 					playerScore.setText(Integer.toString(gameBoard.getPlayer().getScore()));
 					numberPlayers.setText(Integer.toString(gameBoard.getLevelProperties().getNumberOfPlayers()));
-
+					
 					updateTimeHander.postDelayed(this, 1000);
 				}
 			}
@@ -228,7 +231,7 @@ public class GameActivity extends Activity implements OnTouchListener{
 		}
 		
 		public void singlePlayerMode(int avatar, String level){
-			gameBoard.gameStartSinglePlayer(avatar, level);
+			gameBoard.gameStartSinglePlayer(avatar, level,mode,role);
 		}
 		
 		public void multiplayerMode(int avatar, String level, String role, int timeleft, int players, char[][] gameStatus){
@@ -236,5 +239,6 @@ public class GameActivity extends Activity implements OnTouchListener{
 			updateTimeHander = new Handler();
 			updateTimeHander.post(updateDashboard);
 		}
+		
 
 	}
