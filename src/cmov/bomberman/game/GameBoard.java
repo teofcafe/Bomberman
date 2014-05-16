@@ -119,16 +119,20 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
+		
 		drawWall(canvas);
 		drawObstacle(canvas);
-		drawRobots(canvas);
 
 		if(this.bombDroped)
-			if(this.bombExploded) 
-				drawExplosion(canvas);
-			else drawBomb(canvas);
+			if(!this.bombExploded) 
+				drawBomb(canvas);
 
 		player.draw(canvas);
+		drawRobots(canvas);	
+		
+		if(this.bombDroped)
+			if(this.bombExploded)
+				drawExplosion(canvas);
 	}
 
 	private void drawExplosion(Canvas canvas) {
@@ -226,7 +230,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				//para fazer cruzamento
 				if(j != bombY && i != bombX) 
 					continue;
-				else if((j > 0 && j < this.getHeight()) && (i > 0 && i < this.getWidth())) {
+				else if((j >= 0 && j < this.getHeight()) && (i >= 0 && i < this.getWidth())) {
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
 
 				}
