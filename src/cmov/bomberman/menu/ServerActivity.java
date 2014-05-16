@@ -171,14 +171,14 @@ public class ServerActivity extends MultiplayerGameActivity {
 
 			//Fica a escutar para receber as accoes dos clientes
 			System.out.println("ENVIAR");
-			sendCommand("andaja");
+			sendCommand("tester");
 
 			while(!(result.equals("exit"))){
 				try {
 
 					result = bufferReader.readLine();
 					System.out.println("serverside");
-					System.out.println("serverside" + "################################################################################################################################0" + result);
+					System.out.println("serverside" + "####" + result);
 					updateAllPlayers(1  , result);
 
 				} catch (IOException e) {

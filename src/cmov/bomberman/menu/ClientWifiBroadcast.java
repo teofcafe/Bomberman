@@ -221,10 +221,10 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 					//String command = commands[1];
 
 
-					if(result.equals("andaja")){
-						System.out.println("RECEBIMSG");
+					if(result.equals("tester")){
+						System.out.println("RECEBI tester do servidor");
 						System.out.println("sendCommand");
-						sendCommand("recebi o andaja");
+						sendCommand("resposta ao tester");
 
 					}
 
