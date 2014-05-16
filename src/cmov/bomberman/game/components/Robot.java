@@ -22,11 +22,11 @@ public class Robot {
 	private static final int BMP_ROWS = 4;
 	private static final int BMP_COLUMNS = 3;
 	private int currentFrame = 1;
-	private final static float VELOCITY = 2;
+	private static int VELOCITY;
 	private int direction = 1;
 	private int width;
 	private int height;
-	private final static int mustWalk = 10;
+	private static int mustWalk;
 	private byte working = -1;
 	private byte walked = 0;
 	private boolean inRandomMove = false;
@@ -47,6 +47,15 @@ public class Robot {
 		this.id = id;
 		this.blocked = false;
 		memPos = this.getPosition();
+	}
+	
+	public static void setVELOCITY(int vELOCITY) {
+		VELOCITY = vELOCITY;
+	}
+
+	
+	public static void setMustWalk(int mustWalk) {
+		Robot.mustWalk = mustWalk;
 	}
 
 	public int getDirection(){

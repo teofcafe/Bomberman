@@ -61,9 +61,11 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			robot.draw(canvas);
 	}
 
+
 	public void gameStartSinglePlayer(int avatar, String levelName,String mode, String role) {	
 		int setAvatar=avatar;
 		this.mode=mode;
+
 		try {
 
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
@@ -73,13 +75,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			this.levelProperties = LoadMap.loadMap(level,getContext(),setAvatar);
 
 			player = this.levelProperties.getPlayerById((byte)1);
+
 			removeAdicionalPlayers(mode,role);
 
+			setRobotProperties();
+			
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
 		}
 
-		startMainThread();				
+		startMainThread();	
 	}
 
 	public void gameStartMultiplayer(int idPlayer, String levelName, String role, int timeleft, int players, char[][] gameStatus) {	
@@ -88,16 +93,27 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		InputStream level = getResources().openRawResource(resID);
 
 		try {
-			this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		player = this.levelProperties.getPlayerById((byte)idPlayer);
-		player.setScore(0);
-		startMainThread();
+				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+			player = this.levelProperties.getPlayerById((byte)idPlayer);
+			player.setScore(0);
+			setRobotProperties();
+			
+			startMainThread();
+		
 
 	}
+
+	private void setRobotProperties() {
+		Robot.setVELOCITY(this.levelProperties.getRobotSpeed());
+		int mustWalk = 20 / this.levelProperties.getRobotSpeed();
+		Robot.setMustWalk(mustWalk);
+	}
+
 
 	public void startMainThread() {
 		thread= new MainThread(getHolder(), this);
@@ -132,17 +148,24 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	synchronized public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
+		
 		drawWall(canvas);
 		drawObstacle(canvas);
-		drawRobots(canvas);
 
 		if(this.bombDroped)
-			if(this.bombExploded) 
-				drawExplosion(canvas);
-			else drawBomb(canvas);
+			if(!this.bombExploded) 
+				drawBomb(canvas);
+
 
 		for(Player player : levelProperties.getPlayers())
 			player.draw(canvas);
+
+		drawRobots(canvas);	
+		
+		if(this.bombDroped)
+			if(this.bombExploded)
+				drawExplosion(canvas);
+
 	}
 
 	private void drawExplosion(Canvas canvas) {
@@ -240,7 +263,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				//para fazer cruzamento
 				if(j != bombY && i != bombX) 
 					continue;
-				else if((j > 0 && j < this.getHeight()) && (i > 0 && i < this.getWidth())) {
+				else if((j >= 0 && j < this.getHeight()) && (i >= 0 && i < this.getWidth())) {
 					explosions.add(new Explosion(getContext(), i, j, bombX, bombY, explosionRange));
 
 				}
