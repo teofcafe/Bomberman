@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import cmov.bomberman.game.GameBoard;
 import cmov.bomberman.game.LevelProperties;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -38,6 +40,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 	int len;
 	Socket socket = new Socket();
 	byte buf[] = new byte[1024];
+	ClientThread clientthread;
 
 	public ClientWifiBroadcast(WifiP2pManager manager, Channel channel,
 			ClientActivity activity) {
@@ -45,6 +48,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 		this.mManager = manager;
 		this.mChannel = channel;
 		this.mActivity = activity;
+
 	}
 
 	@Override
@@ -105,86 +109,10 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 						host =info.groupOwnerAddress;
 						port = 8000;
-						new Thread(new Runnable() {
-
-							@SuppressWarnings("null")
-							@Override
-							public void run() {
-								try {
-
-									Log.d("WiFi", "Antes");
-									System.out.println("ANTES");
-									socket.bind(null);
-									Log.d("WiFi", "Entretanto");
-									Log.d("WiFi", "Host: " +  String.valueOf(host) + " Port: " + port);
-									System.out.println("Host: " +  String.valueOf(host) + " Port: " + port);
-
-									InetSocketAddress address = new InetSocketAddress(host, port);
-
-									socket.connect(address, 5000);
-									Log.d("WiFi", "Depois");
-									System.out.println("DEPOIS");
-									Log.d("WiFi", "Am I connected? " + socket.isConnected());
-									System.out.println("Am I connected? " + socket.isConnected());
-									Log.d("WiFi", "Ligar os streams");
-									OutputStream outputStream = socket.getOutputStream();
-									ContentResolver cr = context.getContentResolver();
-									InputStream inputStream = socket.getInputStream();
-									
-										System.out.println("estabeli sockets");
-
-									BufferedReader bufferReader = new BufferedReader(new InputStreamReader(inputStream));
-									while(!bufferReader.ready()); System.out.println("Buffer not ready");
-
-									String result = bufferReader.readLine();
-									bufferReader.close();
-									Log.d("WiFi", "String: " + result);
-									
-
-									String[] info = result.split("\\|");
-
-//									Log.d("WiFi", "Map name:" + info[0]);
-//									Log.d("WiFi", "Time left: " +  info[1]);
-//									Log.d("WiFi", "Nr of players: " +  info[2]);
-//									Log.d("WiFi", "ID: " + info[3]);
-									
-									System.out.println( "Map name:" + info[0]);
-									System.out.println("Time left: " +  info[1]);
-									System.out.println( "Nr of players: " +  info[2]);
-									System.out.println("ID: " + info[3]);
-									System.out.println("MAPA: " + info[4]);
-									
-									System.out.println("CWB");
-									
-									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), info[4]);
-									//outputStream.close();
-									//inputStream.close();
-
-								} catch (FileNotFoundException e) {
-									Log.d("WiFi", "FileNotFoundException");
-									//catch logic
-								} catch (IOException e) {
-									//catch logic
-									Log.d("WiFi", "IOException");
-								}
-
-								//								finally {
-								//								    if (socket != null) {
-								//								        if (socket.isConnected()) {
-								//								            try {
-								//								                socket.close();
-								//								            } catch (IOException e) {
-								//								                //catch logic
-								//								            }
-								//								        }
-								//								    }
-								//								}
-
-							}
-							
-						}).start();
+						ContentResolver cr = context.getContentResolver();
+						clientthread = new ClientThread(host, port, cr, socket);	
+						clientthread.start();
 					}
-
 				});
 
 				mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
@@ -207,5 +135,121 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 	public WifiP2pDeviceList getPeers() {
 		return this.myPeers;
+	}
+
+	class ClientThread extends Thread {
+		protected Socket socket;
+		InetAddress host;
+		int port;
+		ContentResolver cr;
+		BufferedReader bufferReader;
+		private PrintWriter printWritter;
+
+
+
+
+		public ClientThread (InetAddress host, int port, ContentResolver cr, Socket socket){
+			this.host = host;
+			this.port = port;
+			this.cr = cr;
+			this.socket = socket;
+		}
+
+		public void sendCommand(String cpm){
+			System.out.println("cpm"+ cpm);
+			System.out.println("cpm"+ this.printWritter);
+			this.printWritter.println(cpm);
+			this.printWritter.flush();
+			System.out.println("envieiiiiiiiii");
+		}
+
+		@Override
+		public void run() {
+			try {
+
+
+				Log.d("WiFi", "Antes");
+				System.out.println("ANTES");
+				socket.bind(null);
+				Log.d("WiFi", "Entretanto");
+				Log.d("WiFi", "Host: " +  String.valueOf(host) + " Port: " + port);
+				System.out.println("Host: " +  String.valueOf(host) + " Port: " + port);
+						
+				InetSocketAddress address = new InetSocketAddress(host, port);
+				socket.connect(address, 5000);
+				
+				this.bufferReader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+				this.printWritter = new PrintWriter(this.socket.getOutputStream());
+				
+				Log.d("WiFi", "Depois");
+				System.out.println("DEPOIS");
+				Log.d("WiFi", "Am I connected? " + socket.isConnected());
+				System.out.println("Am I connected? " + socket.isConnected());
+				Log.d("WiFi", "Ligar os streams");
+
+				System.out.println("estabeli sockets");
+
+				
+				while(!bufferReader.ready()); System.out.println("Buffer not ready");
+					
+
+				String result = bufferReader.readLine();
+
+				Log.d("WiFi", "String: " + result);
+
+
+				String[] info = result.split("\\|");
+
+
+				System.out.println( "Map name:" + info[0]);
+				System.out.println("Time left: " +  info[1]);
+				System.out.println( "Nr of players: " +  info[2]);
+				System.out.println("ID: " + info[3]);
+				System.out.println("MAPA: " + info[4]);
+
+				System.out.println("CWB");
+
+				((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), info[4]);
+				//outputStream.close();
+				//inputStream.close();
+				while (!result.equals("exit")){
+					result = bufferReader.readLine();
+					
+
+					//String []commands = result.split("\\|");
+					//int player = Integer.parseInt(commands[0]);
+					//String command = commands[1];
+
+
+					if(result.equals("andaja")){
+						System.out.println("RECEBIMSG");
+						System.out.println("sendCommand");
+						sendCommand("recebi o andaja");
+						
+					}
+
+					else if(result.equals("right"))
+						continue;
+					else if(result.equals("left"))
+						continue;
+					else if(result.equals("up"))
+						continue;
+					else if(result.equals("down"))
+						continue;
+					else if(result.equals("bomb"))
+						continue;
+					else if(result.equals("stop"))
+						continue;
+
+				}socket.close();
+			} catch (FileNotFoundException e) {
+				Log.d("WiFi", "FileNotFoundException");
+				//catch logic
+			} catch (IOException e) {
+				//catch logic
+				Log.d("WiFi", "IOException");
+			}
+
+		}
 	}
 }

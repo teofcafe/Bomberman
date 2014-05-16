@@ -38,16 +38,17 @@ public class ServerActivity extends MultiplayerGameActivity {
 	public EchoThread[] threadCli = new EchoThread[4];
 	int nrOfPlayers = 1;
 	boolean initialState = true;
+	int idClient;
 
 	public int getPlayerIdentification(){
 		return ++id;
 	}
-	
+
 	@SuppressWarnings("unused")
 	public String getCurrentMap() {
 		String output = new String();
 		char[][] map = gameBoard.getLevelProperties().getGridMap();
-		
+
 		for(int col = 0; col < LevelProperties.gridMap.length; col++) {	
 			for(int line = 0; line < LevelProperties.gridMap[col].length; line++) 
 				output += map[col][line];
@@ -102,8 +103,8 @@ public class ServerActivity extends MultiplayerGameActivity {
 							addr = clientSocket.getInetAddress();
 
 							if(!clientsIdentification.contains(addr)){
-								
-								int idClient= getPlayerIdentification();
+
+								idClient= getPlayerIdentification();
 								clientsIdentification.put(idClient , addr);
 
 
@@ -136,7 +137,7 @@ public class ServerActivity extends MultiplayerGameActivity {
 		public EchoThread(Socket clientSocket, int id) {
 			this.socket = clientSocket;
 			this.playerNumber=id;
-			
+
 			try {
 				this.socket.setKeepAlive(true);
 			} catch (SocketException e) {
@@ -153,28 +154,30 @@ public class ServerActivity extends MultiplayerGameActivity {
 
 		public void run() {
 
-			
-			if(initialState){
-			this.printWritter.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + "|" + ++nrOfPlayers + "|" + this.playerNumber + "|" + getCurrentMap());
-			//this.printWritter.write("\\|OLA");
-			this.printWritter.flush();
 
-			if (printWritter.checkError()) System.out.println("WRITE NOT DONE!!!!!");
-			ServerActivity.this.initialState = false;
+			if(initialState){
+				this.printWritter.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + "|" + ++nrOfPlayers + "|" + idClient + "|" + getCurrentMap());
+				//this.printWritter.write("\\|OLA");
+				this.printWritter.flush();
+
+				if (printWritter.checkError()) System.out.println("WRITE NOT DONE!!!!!");
+				System.out.println("SENDS");
+				ServerActivity.this.initialState = false;
 			}
 
 
 			//Fica a escutar para receber as accoes dos clientes
-			
+			System.out.println("ENVIAR");
+			sendCommand("andaja");
+
 			while(!(result.equals("exit"))){
 				try {
-					if (!bufferReader.ready()) 
-						System.out.println("Buffer not ready!!!!!");
-					else {
-						result = bufferReader.readLine();
-						System.out.println("########################################################0" + result);
-						updateAllPlayers(1  , result);
-					}
+
+					result = bufferReader.readLine();
+					System.out.println("serverside");
+					System.out.println("serverside" + "################################################################################################################################0" + result);
+					updateAllPlayers(1  , result);
+
 				} catch (IOException e) {
 
 					e.printStackTrace();
@@ -190,7 +193,7 @@ public class ServerActivity extends MultiplayerGameActivity {
 		}
 
 		public void sendCommand(String comand) {
-			this.printWritter.write(comand);
+			this.printWritter.println(comand);
 			this.printWritter.flush();
 		}
 	}
@@ -199,7 +202,7 @@ public class ServerActivity extends MultiplayerGameActivity {
 		for (int j = 0 ; j < ServerActivity.this.threadCli.length ; ++j)
 			//if (i != this.id) continue; 
 			if(i == 1)continue;
-			/*else */ else if (ServerActivity.this.threadCli[i] != null) ServerActivity.this.threadCli[i].sendCommand(action);
+			/*else */ else if (ServerActivity.this.threadCli[0] != null) ServerActivity.this.threadCli[0].sendCommand(action);
 	}
 
 }
