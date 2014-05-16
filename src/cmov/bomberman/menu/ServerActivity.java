@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import cmov.bomberman.game.LevelProperties;
+import cmov.bomberman.pair.Pair;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,11 +37,14 @@ public class ServerActivity extends MultiplayerGameActivity {
 	private Hashtable clientsIdentification;
 	public ArrayList<Socket> clients;
 	public EchoThread[] threadCli = new EchoThread[4];
-	int nrOfPlayers = 1;
 	boolean initialState = true;
 
 	public int getPlayerIdentification(){
-		return ++id;
+		return LevelProperties.getNumberOfPlayers();
+	}
+	
+	public Pair nextPlayerPosition(){
+		return LevelProperties.findPlayerPositionNotDeleted(getPlayerIdentification()+1);
 	}
 	
 	@SuppressWarnings("unused")
@@ -103,6 +107,8 @@ public class ServerActivity extends MultiplayerGameActivity {
 
 							if(!clientsIdentification.contains(addr)){
 								
+								LevelProperties.addPlayer(ServerActivity.this.getBaseContext(), getPlayerIdentification(), nextPlayerPosition(),(byte) (getPlayerIdentification()+1));
+								
 								int idClient= getPlayerIdentification();
 								clientsIdentification.put(idClient , addr);
 
@@ -155,7 +161,8 @@ public class ServerActivity extends MultiplayerGameActivity {
 
 			
 			if(initialState){
-			this.printWritter.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + "|" + ++nrOfPlayers + "|" + this.playerNumber + "|" + getCurrentMap());
+			this.printWritter.println(gameBoard.getLevelProperties().getLevelName() + "|" + gameBoard.getLevelProperties().getGameDuration() + 
+					"|" + getPlayerIdentification() + "|" + getPlayerIdentification() + "|" + getCurrentMap());
 			//this.printWritter.write("\\|OLA");
 			this.printWritter.flush();
 
@@ -199,7 +206,7 @@ public class ServerActivity extends MultiplayerGameActivity {
 		for (int j = 0 ; j < ServerActivity.this.threadCli.length ; ++j)
 			//if (i != this.id) continue; 
 			if(i == 1)continue;
-			/*else */ else if (ServerActivity.this.threadCli[i] != null) ServerActivity.this.threadCli[i].sendCommand(action);
+			/*else */ else if (ServerActivity.this.threadCli[0] != null) ServerActivity.this.threadCli[0].sendCommand(action);
 	}
 
 }

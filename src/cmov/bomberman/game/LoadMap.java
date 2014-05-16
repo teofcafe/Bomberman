@@ -139,6 +139,7 @@ public class LoadMap {
 	                    if((ch > 47 )&& (ch < 58))
 	                    		levelProperties.addPlayer(context, avatar, new Pair(i,j),(byte) (ch-'0'));
 	                    
+	                    
 	                    if(ch == 'W') {
 	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }
@@ -159,7 +160,8 @@ public class LoadMap {
 	 
 
 	public static LevelProperties loadMultiplayer(InputStream level, Context context, int idPlayer,int timeLeft, int numberPlayers, char[][] gridMap) throws IOException {
-		 LevelProperties levelProperties = new LevelProperties(LINES,COLUMNS);
+
+		LevelProperties levelProperties = new LevelProperties(LINES,COLUMNS);
 	        ArrayList lines = new ArrayList();
 	        int width = 0;
 	        int height = 0;
@@ -246,7 +248,6 @@ public class LoadMap {
 	        for (int i = 0; i < gridMap.length; i++) {
 	            for (int j = 0; j < gridMap[i].length; j++) {
 	            		char ch=gridMap[i][j];
-	            		 
 	                    gridLayout[i][j]=false;
 	                    if(!(ch == '-')) {
 	                    	gridLayout[i][j]=true;
@@ -256,13 +257,16 @@ public class LoadMap {
 	                    	levelProperties.addWall(context,new Pair(i,j));
 	                    }
 	                    
-	                    if((ch > 47 )&& (ch < 58))
-                    		levelProperties.addPlayer(context, idPlayer-1, new Pair(i,j),(byte) idPlayer);
+	                    if((ch > 47 )&& (ch < 58) && ((ch-'0') <=numberOfPlayers )){
+	                    	Log.d("PPP","vou adicionar: " + (ch-'0'));
+	                    	levelProperties.addPlayer(context, (ch-'0')-1, new Pair(i,j),(byte) (ch-'0'));
+	                    }
 	                    
 	                    else if (ch== 'O') levelProperties.addObstacle(context,new Pair(i,j));
 	                    else if (ch == 'R') levelProperties.addRobot(context,new Pair(i,j));
 	                }
 	            }
+	        
 	  
 	        levelProperties.setGridLayout(gridLayout);
 	        levelProperties.setGridMap(gridMap);

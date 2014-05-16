@@ -76,12 +76,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 					@Override
 					public void onPeersAvailable(WifiP2pDeviceList peers) {	
-						Log.d("WiFi", "onPeersAvailable");
-
-						for(int i = 0; i < peers.getDeviceList().size(); i++)
-							Toast.makeText(context, (peers.getDeviceList().toString()), Toast.LENGTH_SHORT).show();
 						myPeers = peers;
-						Toast.makeText(context, Integer.toString(peers.getDeviceList().size()), Toast.LENGTH_SHORT).show();
 					}
 				});
 
@@ -123,9 +118,9 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 
 									socket.connect(address, 5000);
 									Log.d("WiFi", "Depois");
-									System.out.println("DEPOIS");
+						
 									Log.d("WiFi", "Am I connected? " + socket.isConnected());
-									System.out.println("Am I connected? " + socket.isConnected());
+							
 									Log.d("WiFi", "Ligar os streams");
 									OutputStream outputStream = socket.getOutputStream();
 									ContentResolver cr = context.getContentResolver();
@@ -156,7 +151,7 @@ public class ClientWifiBroadcast extends BroadcastReceiver {
 									
 									System.out.println("CWB");
 									
-									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (byte) Integer.parseInt(info[3]), info[4]);
+									((LoadingActivity) mActivity).startGame(info[0], Integer.valueOf(info[1]), Integer.valueOf(info[2]), (info[3].charAt(0)-'0'), info[4]);
 									//outputStream.close();
 									//inputStream.close();
 

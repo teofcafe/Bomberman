@@ -10,14 +10,17 @@ import cmov.bomberman.game.components.Player;
 import cmov.bomberman.game.components.Wall;
 import cmov.bomberman.menu.GameActivity;
 import cmov.bomberman.pair.Pair;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 import cmov.bomberman.game.components.Robot;
 
 public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
@@ -30,10 +33,12 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private boolean bombExploded = false;
 	private ArrayList<Explosion> explosions; 
 	private LevelProperties levelProperties;
+	String mode="";
 
 	public GameBoard(Context context, AttributeSet aSet) {
 		super(context, aSet);
 		getHolder().addCallback(this);
+//		this.activity=activity;
 	}
 
 
@@ -56,19 +61,19 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			robot.draw(canvas);
 	}
 
-
-
-	public void gameStartSinglePlayer(int avatar, String levelName) {	
-
+	public void gameStartSinglePlayer(int avatar, String levelName,String mode, String role) {	
+		int setAvatar=avatar;
+		this.mode=mode;
 		try {
 
 			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
 			InputStream level = getResources().openRawResource(resID);
+			if(role!=null && role.equals("server"))
+				setAvatar=0;
+			this.levelProperties = LoadMap.loadMap(level,getContext(),setAvatar);
 
-			this.levelProperties = LoadMap.loadMap(level,getContext(),avatar);
-			//TODO alterar o index para o player respectivo 
 			player = this.levelProperties.getPlayerById((byte)1);
-			removeAdicionalPlayers();
+			removeAdicionalPlayers(mode,role);
 
 		} catch (IOException e) {
 			System.err.println("Unable to read map");
@@ -79,20 +84,19 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void gameStartMultiplayer(int idPlayer, String levelName, String role, int timeleft, int players, char[][] gameStatus) {	
 
-			int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
-			InputStream level = getResources().openRawResource(resID);
+		int resID = getResources().getIdentifier(levelName , "raw", GameActivity.packageName);
+		InputStream level = getResources().openRawResource(resID);
 
-			try {
-				this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if(this.levelProperties == null) System.out.println("Level Propriedades null");
-			player = this.levelProperties.getPlayerById((byte)idPlayer);
-			player.setScore(0);
-			startMainThread();
-		
+		try {
+			this.levelProperties = LoadMap.loadMultiplayer(level,getContext(),idPlayer,timeleft,players,gameStatus);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		player = this.levelProperties.getPlayerById((byte)idPlayer);
+		player.setScore(0);
+		startMainThread();
+
 	}
 
 	public void startMainThread() {
@@ -101,10 +105,27 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	public void exitGame() {
+
 		thread.setRunning(false);
 	}
 
+	public void exitGame(String mode) {
+
+	
+		//			Toast.makeText(context, "Game Over", Toast.LENGTH_SHORT).show();			
+		
+	}
+
+
 	public void startGame() {
+//		activity.runOnUiThread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				Toast.makeText(activity, "Game Over", Toast.LENGTH_SHORT).show();
+//
+//			}
+//		});
 		thread.setRunning(true);
 	}
 
@@ -120,7 +141,8 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 				drawExplosion(canvas);
 			else drawBomb(canvas);
 
-		player.draw(canvas);
+		for(Player player : levelProperties.getPlayers())
+			player.draw(canvas);
 	}
 
 	private void drawExplosion(Canvas canvas) {
@@ -227,6 +249,7 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		bombExploded = true;
 
 
+
 		while(explosions.get(0).isAlive()) {
 			for(Explosion explosion : explosions){
 				freezeObjects(bombX, bombY);
@@ -241,10 +264,9 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
-
-
 		for(Explosion explosion : explosions) {
 			deleteObstacles(explosion.getX(),explosion.getY());
+			deletePlayers(explosion.getX(),explosion.getY());
 			explosion = null;
 		}
 
@@ -256,6 +278,17 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 	private void deleteObstacles(int x, int y) {
 		levelProperties.deleteObstacle(x,y);
 
+	}
+
+
+	private void deletePlayers(int x, int y){
+		Player deleted=levelProperties.deletePlayer(x, y);
+		if(deleted!=null && deleted.equals(getPlayer())){
+			if(mode.equals("singleplayer"))
+				exitGame();
+			else
+				exitGame(mode);	
+		}
 	}
 
 	public void dropBomb() {
@@ -273,10 +306,16 @@ public class GameBoard extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	public void removeAdicionalPlayers() {
-		for(byte i=2; i<=levelProperties.getPlayers().size();i++)
-			levelProperties.deletePlayerById(i);
+	public void removeAdicionalPlayers(String mode, String role) {
+		int totalOfPlayersToDelete=LevelProperties.getNumberOfPlayers();
+		for(byte i=2; i<=totalOfPlayersToDelete;i++){
+			if(mode.equals("singleplayer")){
+				levelProperties.deletePlayerById(i);
+			}
+			else if(role.equals("server"))
+				levelProperties.fakeDeletePlayerById(i);
+		}
 	}
 
-	
+
 }

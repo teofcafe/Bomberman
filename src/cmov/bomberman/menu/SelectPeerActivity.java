@@ -95,10 +95,7 @@ public class SelectPeerActivity extends ClientActivity {
 					e.printStackTrace();
 				}
 			}
-			//if(myPeers != null) {
-				
-				//Toast.makeText(SelectPeerActivity.this, "adding peers", Toast.LENGTH_SHORT).show();
-
+			
 				specialPeers.addAll(myPeers.getDeviceList());
 				
 				for(int i = 0; i<myPeers.getDeviceList().size(); i++)
@@ -120,7 +117,6 @@ public class SelectPeerActivity extends ClientActivity {
 				WifiP2pConfig config = new WifiP2pConfig();
 				config.deviceAddress = device.deviceAddress;
 				
-				//Toast.makeText(getBaseContext(), "starting new activity", Toast.LENGTH_SHORT).show();
 
 				Intent intent = new Intent(getBaseContext(), LoadingActivity.class);
 				intent.putExtra("mode","multiplayer");

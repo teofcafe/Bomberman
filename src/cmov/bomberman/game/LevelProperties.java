@@ -5,6 +5,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 import cmov.bomberman.pair.*;
 import cmov.bomberman.game.components.*;
 
@@ -20,7 +21,7 @@ public class LevelProperties {
 	private int numberOfObstacles;
 	private int numberOfRobots;
 	
-	private ArrayBlockingQueue<Player> players;
+	private static ArrayBlockingQueue<Player> players;
 	private ArrayList<Wall> walls;
 	private ArrayBlockingQueue<Obstacle> obstacles;
 	private ArrayBlockingQueue<Robot> robots;
@@ -50,8 +51,8 @@ public class LevelProperties {
 		this.players = new ArrayBlockingQueue(this.numberOfPlayers);
 	}
 	
-	public int getNumberOfPlayers() {
-		return this.players.size();
+	public static int getNumberOfPlayers() {
+		return players.size();
 	}
 
 	public void setNumberOfPlayers(int numberOfPlayers) {
@@ -108,8 +109,11 @@ public class LevelProperties {
 		this.obstacles.add(new Obstacle(context, Mapping.mapToScreen(coordinates)));
 	}
 	
-	public void addPlayer(Context context,int avatar, Pair coordinates, byte id){
-		this.players.add(new Player(context,avatar, id, Mapping.mapToScreen(coordinates)));
+	public static void addPlayer(Context context,int avatar, Pair coordinates, byte id){
+		System.out.println("AVATAR: " + avatar);
+		System.out.println("COORDINATES " + coordinates.getKey() +" "+coordinates.getValue());
+		System.out.println("ID ADD PLAYER: " + id);
+		players.add(new Player(context,avatar, id, Mapping.mapToScreen(coordinates)));
 	}
 	
 	public void addRobot(Context context, Pair coordinates){
@@ -168,6 +172,17 @@ public class LevelProperties {
 		this.gridLayout = gridLayout;
 	}
 
+	public static Pair findPlayerPositionNotDeleted(int id){
+		for(int i=0;i<gridMap.length;i++)
+			for(int j=0;j<gridMap[i].length;j++){
+				System.out.println("matriz "+"["+i+"]"+"["+j+"]="+gridMap[i][j]);
+				if(gridMap[i][j]==(id+'0')){
+					System.out.println("PLAYER POSITION: " + i + " " + j);
+				return new Pair(i,j);
+				}
+			}
+		return null;
+	}
 	
 	
 	public Pair getPlayerPositions(byte player) {
@@ -313,6 +328,24 @@ public class LevelProperties {
 		return null;
 	}
 	
+	public Player getPlayerByMapCoordinates(int x, int y){
+		return this.getPlayerByMapCoordinates(new Pair(x,y));
+	}
+	
+	public Player getPlayerByMapCoordinates(Pair coordinates){
+		
+		Pair screenCoordinates = Mapping.mapToScreen(coordinates);
+		int xvalue = (Integer)screenCoordinates.getValue();
+		int yvalue = (Integer)screenCoordinates.getKey();
+	
+		for(Player player : this.getPlayers()){
+			if(player.getX()==xvalue && player.getY()==yvalue)
+				return player;
+		}
+		
+		return null;
+	}
+	
 	public Robot getRobotByMapCoordinates(int x, int y){
 		return this.getRobotByMapCoordinates(new Pair(x,y));
 	}
@@ -399,6 +432,18 @@ public class LevelProperties {
 			delete(xValue,yValue);
 	}
 	
+	public void fakeDeletePlayerById(byte id){
+		Log.d("mode", "Player id -> : " + id);
+		Player playerToDelete=getPlayerById(id);
+		Pair position = playerToDelete.getMapCoordinatesPosition();
+		int xValue = (Integer) position.getKey();
+		int yValue = (Integer) position.getValue();
+		boolean removed = this.getPlayers().remove(playerToDelete);
+		if(removed){
+			gridLayout[xValue][yValue]=false;
+		}
+	}
+	
 	//Game Coordinates
 	public void deleteObstacle(int x, int y){
 		Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
@@ -408,6 +453,20 @@ public class LevelProperties {
 		if(removed)
 			delete(xvalue,yvalue);
 	}
+	
+	//Game Coordinates
+		public Player deletePlayer(int x, int y){
+			Pair mapCoordinates = Mapping.screenToMap(new Pair(x,y));
+			int xvalue = (Integer) mapCoordinates.getKey();
+			int yvalue = (Integer) mapCoordinates.getValue();
+			Player toDelete=getPlayerByMapCoordinates(xvalue, yvalue);
+			boolean removed = this.getPlayers().remove(toDelete);
+			if(removed){
+				delete(xvalue,yvalue);
+				return toDelete;
+			}
+			return null;
+		}
 	
 	//Map Coordinates
 	public void delete(int x,int y) {
